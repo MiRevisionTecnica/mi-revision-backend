@@ -9,6 +9,7 @@ import {
   type ServiceAccount,
 } from 'firebase-admin/app';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
+import { existsSync } from 'node:fs';
 
 /**
  * Punto único de acceso a Firebase. La app móvil nunca habla con Firebase
@@ -28,7 +29,7 @@ export class FirebaseService implements OnModuleInit {
 
   constructor(private readonly config: ConfigService) {}
 
-  onModuleInit(): void {
+  async onModuleInit(): Promise<void> {
     // getApps() evita reinicializar cuando Nest recarga en modo watch.
     const existing = getApps();
     this.app = existing.length > 0 ? existing[0] : initializeApp(this.credentials());
@@ -37,6 +38,16 @@ export class FirebaseService implements OnModuleInit {
     this.firestore.settings({ ignoreUndefinedProperties: true });
 
     this.logger.log(`Firebase inicializado (proyecto ${this.app.options.projectId})`);
+
+    // Se comprueba la conexión al arrancar. Si las credenciales están mal, es
+    // mejor decirlo ahora y con un mensaje claro que dejar que cada consulta
+    // falle después con un stack trace de gRPC.
+    if (!(await this.ping())) {
+      this.logger.error(
+        'Firebase quedó inicializado pero Firestore no responde. Revisa las credenciales: ' +
+          'en un servidor deben ir en FIREBASE_SERVICE_ACCOUNT_BASE64.',
+      );
+    }
   }
 
   get db(): Firestore {
@@ -57,12 +68,24 @@ export class FirebaseService implements OnModuleInit {
     // 1. Ruta al archivo JSON. Es lo más cómodo en local: se descarga la clave y
     //    se apunta a ella, sin convertir nada. firebase-admin lee la variable
     //    GOOGLE_APPLICATION_CREDENTIALS por su cuenta.
+    //
+    //    Se comprueba que el archivo exista antes de usarlo: una ruta de Windows
+    //    copiada al panel de un servidor Linux no apunta a nada, y sin este
+    //    control el error aparece recién en la primera consulta, disfrazado.
     const path = this.config.get<string>('GOOGLE_APPLICATION_CREDENTIALS');
     if (path) {
-      return {
-        credential: applicationDefault(),
-        projectId: this.config.get<string>('FIREBASE_PROJECT_ID'),
-      };
+      if (existsSync(path)) {
+        return {
+          credential: applicationDefault(),
+          projectId: this.config.get<string>('FIREBASE_PROJECT_ID'),
+        };
+      }
+
+      this.logger.warn(
+        `GOOGLE_APPLICATION_CREDENTIALS apunta a "${path}", que no existe en este equipo. ` +
+          'Se ignora y se buscan las otras opciones. En un servidor usa ' +
+          'FIREBASE_SERVICE_ACCOUNT_BASE64.',
+      );
     }
 
     // 2. El JSON completo en base64: una sola variable, ideal para Railway.
@@ -93,7 +116,9 @@ export class FirebaseService implements OnModuleInit {
     }
 
     throw new Error(
-      'Faltan las credenciales de Firebase. Ver README.md → "Credenciales de Firebase".',
+      'Faltan las credenciales de Firebase. En local sirve GOOGLE_APPLICATION_CREDENTIALS ' +
+        'con la ruta al JSON; en Railway u otro servidor tiene que ser ' +
+        'FIREBASE_SERVICE_ACCOUNT_BASE64. Ver README.md → "Credenciales de Firebase".',
     );
   }
 }

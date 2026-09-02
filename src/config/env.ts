@@ -1,4 +1,5 @@
 import { plainToInstance } from 'class-transformer';
+import { existsSync } from 'node:fs';
 import {
   IsBoolean,
   IsIn,
@@ -175,8 +176,11 @@ export function validateEnv(raw: Record<string, unknown>): Env {
     excludeExtraneousValues: false,
   });
 
+  // Una ruta que no existe no cuenta como credencial: es el caso típico de
+  // copiar el .env local al panel de un servidor.
   const hasCredentials =
-    Boolean(env.GOOGLE_APPLICATION_CREDENTIALS) ||
+    (Boolean(env.GOOGLE_APPLICATION_CREDENTIALS) &&
+      existsSync(env.GOOGLE_APPLICATION_CREDENTIALS!)) ||
     Boolean(env.FIREBASE_SERVICE_ACCOUNT_BASE64) ||
     Boolean(env.FIREBASE_PROJECT_ID && env.FIREBASE_CLIENT_EMAIL && env.FIREBASE_PRIVATE_KEY);
 
