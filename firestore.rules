@@ -1,0 +1,14 @@
+rules_version = '2';
+
+// La app móvil NO habla con Firestore: todo pasa por la API de NestJS, que usa
+// el Admin SDK y por diseño se salta estas reglas. Por eso el acceso directo
+// desde cualquier cliente queda cerrado por completo.
+//
+// Desplegar con: npx firebase-tools deploy --only firestore:rules
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

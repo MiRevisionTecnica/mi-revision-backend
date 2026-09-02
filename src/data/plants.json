@@ -1,0 +1,608 @@
+[
+  {
+    "id": "prt-01",
+    "company": "San Dámaso",
+    "comuna": "Colina",
+    "address": "Camino Antiguo Coquimbo s/n, Chacra El Carmen, Parcela 2, Lote 13",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.202472,
+    "lng": -70.674915,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-02",
+    "company": "San Dámaso",
+    "comuna": "Huechuraba",
+    "address": "Av. Américo Vespucio Norte 191",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.341654,
+    "lng": -70.625936,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-03",
+    "company": "TÜV Rheinland",
+    "comuna": "Huechuraba",
+    "address": "Av. Santa Clara 523",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.380846,
+    "lng": -70.635583,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-04",
+    "company": "TÜV Rheinland",
+    "comuna": "Quilicura",
+    "address": "Cañaveral Lotes 450 y 500",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.360043,
+    "lng": -70.711856,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-05",
+    "company": "San Dámaso",
+    "comuna": "Quilicura",
+    "address": "Av. Eduardo Frei Montalva 9500",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.340385,
+    "lng": -70.712775,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-06",
+    "company": "Chilena de Revisiones Técnicas",
+    "comuna": "Quilicura",
+    "address": "Senador Jaime Guzmán 96",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.365896,
+    "lng": -70.705395,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-07",
+    "company": "Applus",
+    "comuna": "Quilicura",
+    "address": "Av. Galvarino 9430",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.335381,
+    "lng": -70.705065,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-08",
+    "company": "TÜV Rheinland",
+    "comuna": "Recoleta",
+    "address": "Av. Einstein 1010",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.404091,
+    "lng": -70.653458,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-09",
+    "company": "Systech",
+    "comuna": "Lampa",
+    "address": "Camino El Otoño 501",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.289595,
+    "lng": -70.870525,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-10",
+    "company": "Mival",
+    "comuna": "Renca",
+    "address": "Montevideo 2186",
+    "classes": [
+      "A"
+    ],
+    "lat": -33.391247,
+    "lng": -70.696458,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-11",
+    "company": "TÜV Rheinland Andino",
+    "comuna": "Pudahuel",
+    "address": "Av. Américo Vespucio 1393",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.445667,
+    "lng": -70.781345,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-12",
+    "company": "UVT",
+    "comuna": "Maipú",
+    "address": "Caletera Américo Vespucio 2562",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.466701,
+    "lng": -70.763046,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-13",
+    "company": "San Dámaso",
+    "comuna": "Maipú",
+    "address": "Camino a Melipilla 17600",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.547871,
+    "lng": -70.785718,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-14",
+    "company": "Applus",
+    "comuna": "Quinta Normal",
+    "address": "Av. Carrascal 5720",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.421157,
+    "lng": -70.699929,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-15",
+    "company": "UVT",
+    "comuna": "Cerrillos",
+    "address": "Caletera General Velásquez 7319",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.50234,
+    "lng": -70.715842,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-16",
+    "company": "SGS",
+    "comuna": "Cerrillos",
+    "address": "Vista Alegre 2253",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.521946,
+    "lng": -70.710308,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-17",
+    "company": "DEKRA",
+    "comuna": "Independencia",
+    "address": "Catorce de la Fama 2850",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.422295,
+    "lng": -70.655465,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-18",
+    "company": "SGS",
+    "comuna": "Ñuñoa",
+    "address": "Av. Guillermo Mann 1251",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.471777,
+    "lng": -70.623881,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-19",
+    "company": "SGS",
+    "comuna": "Ñuñoa",
+    "address": "Av. Williams Rebolledo 1800",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.471488,
+    "lng": -70.61949,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-20",
+    "company": "UVT",
+    "comuna": "Peñalolén",
+    "address": "Av. Las Torres 6900",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.50486,
+    "lng": -70.561936,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-21",
+    "company": "SGS",
+    "comuna": "Peñalolén",
+    "address": "Manuel Carvallo 1144",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.468856,
+    "lng": -70.569878,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-22",
+    "company": "Chilena de Revisiones Técnicas",
+    "comuna": "Peñalolén",
+    "address": "Av. Américo Vespucio 4446",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.497867,
+    "lng": -70.584691,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-23",
+    "company": "UVT",
+    "comuna": "La Reina",
+    "address": "Av. Alcalde Fernando Castillo Velasco 8712",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.450811,
+    "lng": -70.540509,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-24",
+    "company": "DEKRA",
+    "comuna": "La Reina",
+    "address": "Los Hilanderos 8500",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.452739,
+    "lng": -70.54363,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-25",
+    "company": "TÜV Rheinland Andino",
+    "comuna": "La Florida",
+    "address": "Av. Vicuña Mackenna Poniente 7955",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.515243,
+    "lng": -70.60707,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-26",
+    "company": "San Dámaso",
+    "comuna": "La Florida",
+    "address": "Av. Tobalaba 7609, Lote 3",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.51982,
+    "lng": -70.557396,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-27",
+    "company": "UVT",
+    "comuna": "La Florida",
+    "address": "Av. La Florida 11573",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.532771,
+    "lng": -70.574461,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-28",
+    "company": "Chilena de Revisiones Técnicas",
+    "comuna": "La Pintana",
+    "address": "Lo Blanco 1789",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.586785,
+    "lng": -70.65454,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-29",
+    "company": "TÜV Rheinland Andino",
+    "comuna": "La Pintana",
+    "address": "Av. Gabriela 3470",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.583067,
+    "lng": -70.613524,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-30",
+    "company": "Applus",
+    "comuna": "La Pintana",
+    "address": "Av. Gabriela 2891",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.584844,
+    "lng": -70.621283,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-31",
+    "company": "SGS",
+    "comuna": "Macul",
+    "address": "Av. Maratón 3401",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.482163,
+    "lng": -70.599193,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-32",
+    "company": "San Dámaso",
+    "comuna": "Puente Alto",
+    "address": "Av. Santa Rosa 659",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.612157,
+    "lng": -70.626042,
+    "precision": "exact",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:30",
+          "close": "20:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:30",
+          "close": "20:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:30",
+          "close": "20:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:30",
+          "close": "20:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:30",
+          "close": "20:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "openstreetmap"
+  },
+  {
+    "id": "prt-33",
+    "company": "San Dámaso",
+    "comuna": "Puente Alto",
+    "address": "Av. Eyzaguirre 3709",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.617332,
+    "lng": -70.621172,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-34",
+    "company": "Mival",
+    "comuna": "San Bernardo",
+    "address": "Camino Los Pinos 3105",
+    "classes": [
+      "A"
+    ],
+    "lat": -33.571105,
+    "lng": -70.718887,
+    "precision": "approx",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-35",
+    "company": "DEKRA",
+    "comuna": "San Bernardo",
+    "address": "Santa Margarita 1775",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.546355,
+    "lng": -70.711334,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-36",
+    "company": "TÜV Rheinland Andino",
+    "comuna": "San Joaquín",
+    "address": "Av. Salvador Allende 143",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.495424,
+    "lng": -70.624629,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-37",
+    "company": "Applus",
+    "comuna": "San Joaquín",
+    "address": "Av. Departamental 390",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.507734,
+    "lng": -70.632452,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  },
+  {
+    "id": "prt-38",
+    "company": "Applus",
+    "comuna": "San Ramón",
+    "address": "Av. Américo Vespucio 1460",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.540045,
+    "lng": -70.648033,
+    "precision": "exact",
+    "schedule": null,
+    "scheduleSource": null
+  }
+]

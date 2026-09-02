@@ -1,0 +1,15 @@
+# Configuración de despliegue en Railway.
+# La base de datos es Firestore, así que este servicio no necesita Postgres:
+# basta con las credenciales de Firebase en las variables de entorno.
+
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "node dist/main"
+healthcheckPath = "/health"
+healthcheckTimeout = 120
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 5
+numReplicas = 1

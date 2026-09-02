@@ -1,0 +1,29 @@
+# Dependencias
+node_modules/
+
+# Compilado
+dist/
+*.tsbuildinfo
+
+# Cliente generado por Prisma (se regenera en cada build)
+/src/generated/prisma
+
+# Entorno
+.env
+.env.local
+.env.*.local
+
+# Logs y cobertura
+*.log
+npm-debug.log*
+coverage/
+
+# Editores
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Clave de cuenta de servicio de Firebase: es secreta, nunca se commitea.
+*-firebase-adminsdk-*.json
+service-account*.json

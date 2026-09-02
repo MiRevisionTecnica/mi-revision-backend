@@ -1,0 +1,1353 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "El correo ya está registrado"
+          }
+        },
+        "summary": "Crear una cuenta",
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciales incorrectas"
+          }
+        },
+        "summary": "Iniciar sesión",
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/api/auth/google": {
+      "post": {
+        "description": "Recibe el ID token que la app obtuvo de Google, lo verifica y devuelve una sesión propia. Si el correo ya tenía cuenta con contraseña, la vincula en vez de duplicarla.",
+        "operationId": "AuthController_google",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "El ID token no es válido o el correo no está verificado"
+          },
+          "503": {
+            "description": "Falta configurar GOOGLE_OAUTH_CLIENT_IDS en el servidor"
+          }
+        },
+        "summary": "Entrar con Google",
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "description": "Entrega un access token nuevo y rota el refresh token usado.",
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Renovar la sesión",
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "description": "Sin refreshToken en el cuerpo, cierra todas las sesiones del usuario.",
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cerrar sesión",
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Datos del usuario autenticado",
+        "tags": [
+          "Autenticación"
+        ]
+      },
+      "patch": {
+        "operationId": "AuthController_updateProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Actualizar nombre o preferencia de correos",
+        "tags": [
+          "Autenticación"
+        ]
+      },
+      "delete": {
+        "description": "Borra el usuario con sus vehículos, documentos y dispositivos.",
+        "operationId": "AuthController_deleteAccount",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Eliminar la cuenta",
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/api/vehicles": {
+      "get": {
+        "operationId": "VehiclesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VehicleResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar mis vehículos con sus vencimientos",
+        "tags": [
+          "Vehículos"
+        ]
+      },
+      "post": {
+        "description": "El límite por cuenta se controla con MAX_VEHICLES_PER_USER (Fase 1: 1).",
+        "operationId": "VehiclesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVehicleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Alcanzaste el límite de vehículos del plan"
+          },
+          "409": {
+            "description": "Ya registraste esa patente"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registrar un vehículo",
+        "tags": [
+          "Vehículos"
+        ]
+      }
+    },
+    "/api/vehicles/{id}": {
+      "get": {
+        "operationId": "VehiclesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe o no es tuyo"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Ver un vehículo",
+        "tags": [
+          "Vehículos"
+        ]
+      },
+      "patch": {
+        "description": "Si se envía \"expirations\", reemplaza por completo las fechas guardadas.",
+        "operationId": "VehiclesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVehicleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Actualizar un vehículo",
+        "tags": [
+          "Vehículos"
+        ]
+      },
+      "delete": {
+        "operationId": "VehiclesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Eliminar un vehículo con sus documentos y fechas",
+        "tags": [
+          "Vehículos"
+        ]
+      }
+    },
+    "/api/vehicles/{vehicleId}/documents": {
+      "get": {
+        "operationId": "DocumentsController_list",
+        "parameters": [
+          {
+            "name": "vehicleId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar los documentos de un vehículo",
+        "tags": [
+          "Documentos"
+        ]
+      },
+      "post": {
+        "description": "Guarda los metadatos. En la Fase 1 el archivo queda en el teléfono; cuando exista bucket se envía storageUrl.",
+        "operationId": "DocumentsController_create",
+        "parameters": [
+          {
+            "name": "vehicleId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registrar un documento",
+        "tags": [
+          "Documentos"
+        ]
+      }
+    },
+    "/api/documents/{id}": {
+      "delete": {
+        "operationId": "DocumentsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Eliminar un documento",
+        "tags": [
+          "Documentos"
+        ]
+      }
+    },
+    "/api/plants": {
+      "get": {
+        "description": "Catálogo público de la Región Metropolitana. Con lat y lng el resultado viene ordenado por cercanía e incluye distanceKm.",
+        "operationId": "PlantsController_search",
+        "parameters": [
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Texto libre: comuna, dirección o empresa.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "comuna",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": "La Florida",
+              "type": "string"
+            }
+          },
+          {
+            "name": "lat",
+            "required": false,
+            "in": "query",
+            "description": "Latitud del usuario. Con lat y lng el listado se ordena por cercanía.",
+            "schema": {
+              "example": -33.4489,
+              "type": "number"
+            }
+          },
+          {
+            "name": "lng",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": -70.6693,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maximum": 200,
+              "default": 50,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlantResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Buscar plantas de revisión técnica",
+        "tags": [
+          "Plantas PRT"
+        ]
+      }
+    },
+    "/api/plants/comunas": {
+      "get": {
+        "operationId": "PlantsController_comunas",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Comunas con plantas disponibles",
+        "tags": [
+          "Plantas PRT"
+        ]
+      }
+    },
+    "/api/plants/{id}": {
+      "get": {
+        "operationId": "PlantsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlantResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Ver una planta",
+        "tags": [
+          "Plantas PRT"
+        ]
+      }
+    },
+    "/api/devices": {
+      "post": {
+        "description": "La app lo llama al iniciar sesión y cuando Expo renueva el token.",
+        "operationId": "DevicesController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDeviceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Registrar el token de push del teléfono",
+        "tags": [
+          "Dispositivos"
+        ]
+      },
+      "get": {
+        "operationId": "DevicesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar mis dispositivos registrados",
+        "tags": [
+          "Dispositivos"
+        ]
+      }
+    },
+    "/api/devices/{expoPushToken}": {
+      "delete": {
+        "operationId": "DevicesController_remove",
+        "parameters": [
+          {
+            "name": "expoPushToken",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Dar de baja un dispositivo (al cerrar sesión)",
+        "tags": [
+          "Dispositivos"
+        ]
+      }
+    },
+    "/api/reminders/preview": {
+      "get": {
+        "description": "No envía nada. Sirve para revisar el contenido de los recordatorios.",
+        "operationId": "RemindersController_preview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Ver qué avisos tocarían hoy para mis vehículos",
+        "tags": [
+          "Recordatorios"
+        ]
+      }
+    },
+    "/api/reminders/run": {
+      "post": {
+        "description": "Pensado para un cron externo (Railway Scheduled Job). La operación es idempotente: repetirla en el mismo día no duplica avisos.",
+        "operationId": "RemindersController_run",
+        "parameters": [
+          {
+            "name": "x-cron-secret",
+            "required": true,
+            "in": "header",
+            "description": "Debe coincidir con CRON_SECRET. Sin esa variable el endpoint queda deshabilitado.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resumen de lo enviado"
+          },
+          "403": {
+            "description": "Secreto ausente o incorrecto"
+          }
+        },
+        "summary": "Disparar el envío de recordatorios",
+        "tags": [
+          "Recordatorios"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Comprueba que la API responde y que Firestore está accesible.",
+        "operationId": "HealthController_check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "La API y Firestore responden"
+          }
+        },
+        "summary": "Estado del servicio",
+        "tags": [
+          "Estado"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Mi Revisión Técnica — API",
+    "description": "Contrato generado desde el código. Ver README.md.",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "access-token": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Iván Pérez"
+          },
+          "email": {
+            "type": "string",
+            "example": "ivan@ejemplo.cl"
+          },
+          "password": {
+            "type": "string",
+            "example": "unaClaveSegura",
+            "minLength": 8
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "providers": {
+            "type": "array",
+            "description": "Formas con las que esta cuenta puede iniciar sesión.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "password",
+                "google"
+              ]
+            }
+          },
+          "photoUrl": {
+            "type": "object",
+            "nullable": true
+          },
+          "emailReminders": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "providers",
+          "emailReminders",
+          "createdAt"
+        ]
+      },
+      "SessionResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserResponse"
+          },
+          "accessToken": {
+            "type": "string",
+            "description": "Token para el header Authorization: Bearer."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Token de larga duración para renovar la sesión."
+          },
+          "expiresIn": {
+            "type": "number",
+            "description": "Segundos de validez del access token.",
+            "example": 3600
+          }
+        },
+        "required": [
+          "user",
+          "accessToken",
+          "refreshToken",
+          "expiresIn"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "ivan@ejemplo.cl"
+          },
+          "password": {
+            "type": "string",
+            "example": "unaClaveSegura"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "GoogleAuthDto": {
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "ID token que entrega Google en el teléfono. El backend lo verifica contra los client ID configurados; la app nunca habla con Firebase."
+          }
+        },
+        "required": [
+          "idToken"
+        ]
+      },
+      "RefreshDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token entregado al iniciar sesión."
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Iván Pérez"
+          },
+          "emailReminders": {
+            "type": "boolean",
+            "description": "Recibir avisos de vencimiento por correo."
+          }
+        }
+      },
+      "ExpirationResponse": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "REVISION_TECNICA",
+              "SOAP",
+              "PERMISO_CIRCULACION",
+              "OTRO"
+            ]
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2026-09-30"
+          },
+          "daysRemaining": {
+            "type": "number",
+            "example": 28,
+            "description": "Días que faltan. Negativo si ya venció."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "vigente",
+              "por_vencer",
+              "vencido"
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "dueDate",
+          "daysRemaining",
+          "status"
+        ]
+      },
+      "VehicleResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "plate": {
+            "type": "string",
+            "example": "ABCD12"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "year": {
+            "type": "object",
+            "nullable": true
+          },
+          "expirations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExpirationResponse"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "plate",
+          "brand",
+          "model",
+          "expirations",
+          "createdAt"
+        ]
+      },
+      "ExpirationDto": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "REVISION_TECNICA",
+              "SOAP",
+              "PERMISO_CIRCULACION",
+              "OTRO"
+            ],
+            "example": "REVISION_TECNICA"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2026-09-30",
+            "description": "Fecha de vencimiento (YYYY-MM-DD)."
+          }
+        },
+        "required": [
+          "kind",
+          "dueDate"
+        ]
+      },
+      "CreateVehicleDto": {
+        "type": "object",
+        "properties": {
+          "plate": {
+            "type": "string",
+            "example": "ABCD12",
+            "description": "Sin guiones ni espacios."
+          },
+          "brand": {
+            "type": "string",
+            "example": "Chevrolet"
+          },
+          "model": {
+            "type": "string",
+            "example": "Cruze LT"
+          },
+          "year": {
+            "type": "number",
+            "example": 2018
+          },
+          "expirations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExpirationDto"
+            }
+          }
+        },
+        "required": [
+          "plate",
+          "brand",
+          "model"
+        ]
+      },
+      "UpdateVehicleDto": {
+        "type": "object",
+        "properties": {
+          "plate": {
+            "type": "string",
+            "example": "ABCD12",
+            "description": "Sin guiones ni espacios."
+          },
+          "brand": {
+            "type": "string",
+            "example": "Chevrolet"
+          },
+          "model": {
+            "type": "string",
+            "example": "Cruze LT"
+          },
+          "year": {
+            "type": "number",
+            "example": 2018
+          },
+          "expirations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExpirationDto"
+            }
+          }
+        }
+      },
+      "DocumentResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "vehicleId": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "REVISION_TECNICA",
+              "SOAP",
+              "PERMISO_CIRCULACION",
+              "OTRO"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "mimeType": {
+            "type": "object",
+            "nullable": true
+          },
+          "size": {
+            "type": "object",
+            "nullable": true
+          },
+          "storageUrl": {
+            "type": "object",
+            "nullable": true
+          },
+          "uploadedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "vehicleId",
+          "kind",
+          "name",
+          "uploadedAt"
+        ]
+      },
+      "CreateDocumentDto": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "REVISION_TECNICA",
+              "SOAP",
+              "PERMISO_CIRCULACION",
+              "OTRO"
+            ],
+            "example": "REVISION_TECNICA"
+          },
+          "name": {
+            "type": "string",
+            "example": "revision-tecnica-2026.jpg"
+          },
+          "mimeType": {
+            "type": "string",
+            "example": "image/jpeg"
+          },
+          "size": {
+            "type": "number",
+            "example": 348212,
+            "description": "Tamaño en bytes."
+          },
+          "storageUrl": {
+            "type": "string",
+            "description": "URL del archivo cuando exista almacenamiento en la nube. En la Fase 1 va vacío."
+          }
+        },
+        "required": [
+          "kind",
+          "name"
+        ]
+      },
+      "PlantResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "prt-25"
+          },
+          "company": {
+            "type": "string",
+            "example": "TÜV Rheinland Andino"
+          },
+          "comuna": {
+            "type": "string",
+            "example": "La Florida"
+          },
+          "address": {
+            "type": "string",
+            "example": "Av. Vicuña Mackenna Poniente 7955"
+          },
+          "lat": {
+            "type": "number",
+            "example": -33.515243
+          },
+          "lng": {
+            "type": "number",
+            "example": -70.60707
+          },
+          "classes": {
+            "example": [
+              "A",
+              "B"
+            ],
+            "description": "A = livianos, B = pesados.",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "phone": {
+            "type": "object",
+            "nullable": true
+          },
+          "schedule": {
+            "type": "object",
+            "nullable": true
+          },
+          "distanceKm": {
+            "type": "number",
+            "example": 2.4,
+            "description": "Distancia en km. Solo cuando se envían lat y lng."
+          }
+        },
+        "required": [
+          "id",
+          "company",
+          "comuna",
+          "address",
+          "lat",
+          "lng",
+          "classes"
+        ]
+      },
+      "RegisterDeviceDto": {
+        "type": "object",
+        "properties": {
+          "expoPushToken": {
+            "type": "string",
+            "example": "ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]",
+            "description": "Token entregado por expo-notifications en el dispositivo."
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "android",
+              "ios"
+            ]
+          }
+        },
+        "required": [
+          "expoPushToken"
+        ]
+      },
+      "DeviceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "expoPushToken": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "object",
+            "nullable": true
+          },
+          "lastSeenAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "expoPushToken",
+          "lastSeenAt"
+        ]
+      }
+    }
+  }
+}
