@@ -218,52 +218,48 @@ curl -X POST https://<tu-servicio>.up.railway.app/api/reminders/run \
 38 plantas de la Región Metropolitana. `src/data/plants.json` es el archivo maestro y el
 mismo que usa la app como respaldo sin conexión.
 
-### Precisión de la ubicación
+### De dónde salen los datos
 
-Cada planta lleva un campo `precision` y la app **avisa en pantalla** cuando la ubicación no
-es de confianza, en vez de mostrar un pin que parece exacto y no lo es:
+Google Places es la fuente: entrega la coordenada del propio negocio, el horario, el teléfono
+y si sigue funcionando. Al 2 de septiembre de 2026, de las 38 plantas del listado:
 
-| `precision` | Qué significa | Cuántas |
-| --- | --- | --- |
-| `places` | Coordenada de Google Places | — |
-| `exact` | El punto cae sobre la planta en el mapa (verificado por geocodificación inversa) | 19 |
-| `approx` | Sabemos comuna y calle, pero el punto exacto **no está verificado** | 19 |
+| Dato | Cobertura |
+| --- | --- |
+| Coordenada verificada (`precision: places`) | 38 |
+| Horario de atención | 36 |
+| Teléfono | 38 |
+| Cerradas permanentemente | 2 (SGS Ñuñoa) |
 
-Cómo se verificó: se hizo geocodificación inversa de cada coordenada publicada para ver qué
-hay realmente ahí. **La mitad no resistió el examen**: había pines sobre un colegio, un teatro
-y una ciclovía. Nominatim resolvía el centro de la calle cuando no encontraba el número, y la
-etiqueta `address` daba una confianza que no correspondía.
+Las cerradas **no se listan** en la API: mandar a alguien a una planta que ya no existe es peor
+que no mostrarla. Quedan en la base con `status: "closed"`, así que si reabren vuelven solas en
+el siguiente refresco.
 
-Un caso concreto: la planta San Dámaso de Av. Eyzaguirre (Puente Alto) estaba a **6,4 km** de
-su lugar real, y su dirección de origen tenía mal el número (3649 en vez de 3709).
+Esto corrigió errores grandes. Antes, con geocodificación gratuita, la mitad de las
+coordenadas apuntaba a cualquier parte —hubo pines sobre un colegio, un teatro y una
+ciclovía— y una planta estaba a 6,4 km de su lugar real.
 
-Mientras `precision` no sea `places` o `exact`, la app lo advierte en pantalla y dibuja el
-pin con borde punteado. Cargar Google Places con `npm run enrich:plants` deja las 38 en
-`places`, que es la salida definitiva a este problema.
+### Refresco automático
 
-### Horarios
+[`PlantsRefreshService`](src/plants/plants-refresh.service.ts) actualiza el catálogo **el día 1
+de cada mes a las 03:00** (hora de Chile). Una vez al mes basta: los horarios y teléfonos casi
+no cambian, y así el gasto queda en 38 llamadas mensuales, muy lejos del free tier de 10.000
+por SKU. El `placeId` guardado evita repetir la búsqueda, así que solo se paga el detalle.
 
-`schedule` guarda los tramos de atención por día (`{ "mon": [["07:30","20:00"]], … }`).
-Un día sin tramos está cerrado; `null` significa **"no tenemos el dato"**, que la app
-muestra como "Horario no informado". Nunca se inventa un horario.
-
-OpenStreetMap tiene 31 de las 38 plantas mapeadas, pero **solo una con horario**. Por eso:
+Para forzarlo a mano, tras editar el listado o para ver qué devuelve Google:
 
 ```bash
-npm run enrich:plants             # prueba en seco: muestra qué cambiaría
-npm run enrich:plants -- --write  # escribe en Firestore y en el JSON
+npm run enrich:plants             # prueba en seco, no escribe nada
+npm run enrich:plants -- --write  # guarda en Firestore y en src/data/plants.json
 ```
 
-[`enrich-plants.ts`](src/tools/enrich-plants.ts) consulta **Google Places**: coordenadas
-exactas, horario y teléfono. Necesita `GOOGLE_MAPS_API_KEY` con "Places API (New)" habilitada
-en el proyecto de Google Cloud.
+Ambos caminos comparten la lógica de [`places-refresh.ts`](src/plants/places-refresh.ts).
+Necesitan `GOOGLE_MAPS_API_KEY` con "Places API (New)" habilitada; sin ella el servicio avisa
+al arrancar y el catálogo queda como esté.
 
-**Costo: cero a nuestro volumen.** El free tier son 10.000 llamadas al mes por SKU y refrescar
-las 38 plantas gasta 76 (una búsqueda y un detalle por planta). Además el `placeId` queda
-guardado, así que las corridas siguientes se saltan la búsqueda. Sí exige tener facturación
-activada en Google Cloud, aunque no llegue a cobrarse.
+**Detalle a tener presente:** Firestore no acepta arreglos anidados, así que los tramos se
+guardan como objetos (`{ open: "08:00", close: "17:00" }`) y no como pares.
 
-Para actualizar el listado de plantas en sí (altas y bajas), editar el JSON y correr
+Para agregar o quitar plantas del listado, editar `src/data/plants.json` y correr
 `npm run seed` (es un upsert, seguro de repetir).
 
 ## Estado de la verificación

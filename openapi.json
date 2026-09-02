@@ -1286,7 +1286,24 @@
           },
           "schedule": {
             "type": "object",
-            "nullable": true
+            "nullable": true,
+            "description": "Tramos de atención por día ({ mon: [{ open: \"08:00\", close: \"18:00\" }], … }). null = no tenemos el dato."
+          },
+          "scheduleSource": {
+            "type": "object",
+            "nullable": true,
+            "description": "De dónde salió el horario."
+          },
+          "precision": {
+            "type": "string",
+            "enum": [
+              "places",
+              "exact",
+              "address",
+              "street",
+              "comuna"
+            ],
+            "description": "Qué tan precisa es la ubicación. Bajo \"exact\" conviene avisarlo en pantalla."
           },
           "distanceKm": {
             "type": "number",
@@ -1301,7 +1318,8 @@
           "address",
           "lat",
           "lng",
-          "classes"
+          "classes",
+          "precision"
         ]
       },
       "RegisterDeviceDto": {
