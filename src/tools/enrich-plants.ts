@@ -9,6 +9,8 @@
  * La lógica vive en src/plants/places-refresh.ts, compartida con el cron.
  */
 import 'dotenv/config';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import {
   applicationDefault,
   cert,
@@ -60,7 +62,10 @@ function credentials() {
   throw new Error('Faltan las credenciales de Firebase. Ver README.md.');
 }
 
-const file = new URL('../data/plants.json', import.meta.url);
+// Se resuelve desde la raíz del proyecto y no desde import.meta.url: el
+// comando corre compilado desde dist/, y ahí la ruta relativa apuntaría a
+// la copia del build en vez del archivo fuente que sí se versiona.
+const file = pathToFileURL(resolve(process.cwd(), 'src/data/plants.json'));
 const seed = await readSeed(file);
 
 const { plants, result } = await refreshFromPlaces(seed, KEY, (line) => console.log(line));

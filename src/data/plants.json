@@ -8,11 +8,52 @@
       "A",
       "B"
     ],
-    "lat": -33.202472,
-    "lng": -70.674915,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.291971,
+    "lng": -70.727834,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "14:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJ3ycz8iW_YpYRCvlzZNDXHGg",
+    "phone": "(2) 2882 1820",
+    "status": "operational"
   },
   {
     "id": "prt-02",
@@ -23,11 +64,52 @@
       "A",
       "B"
     ],
-    "lat": -33.341654,
-    "lng": -70.625936,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.391071,
+    "lng": -70.629264,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:15",
+          "close": "20:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:15",
+          "close": "20:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:15",
+          "close": "20:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:15",
+          "close": "20:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:15",
+          "close": "19:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJT7kiPAXGYpYRqHygXqSKaWc",
+    "phone": "(2) 2882 1826",
+    "status": "operational"
   },
   {
     "id": "prt-03",
@@ -38,11 +120,52 @@
       "A",
       "B"
     ],
-    "lat": -33.380846,
-    "lng": -70.635583,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.380989,
+    "lng": -70.635233,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:30",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:30",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:30",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:30",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:30",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJE_E0EhbGYpYRX0d0VNC5g2k",
+    "phone": "(2) 2352 4226",
+    "status": "operational"
   },
   {
     "id": "prt-04",
@@ -53,11 +176,52 @@
       "A",
       "B"
     ],
-    "lat": -33.360043,
-    "lng": -70.711856,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.323279,
+    "lng": -70.709724,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJrY9unqm4YpYR1gixgR5F5LE",
+    "phone": "(2) 2352 4226",
+    "status": "operational"
   },
   {
     "id": "prt-05",
@@ -68,11 +232,52 @@
       "A",
       "B"
     ],
-    "lat": -33.340385,
-    "lng": -70.712775,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.340378,
+    "lng": -70.712749,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJ03eftk3HYpYRcA0wTflslwc",
+    "phone": "(2) 2882 1645",
+    "status": "operational"
   },
   {
     "id": "prt-06",
@@ -83,11 +288,52 @@
       "A",
       "B"
     ],
-    "lat": -33.365896,
-    "lng": -70.705395,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.365944,
+    "lng": -70.705508,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:00",
+          "close": "21:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:00",
+          "close": "21:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:00",
+          "close": "21:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:00",
+          "close": "21:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:00",
+          "close": "21:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJO8mCiSjHYpYRr6PhR7TAu7I",
+    "phone": "(2) 2307 0825",
+    "status": "operational"
   },
   {
     "id": "prt-07",
@@ -98,11 +344,52 @@
       "A",
       "B"
     ],
-    "lat": -33.335381,
-    "lng": -70.705065,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.334661,
+    "lng": -70.704605,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJYziRrIrHYpYRTbRR6264Ybg",
+    "phone": "(2) 2659 6233",
+    "status": "operational"
   },
   {
     "id": "prt-08",
@@ -113,11 +400,52 @@
       "A",
       "B"
     ],
-    "lat": -33.404091,
-    "lng": -70.653458,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.404182,
+    "lng": -70.653514,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJpdusmdjFYpYRIY4_7Y6eL9Y",
+    "phone": "(2) 2352 4226",
+    "status": "operational"
   },
   {
     "id": "prt-09",
@@ -128,11 +456,52 @@
       "A",
       "B"
     ],
-    "lat": -33.289595,
-    "lng": -70.870525,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.280279,
+    "lng": -70.744469,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "18:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "13:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJkRd08qC_YpYRbZuyqBpGMEo",
+    "phone": "9 9820 8500",
+    "status": "operational"
   },
   {
     "id": "prt-10",
@@ -142,11 +511,52 @@
     "classes": [
       "A"
     ],
-    "lat": -33.391247,
-    "lng": -70.696458,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.395573,
+    "lng": -70.695623,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJGd_a_bzGYpYRHGPrOg9RIDI",
+    "phone": "(2) 2603 9898",
+    "status": "operational"
   },
   {
     "id": "prt-11",
@@ -157,11 +567,52 @@
       "A",
       "B"
     ],
-    "lat": -33.445667,
-    "lng": -70.781345,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.420746,
+    "lng": -70.781364,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJ7ZrBqErDYpYRIszwO3Gco3Y",
+    "phone": "(2) 2352 4226",
+    "status": "operational"
   },
   {
     "id": "prt-12",
@@ -172,11 +623,52 @@
       "A",
       "B"
     ],
-    "lat": -33.466701,
-    "lng": -70.763046,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.466614,
+    "lng": -70.763077,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJ4bLptQHDYpYR-CDPobtKDts",
+    "phone": "9 4242 0571",
+    "status": "operational"
   },
   {
     "id": "prt-13",
@@ -187,11 +679,52 @@
       "A",
       "B"
     ],
-    "lat": -33.547871,
-    "lng": -70.785718,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.547678,
+    "lng": -70.786087,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:00",
+          "close": "20:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:00",
+          "close": "20:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:00",
+          "close": "20:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:00",
+          "close": "20:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:00",
+          "close": "19:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJSU69kQzdYpYRqXQt6Isa5lA",
+    "phone": "(2) 2882 1830",
+    "status": "operational"
   },
   {
     "id": "prt-14",
@@ -202,11 +735,52 @@
       "A",
       "B"
     ],
-    "lat": -33.421157,
-    "lng": -70.699929,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.419666,
+    "lng": -70.708473,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:45",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:45",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:45",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:45",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:45",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJ8ayKigTEYpYRFUU_wFpMvLI",
+    "phone": "9 8803 4225",
+    "status": "operational"
   },
   {
     "id": "prt-15",
@@ -217,11 +791,52 @@
       "A",
       "B"
     ],
-    "lat": -33.50234,
-    "lng": -70.715842,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.510345,
+    "lng": -70.699735,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:30",
+          "close": "17:30"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:30",
+          "close": "17:30"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:30",
+          "close": "17:30"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:30",
+          "close": "17:30"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:30",
+          "close": "17:30"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJN2TySQzbYpYR6hmYEZxz-Qs",
+    "phone": "(2) 2444 5800",
+    "status": "operational"
   },
   {
     "id": "prt-16",
@@ -232,11 +847,52 @@
       "A",
       "B"
     ],
-    "lat": -33.521946,
-    "lng": -70.710308,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.520731,
+    "lng": -70.714659,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJmZpx2V_bYpYRZi_lnfJzbeI",
+    "phone": "9 7496 4404",
+    "status": "operational"
   },
   {
     "id": "prt-17",
@@ -247,11 +903,52 @@
       "A",
       "B"
     ],
-    "lat": -33.422295,
-    "lng": -70.655465,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.402552,
+    "lng": -70.680001,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJYQcbE17HYpYRjr-OKFutxsQ",
+    "phone": "(2) 2577 8002",
+    "status": "operational"
   },
   {
     "id": "prt-18",
@@ -262,11 +959,14 @@
       "A",
       "B"
     ],
-    "lat": -33.471777,
-    "lng": -70.623881,
-    "precision": "approx",
+    "lat": -33.471243,
+    "lng": -70.619163,
+    "precision": "places",
     "schedule": null,
-    "scheduleSource": null
+    "scheduleSource": null,
+    "placeId": "ChIJncFq4MHPYpYRed6W3FmOHRY",
+    "phone": "9 7496 4404",
+    "status": "closed"
   },
   {
     "id": "prt-19",
@@ -277,11 +977,14 @@
       "A",
       "B"
     ],
-    "lat": -33.471488,
-    "lng": -70.61949,
-    "precision": "exact",
+    "lat": -33.47171,
+    "lng": -70.61973,
+    "precision": "places",
     "schedule": null,
-    "scheduleSource": null
+    "scheduleSource": null,
+    "placeId": "ChIJxeAVkvfPYpYR8muxnC8Bg-I",
+    "phone": "9 7496 4404",
+    "status": "closed"
   },
   {
     "id": "prt-20",
@@ -292,11 +995,52 @@
       "A",
       "B"
     ],
-    "lat": -33.50486,
-    "lng": -70.561936,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.504855,
+    "lng": -70.562051,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJq0legrrRYpYRO8kNHqmUfCs",
+    "phone": "9 4242 0567",
+    "status": "operational"
   },
   {
     "id": "prt-21",
@@ -307,11 +1051,52 @@
       "A",
       "B"
     ],
-    "lat": -33.468856,
-    "lng": -70.569878,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.464438,
+    "lng": -70.568399,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJm_GDAzLOYpYR5y9FVu4W718",
+    "phone": "9 7496 4404",
+    "status": "operational"
   },
   {
     "id": "prt-22",
@@ -322,11 +1107,52 @@
       "A",
       "B"
     ],
-    "lat": -33.497867,
-    "lng": -70.584691,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.497839,
+    "lng": -70.584581,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "18:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJE1O4hzfQYpYR8yeMjG2yai8",
+    "phone": "(2) 2307 0833",
+    "status": "operational"
   },
   {
     "id": "prt-23",
@@ -337,11 +1163,52 @@
       "A",
       "B"
     ],
-    "lat": -33.450811,
-    "lng": -70.540509,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.450996,
+    "lng": -70.54075,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJWcgH5hLOYpYRBMMHY7NNQUw",
+    "phone": "9 5408 1252",
+    "status": "operational"
   },
   {
     "id": "prt-24",
@@ -352,11 +1219,52 @@
       "A",
       "B"
     ],
-    "lat": -33.452739,
-    "lng": -70.54363,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.452765,
+    "lng": -70.543571,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJ_9ALRzbPYpYRAoNtgGyA4ko",
+    "phone": "(2) 2577 8002",
+    "status": "operational"
   },
   {
     "id": "prt-25",
@@ -367,11 +1275,52 @@
       "A",
       "B"
     ],
-    "lat": -33.515243,
-    "lng": -70.60707,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.527618,
+    "lng": -70.597518,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJGW_Bk_TQYpYRXrJj9MI0eV0",
+    "phone": "(2) 2352 4226",
+    "status": "operational"
   },
   {
     "id": "prt-26",
@@ -382,127 +1331,37 @@
       "A",
       "B"
     ],
-    "lat": -33.51982,
-    "lng": -70.557396,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
-  },
-  {
-    "id": "prt-27",
-    "company": "UVT",
-    "comuna": "La Florida",
-    "address": "Av. La Florida 11573",
-    "classes": [
-      "A",
-      "B"
-    ],
-    "lat": -33.532771,
-    "lng": -70.574461,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
-  },
-  {
-    "id": "prt-28",
-    "company": "Chilena de Revisiones Técnicas",
-    "comuna": "La Pintana",
-    "address": "Lo Blanco 1789",
-    "classes": [
-      "A",
-      "B"
-    ],
-    "lat": -33.586785,
-    "lng": -70.65454,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
-  },
-  {
-    "id": "prt-29",
-    "company": "TÜV Rheinland Andino",
-    "comuna": "La Pintana",
-    "address": "Av. Gabriela 3470",
-    "classes": [
-      "A",
-      "B"
-    ],
-    "lat": -33.583067,
-    "lng": -70.613524,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
-  },
-  {
-    "id": "prt-30",
-    "company": "Applus",
-    "comuna": "La Pintana",
-    "address": "Av. Gabriela 2891",
-    "classes": [
-      "A",
-      "B"
-    ],
-    "lat": -33.584844,
-    "lng": -70.621283,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
-  },
-  {
-    "id": "prt-31",
-    "company": "SGS",
-    "comuna": "Macul",
-    "address": "Av. Maratón 3401",
-    "classes": [
-      "A",
-      "B"
-    ],
-    "lat": -33.482163,
-    "lng": -70.599193,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
-  },
-  {
-    "id": "prt-32",
-    "company": "San Dámaso",
-    "comuna": "Puente Alto",
-    "address": "Av. Santa Rosa 659",
-    "classes": [
-      "A",
-      "B"
-    ],
-    "lat": -33.612157,
-    "lng": -70.626042,
-    "precision": "exact",
+    "lat": -33.524113,
+    "lng": -70.556555,
+    "precision": "places",
     "schedule": {
       "mon": [
         {
-          "open": "07:30",
+          "open": "07:00",
           "close": "20:00"
         }
       ],
       "tue": [
         {
-          "open": "07:30",
+          "open": "07:00",
           "close": "20:00"
         }
       ],
       "wed": [
         {
-          "open": "07:30",
+          "open": "07:00",
           "close": "20:00"
         }
       ],
       "thu": [
         {
-          "open": "07:30",
+          "open": "07:00",
           "close": "20:00"
         }
       ],
       "fri": [
         {
-          "open": "07:30",
+          "open": "07:00",
           "close": "20:00"
         }
       ],
@@ -514,7 +1373,341 @@
       ],
       "sun": []
     },
-    "scheduleSource": "openstreetmap"
+    "scheduleSource": "google-places",
+    "placeId": "ChIJPxwVoQ7RYpYR7tJpkORJ3qU",
+    "phone": "(2) 2882 1828",
+    "status": "operational"
+  },
+  {
+    "id": "prt-27",
+    "company": "UVT",
+    "comuna": "La Florida",
+    "address": "Av. La Florida 11573",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.560663,
+    "lng": -70.55878,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJXXzts3zRYpYRsWY8A-EY6gw",
+    "phone": "9 6677 7259",
+    "status": "operational"
+  },
+  {
+    "id": "prt-28",
+    "company": "Chilena de Revisiones Técnicas",
+    "comuna": "La Pintana",
+    "address": "Lo Blanco 1789",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.586715,
+    "lng": -70.654467,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:00",
+          "close": "21:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:00",
+          "close": "21:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:00",
+          "close": "21:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:00",
+          "close": "21:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:00",
+          "close": "21:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJbWUntYPZYpYRf5L1AXldqYE",
+    "phone": "(2) 2307 0813",
+    "status": "operational"
+  },
+  {
+    "id": "prt-29",
+    "company": "TÜV Rheinland Andino",
+    "comuna": "La Pintana",
+    "address": "Av. Gabriela 3470",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.582865,
+    "lng": -70.613534,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJKWDauCTXYpYRXHCpERRlV0s",
+    "phone": "(2) 2352 4226",
+    "status": "operational"
+  },
+  {
+    "id": "prt-30",
+    "company": "Applus",
+    "comuna": "La Pintana",
+    "address": "Av. Gabriela 2891",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.585319,
+    "lng": -70.62075,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "16:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "16:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "16:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "16:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "16:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "15:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJi6QylljXYpYR8IB5o6Z-fW4",
+    "phone": "9 8803 4225",
+    "status": "operational"
+  },
+  {
+    "id": "prt-31",
+    "company": "SGS",
+    "comuna": "Macul",
+    "address": "Av. Maratón 3401",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.486358,
+    "lng": -70.612968,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJBygYrwPQYpYRpPKb2toc6Nk",
+    "phone": "(2) 2411 5182",
+    "status": "operational"
+  },
+  {
+    "id": "prt-32",
+    "company": "San Dámaso",
+    "comuna": "Puente Alto",
+    "address": "Av. Santa Rosa 659",
+    "classes": [
+      "A",
+      "B"
+    ],
+    "lat": -33.612131,
+    "lng": -70.626093,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:30",
+          "close": "17:30"
+        }
+      ],
+      "sat": [],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJeXQtd2-_YpYRg3GjaRHG9iQ",
+    "phone": "(2) 2882 1824",
+    "status": "operational"
   },
   {
     "id": "prt-33",
@@ -525,11 +1718,52 @@
       "A",
       "B"
     ],
-    "lat": -33.617332,
-    "lng": -70.621172,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.617418,
+    "lng": -70.621106,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJmehJo4DXYpYRPG4JZrVoUgs",
+    "phone": "(2) 2882 1832",
+    "status": "operational"
   },
   {
     "id": "prt-34",
@@ -539,11 +1773,52 @@
     "classes": [
       "A"
     ],
-    "lat": -33.571105,
-    "lng": -70.718887,
-    "precision": "approx",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.570051,
+    "lng": -70.711049,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "09:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "08:00",
+          "close": "16:00"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJzUzWps3bYpYR1f10WVVX8wA",
+    "phone": "9 8623 2602",
+    "status": "operational"
   },
   {
     "id": "prt-35",
@@ -554,11 +1829,52 @@
       "A",
       "B"
     ],
-    "lat": -33.546355,
-    "lng": -70.711334,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.546339,
+    "lng": -70.711396,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:30"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:30"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:30"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:30"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:30"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "15:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJ29EGOmjbYpYRXDH74rX5LFE",
+    "phone": "(2) 2577 8002",
+    "status": "operational"
   },
   {
     "id": "prt-36",
@@ -569,11 +1885,52 @@
       "A",
       "B"
     ],
-    "lat": -33.495424,
-    "lng": -70.624629,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.495556,
+    "lng": -70.624611,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "tue": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "wed": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "thu": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "fri": [
+        {
+          "open": "08:00",
+          "close": "17:00"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJkw5_LqbaYpYRj1dm5mxYSkk",
+    "phone": "(2) 2352 4226",
+    "status": "operational"
   },
   {
     "id": "prt-37",
@@ -584,11 +1941,52 @@
       "A",
       "B"
     ],
-    "lat": -33.507734,
-    "lng": -70.632452,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.507464,
+    "lng": -70.632279,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:45",
+          "close": "16:45"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:45",
+          "close": "16:45"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:45",
+          "close": "16:45"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:45",
+          "close": "16:45"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:45",
+          "close": "16:45"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJB6fypqLaYpYR1u-o6cdHHQI",
+    "phone": "9 8803 4225",
+    "status": "operational"
   },
   {
     "id": "prt-38",
@@ -599,10 +1997,51 @@
       "A",
       "B"
     ],
-    "lat": -33.540045,
-    "lng": -70.648033,
-    "precision": "exact",
-    "schedule": null,
-    "scheduleSource": null
+    "lat": -33.540043,
+    "lng": -70.647961,
+    "precision": "places",
+    "schedule": {
+      "mon": [
+        {
+          "open": "07:45",
+          "close": "16:45"
+        }
+      ],
+      "tue": [
+        {
+          "open": "07:45",
+          "close": "16:45"
+        }
+      ],
+      "wed": [
+        {
+          "open": "07:45",
+          "close": "16:45"
+        }
+      ],
+      "thu": [
+        {
+          "open": "07:45",
+          "close": "16:45"
+        }
+      ],
+      "fri": [
+        {
+          "open": "07:45",
+          "close": "16:45"
+        }
+      ],
+      "sat": [
+        {
+          "open": "07:30",
+          "close": "16:30"
+        }
+      ],
+      "sun": []
+    },
+    "scheduleSource": "google-places",
+    "placeId": "ChIJtym8DV3aYpYRgCJQvDt7Zgo",
+    "phone": "9 8803 4225",
+    "status": "operational"
   }
 ]
