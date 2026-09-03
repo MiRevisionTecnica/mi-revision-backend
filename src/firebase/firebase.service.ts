@@ -89,12 +89,9 @@ export class FirebaseService implements OnModuleInit {
     }
 
     // 2. El JSON completo en base64: una sola variable, ideal para Railway.
-    const base64 = this.config.get<string>('FIREBASE_SERVICE_ACCOUNT_BASE64');
-    if (base64) {
-      const json = JSON.parse(
-        Buffer.from(base64, 'base64').toString('utf8'),
-      ) as ServiceAccount & { project_id?: string };
-
+    const raw = this.config.get<string>('FIREBASE_SERVICE_ACCOUNT_BASE64');
+    if (raw) {
+      const json = this.parseServiceAccount(raw);
       return { credential: cert(json), projectId: json.projectId ?? json.project_id };
     }
 
@@ -120,5 +117,43 @@ export class FirebaseService implements OnModuleInit {
         'con la ruta al JSON; en Railway u otro servidor tiene que ser ' +
         'FIREBASE_SERVICE_ACCOUNT_BASE64. Ver README.md → "Credenciales de Firebase".',
     );
+  }
+
+  /**
+   * Lee la cuenta de servicio desde FIREBASE_SERVICE_ACCOUNT_BASE64.
+   *
+   * Acepta el JSON en base64 y también el JSON pegado tal cual: copiar el
+   * archivo en vez del base64 es el error más fácil de cometer al configurar
+   * el panel de un servidor, y no hay motivo para castigarlo.
+   *
+   * Si no es ni lo uno ni lo otro se falla con un mensaje que dice qué pasó.
+   * `Buffer.from(x, 'base64')` descarta en silencio los caracteres que no son
+   * base64, así que sin esta comprobación el error que aparece es un
+   * "Unexpected token" sobre un montón de binario, que no orienta a nadie.
+   */
+  private parseServiceAccount(raw: string): ServiceAccount & { project_id?: string } {
+    const value = raw.trim();
+    const text = value.startsWith('{')
+      ? value
+      : Buffer.from(value, 'base64').toString('utf8').trim();
+
+    if (!text.startsWith('{')) {
+      throw new Error(
+        'FIREBASE_SERVICE_ACCOUNT_BASE64 no contiene la cuenta de servicio. ' +
+          'Tiene que ser el JSON de la clave privada, en base64 y en una sola línea. ' +
+          'En PowerShell: [Convert]::ToBase64String([IO.File]::ReadAllBytes("C:/ruta/al/clave.json")) | Set-Clipboard ' +
+          '— y pegar lo que quedó en el portapapeles, no el comando ni el JSON sin codificar.',
+      );
+    }
+
+    try {
+      return JSON.parse(text) as ServiceAccount & { project_id?: string };
+    } catch {
+      throw new Error(
+        'FIREBASE_SERVICE_ACCOUNT_BASE64 decodifica a algo que no es JSON válido. ' +
+          'Es probable que el valor se haya cortado al pegarlo: el archivo completo ' +
+          'son unos 3.200 caracteres en una sola línea.',
+      );
+    }
   }
 }
