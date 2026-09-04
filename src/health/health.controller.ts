@@ -17,11 +17,15 @@ export class HealthController {
   @ApiResponse({ status: 200, description: 'La API y Firestore responden' })
   async check() {
     const startedAt = Date.now();
-    const reachable = await this.firebase.ping();
+    const { reachable, reason } = await this.firebase.diagnose();
 
     return {
       status: reachable ? 'ok' : 'degraded',
       firestore: reachable ? 'ok' : 'error',
+      // El motivo se expone a propósito sin autenticación: describe la
+      // configuración del servidor, no datos de nadie, y tenerlo acá evita
+      // depender de los logs del proveedor para saber qué está roto.
+      ...(reason ? { reason } : {}),
       latencyMs: Date.now() - startedAt,
       uptimeSeconds: Math.round(process.uptime()),
       timestamp: new Date().toISOString(),

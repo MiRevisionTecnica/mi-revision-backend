@@ -42,11 +42,9 @@ export class FirebaseService implements OnModuleInit {
     // Se comprueba la conexión al arrancar. Si las credenciales están mal, es
     // mejor decirlo ahora y con un mensaje claro que dejar que cada consulta
     // falle después con un stack trace de gRPC.
-    if (!(await this.ping())) {
-      this.logger.error(
-        'Firebase quedó inicializado pero Firestore no responde. Revisa las credenciales: ' +
-          'en un servidor deben ir en FIREBASE_SERVICE_ACCOUNT_BASE64.',
-      );
+    const { reachable, reason } = await this.diagnose();
+    if (!reachable) {
+      this.logger.error(`Firebase inicializó, pero Firestore no responde. ${reason}`);
     }
   }
 
@@ -56,11 +54,23 @@ export class FirebaseService implements OnModuleInit {
 
   /** Comprobación de conectividad para el health check. */
   async ping(): Promise<boolean> {
+    return (await this.diagnose()).reachable;
+  }
+
+  /**
+   * Igual que ping(), pero explicando la falla.
+   *
+   * Un "no responde" a secas manda a revisar las credenciales, que es lo
+   * primero que uno sospecha y muchas veces no es el problema: la credencial
+   * puede estar impecable y la cuenta de servicio deshabilitada, o la base de
+   * Firestore sin crear. Distinguirlos ahorra buscar donde no es.
+   */
+  async diagnose(): Promise<{ reachable: boolean; reason?: string }> {
     try {
       await this.firestore.listCollections();
-      return true;
-    } catch {
-      return false;
+      return { reachable: true };
+    } catch (error) {
+      return { reachable: false, reason: explainFirestoreError(error) };
     }
   }
 
@@ -156,4 +166,60 @@ export class FirebaseService implements OnModuleInit {
       );
     }
   }
+}
+
+/**
+ * Traduce el error de Firestore a algo accionable.
+ *
+ * gRPC devuelve siempre el mismo "UNAUTHENTICATED: Request had invalid
+ * authentication credentials" para causas muy distintas; el motivo real viaja
+ * en `ACCOUNT_STATE_INVALID` y compañía, dentro de los detalles.
+ */
+function explainFirestoreError(error: unknown): string {
+  const err = error as { code?: number; message?: string; statusDetails?: unknown[] };
+  const message = err?.message ?? String(error);
+
+  const reasons = (err?.statusDetails ?? [])
+    .map((detail) => (detail as { reason?: string })?.reason)
+    .filter(Boolean);
+
+  if (reasons.includes('ACCOUNT_STATE_INVALID')) {
+    return (
+      'La cuenta de servicio está deshabilitada. Las credenciales están bien: hay que ' +
+      'habilitarla en Google Cloud → IAM y administración → Cuentas de servicio. ' +
+      'Si Google la deshabilitó por detectar la clave privada expuesta, además hay que ' +
+      'generar una clave nueva y borrar la anterior, o la volverán a deshabilitar.'
+    );
+  }
+
+  if (reasons.includes('SERVICE_DISABLED') || /has not been used|is disabled/i.test(message)) {
+    return (
+      'La API de Firestore está deshabilitada en el proyecto. Se habilita en ' +
+      'Google Cloud → APIs y servicios → Cloud Firestore API.'
+    );
+  }
+
+  if (err?.code === 5 || /NOT_FOUND|does not exist/i.test(message)) {
+    return (
+      'El proyecto existe pero no tiene base de datos de Firestore. Se crea en ' +
+      'la consola de Firebase → Firestore Database → Crear base de datos.'
+    );
+  }
+
+  if (err?.code === 7) {
+    return (
+      'La cuenta de servicio no tiene permisos sobre Firestore. Necesita el rol ' +
+      '"Usuario de Cloud Datastore" en Google Cloud → IAM.'
+    );
+  }
+
+  if (err?.code === 16) {
+    return (
+      'Google rechazó las credenciales. Revisa que FIREBASE_SERVICE_ACCOUNT_BASE64 ' +
+      'corresponda a una clave vigente de este proyecto y que no se haya borrado ' +
+      'en Google Cloud → IAM → Cuentas de servicio → Claves.'
+    );
+  }
+
+  return message;
 }
