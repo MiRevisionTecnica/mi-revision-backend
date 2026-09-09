@@ -58,6 +58,8 @@ export class AuthService {
         photoUrl: null,
         providers: ['password'],
         emailReminders: true,
+        acceptedTermsVersion: dto.acceptedTermsVersion,
+        acceptedTermsAt: now,
         createdAt: now,
         updatedAt: now,
       };
@@ -99,7 +101,7 @@ export class AuthService {
    * en vez de duplicar: el correo verificado por Google es prueba suficiente de
    * que se trata de la misma persona.
    */
-  async loginWithGoogle(idToken: string): Promise<SessionResponse> {
+  async loginWithGoogle(idToken: string, acceptedTermsVersion?: string): Promise<SessionResponse> {
     const profile = await this.google.verify(idToken);
     const db = this.firebase.db;
     const now = new Date().toISOString();
@@ -138,6 +140,8 @@ export class AuthService {
         photoUrl: profile.photoUrl,
         providers: ['google'],
         emailReminders: true,
+        acceptedTermsVersion: acceptedTermsVersion ?? null,
+        acceptedTermsAt: acceptedTermsVersion ? now : null,
         createdAt: now,
         updatedAt: now,
       };

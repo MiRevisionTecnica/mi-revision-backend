@@ -39,6 +39,15 @@ export type UserDoc = {
   photoUrl: string | null;
   providers: AuthProvider[];
   emailReminders: boolean;
+  /**
+   * Versión del texto legal que la persona aceptó al registrarse, y cuándo.
+   *
+   * Para hacer valer los términos hay que poder demostrar qué texto aceptó y en
+   * qué momento, no solo que aceptó algo alguna vez. Es null en las cuentas
+   * creadas antes de que la app pidiera la aceptación.
+   */
+  acceptedTermsVersion: string | null;
+  acceptedTermsAt: string | null;
   createdAt: string;
   updatedAt: string;
 };

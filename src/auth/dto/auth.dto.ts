@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -25,6 +26,15 @@ export class RegisterDto {
   @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
   @MaxLength(72)
   password: string;
+
+  @ApiProperty({
+    example: '2026-09-09',
+    description:
+      'Versión de los términos aceptados, en formato AAAA-MM-DD. Queda registrada con la cuenta.',
+  })
+  @IsString()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: 'La versión de los términos debe ser AAAA-MM-DD.' })
+  acceptedTermsVersion: string;
 }
 
 export class LoginDto {
@@ -45,6 +55,17 @@ export class GoogleAuthDto {
   @IsString()
   @IsNotEmpty()
   idToken: string;
+
+  @ApiProperty({
+    required: false,
+    example: '2026-09-09',
+    description:
+      'Versión de los términos aceptados. Solo se registra si la cuenta se crea en esta llamada: al iniciar sesión en una cuenta existente se ignora.',
+  })
+  @IsOptional()
+  @IsString()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: 'La versión de los términos debe ser AAAA-MM-DD.' })
+  acceptedTermsVersion?: string;
 }
 
 export class RefreshDto {

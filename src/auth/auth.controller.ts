@@ -58,7 +58,7 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'El ID token no es válido o el correo no está verificado' })
   @ApiResponse({ status: 503, description: 'Falta configurar GOOGLE_OAUTH_CLIENT_IDS en el servidor' })
   google(@Body() dto: GoogleAuthDto): Promise<SessionResponse> {
-    return this.auth.loginWithGoogle(dto.idToken);
+    return this.auth.loginWithGoogle(dto.idToken, dto.acceptedTermsVersion);
   }
 
   @Public()
