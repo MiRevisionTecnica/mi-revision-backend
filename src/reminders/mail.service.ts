@@ -31,7 +31,7 @@ export class MailService implements OnModuleInit {
     const port = this.config.get<number>('SMTP_PORT', 587);
     this.from = this.config.get<string>(
       'MAIL_FROM',
-      'Mi Revisión Técnica <no-reply@mirevisionapp.cl>',
+      'Mi Revisión Técnica <mirevision.soporte@gmail.com>',
     );
 
     this.transporter = createTransport({
