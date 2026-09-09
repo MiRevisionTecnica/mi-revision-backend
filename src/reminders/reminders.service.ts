@@ -46,6 +46,21 @@ const KIND_LABEL: Record<DocumentKind, string> = {
 export class RemindersService implements OnModuleInit {
   private readonly logger = new Logger(RemindersService.name);
 
+  /**
+   * Resultado del último envío automático.
+   *
+   * Un recordatorio que no sale no se nota: la app se ve sana, nadie reclama y
+   * el usuario simplemente no recibe el aviso que justifica que exista. Que
+   * falle en silencio es peor que que falle ruidosamente, así que el estado se
+   * guarda y se publica en /health.
+   */
+  private lastRun: { at: string; ok: boolean; detail: string } | null = null;
+
+  /** Último envío automático, o null si todavía no ha corrido ninguno. */
+  get lastAutomaticRun(): { at: string; ok: boolean; detail: string } | null {
+    return this.lastRun;
+  }
+
   constructor(
     private readonly firebase: FirebaseService,
     private readonly config: ConfigService,
@@ -79,9 +94,30 @@ export class RemindersService implements OnModuleInit {
     this.logger.log(`Recordatorios programados todos los días a las ${hour}:00 (America/Santiago)`);
   }
 
+  /**
+   * Ejecuta el envío dejando registrado cómo fue. Pasan por acá tanto el cron
+   * interno como POST /reminders/run, para que ninguna ejecución quede sin
+   * quedar anotada en /health según por dónde se haya disparado.
+   */
+  async runTracked(reference?: Date): Promise<ReminderRunResult> {
+    try {
+      const result = reference ? await this.run(reference) : await this.run();
+      this.lastRun = {
+        at: new Date().toISOString(),
+        ok: true,
+        detail: `${result.pushSent} push, ${result.emailsSent} correos, sobre ${result.checked} vencimientos`,
+      };
+      return result;
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      this.lastRun = { at: new Date().toISOString(), ok: false, detail };
+      throw error;
+    }
+  }
+
   private async runAndLog(): Promise<void> {
     try {
-      const result = await this.run();
+      const result = await this.runTracked();
       this.logger.log(
         `Recordatorios: ${result.pushSent} push, ${result.emailsSent} correos, ` +
           `${result.skipped} ya enviados, sobre ${result.checked} vencimientos.`,

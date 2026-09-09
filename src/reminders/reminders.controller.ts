@@ -53,6 +53,6 @@ export class RemindersController {
       throw new ForbiddenException('Secreto de cron inválido.');
     }
 
-    return this.reminders.run();
+    return this.reminders.runTracked();
   }
 }
