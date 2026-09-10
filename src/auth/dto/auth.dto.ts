@@ -21,6 +21,18 @@ export class SyncSessionDto {
   @IsString()
   @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: 'La versión de los términos debe ser AAAA-MM-DD.' })
   acceptedTermsVersion?: string;
+
+  @ApiProperty({
+    required: false,
+    example: 'Iván Pérez',
+    description:
+      'Nombre para mostrar, al crear la cuenta. Existe porque el que la app le pone a la cuenta de Firebase puede no estar visible todavía cuando llega esta petición; sin él, el perfil nacería con el correo por nombre. Se ignora si el perfil ya existe.',
+  })
+  @IsOptional()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(80)
+  name?: string;
 }
 
 export class UpdateProfileDto {

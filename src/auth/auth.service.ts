@@ -48,7 +48,7 @@ export class AuthService {
     if (!snapshot.exists) {
       const data: UserDoc = {
         email,
-        name: cuenta?.displayName?.trim() || email.split('@')[0],
+        name: dto.name?.trim() || cuenta?.displayName?.trim() || email.split('@')[0],
         googleId: idDeGoogle(cuenta),
         photoUrl: cuenta?.photoURL ?? null,
         providers,

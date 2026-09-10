@@ -829,6 +829,11 @@
             "type": "string",
             "example": "2026-09-09",
             "description": "Versión de los términos aceptados, en formato AAAA-MM-DD. Se manda al crear la cuenta y queda registrada con ella; en un inicio de sesión normal se omite."
+          },
+          "name": {
+            "type": "string",
+            "example": "Iván Pérez",
+            "description": "Nombre para mostrar, al crear la cuenta. Existe porque el que la app le pone a la cuenta de Firebase puede no estar visible todavía cuando llega esta petición; sin él, el perfil nacería con el correo por nombre. Se ignora si el perfil ya existe."
           }
         }
       },
