@@ -65,4 +65,24 @@ export class PlantResponse {
     description: 'Distancia en km. Solo cuando se envían lat y lng.',
   })
   distanceKm?: number;
+
+  @ApiPropertyOptional({
+    nullable: true,
+    example: [{ label: 'Clase A', amount: 25000 }],
+    description: 'Valores de la revisión. null = no tenemos el dato.',
+  })
+  prices: { label: string; amount: number }[] | null;
+
+  @ApiPropertyOptional({
+    nullable: true,
+    example: '2026-09-10',
+    description: 'Cuándo se verificaron los valores.',
+  })
+  pricesUpdatedAt: string | null;
+
+  @ApiPropertyOptional({
+    nullable: true,
+    description: 'Página pública de la planta donde se ve la cámara del patio.',
+  })
+  cameraUrl: string | null;
 }

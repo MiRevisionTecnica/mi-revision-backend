@@ -53,7 +53,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJ3ycz8iW_YpYRCvlzZNDXHGg",
     "phone": "(2) 2882 1820",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 13500
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-02",
@@ -109,7 +116,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJT7kiPAXGYpYRqHygXqSKaWc",
     "phone": "(2) 2882 1826",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 13500
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-03",
@@ -165,7 +179,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJE_E0EhbGYpYRX0d0VNC5g2k",
     "phone": "(2) 2352 4226",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 14800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-04",
@@ -221,7 +242,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJrY9unqm4YpYR1gixgR5F5LE",
     "phone": "(2) 2352 4226",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 14800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-05",
@@ -277,7 +305,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJ03eftk3HYpYRcA0wTflslwc",
     "phone": "(2) 2882 1645",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 13600
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-06",
@@ -333,7 +368,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJO8mCiSjHYpYRr6PhR7TAu7I",
     "phone": "(2) 2307 0825",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 20900
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-07",
@@ -389,7 +431,18 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJYziRrIrHYpYRTbRR6264Ybg",
     "phone": "(2) 2659 6233",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Camiones y buses",
+        "amount": 22600
+      },
+      {
+        "label": "Taxis",
+        "amount": 15200
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-08",
@@ -445,7 +498,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJpdusmdjFYpYRIY4_7Y6eL9Y",
     "phone": "(2) 2352 4226",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 14800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-09",
@@ -501,7 +561,22 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJkRd08qC_YpYRbZuyqBpGMEo",
     "phone": "9 9820 8500",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 12700
+      },
+      {
+        "label": "Camiones y buses",
+        "amount": 19000
+      },
+      {
+        "label": "Taxis",
+        "amount": 12700
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-10",
@@ -556,7 +631,18 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJGd_a_bzGYpYRHGPrOg9RIDI",
     "phone": "(2) 2603 9898",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Camiones y buses",
+        "amount": 20600
+      },
+      {
+        "label": "Taxis",
+        "amount": 13750
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-11",
@@ -612,7 +698,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJ7ZrBqErDYpYRIszwO3Gco3Y",
     "phone": "(2) 2352 4226",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 14800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-12",
@@ -668,7 +761,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJ4bLptQHDYpYR-CDPobtKDts",
     "phone": "9 4242 0571",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 16800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-13",
@@ -724,7 +824,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJSU69kQzdYpYRqXQt6Isa5lA",
     "phone": "(2) 2882 1830",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 13500
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-14",
@@ -780,7 +887,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJ8ayKigTEYpYRFUU_wFpMvLI",
     "phone": "9 8803 4225",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 14750
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-15",
@@ -836,7 +950,18 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJN2TySQzbYpYR6hmYEZxz-Qs",
     "phone": "(2) 2444 5800",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Camiones y buses",
+        "amount": 24950
+      },
+      {
+        "label": "Taxis",
+        "amount": 16850
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-16",
@@ -892,7 +1017,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJmZpx2V_bYpYRZi_lnfJzbeI",
     "phone": "9 7496 4404",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 21800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-17",
@@ -948,7 +1080,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJYQcbE17HYpYRjr-OKFutxsQ",
     "phone": "(2) 2577 8002",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 18950
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-18",
@@ -1040,7 +1179,18 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJq0legrrRYpYRO8kNHqmUfCs",
     "phone": "9 4242 0567",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Camiones y buses",
+        "amount": 24950
+      },
+      {
+        "label": "Taxis",
+        "amount": 16850
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-21",
@@ -1096,7 +1246,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJm_GDAzLOYpYR5y9FVu4W718",
     "phone": "9 7496 4404",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 21800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-22",
@@ -1152,7 +1309,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJE1O4hzfQYpYR8yeMjG2yai8",
     "phone": "(2) 2307 0833",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 20900
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-23",
@@ -1208,7 +1372,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJWcgH5hLOYpYRBMMHY7NNQUw",
     "phone": "9 5408 1252",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 16800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-24",
@@ -1264,7 +1435,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJ_9ALRzbPYpYRAoNtgGyA4ko",
     "phone": "(2) 2577 8002",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 18950
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-25",
@@ -1320,7 +1498,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJGW_Bk_TQYpYRXrJj9MI0eV0",
     "phone": "(2) 2352 4226",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 14800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-26",
@@ -1376,7 +1561,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJPxwVoQ7RYpYR7tJpkORJ3qU",
     "phone": "(2) 2882 1828",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 13500
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-27",
@@ -1432,7 +1624,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJXXzts3zRYpYRsWY8A-EY6gw",
     "phone": "9 6677 7259",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 16800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-28",
@@ -1488,7 +1687,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJbWUntYPZYpYRf5L1AXldqYE",
     "phone": "(2) 2307 0813",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 20900
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-29",
@@ -1544,7 +1750,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJKWDauCTXYpYRXHCpERRlV0s",
     "phone": "(2) 2352 4226",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 14800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-30",
@@ -1600,7 +1813,18 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJi6QylljXYpYR8IB5o6Z-fW4",
     "phone": "9 8803 4225",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Camiones y buses",
+        "amount": 22600
+      },
+      {
+        "label": "Taxis",
+        "amount": 15200
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-31",
@@ -1656,7 +1880,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJBygYrwPQYpYRpPKb2toc6Nk",
     "phone": "(2) 2411 5182",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 21800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-32",
@@ -1707,7 +1938,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJeXQtd2-_YpYRg3GjaRHG9iQ",
     "phone": "(2) 2882 1824",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 13600
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-33",
@@ -1763,7 +2001,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJmehJo4DXYpYRPG4JZrVoUgs",
     "phone": "(2) 2882 1832",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 13600
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-34",
@@ -1818,7 +2063,18 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJzUzWps3bYpYR1f10WVVX8wA",
     "phone": "9 8623 2602",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Camiones y buses",
+        "amount": 20600
+      },
+      {
+        "label": "Taxis",
+        "amount": 13750
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-35",
@@ -1874,7 +2130,18 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJ29EGOmjbYpYRXDH74rX5LFE",
     "phone": "(2) 2577 8002",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Camiones y buses",
+        "amount": 26200
+      },
+      {
+        "label": "Taxis",
+        "amount": 17450
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-36",
@@ -1930,7 +2197,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJkw5_LqbaYpYRj1dm5mxYSkk",
     "phone": "(2) 2352 4226",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 14800
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-37",
@@ -1986,7 +2260,14 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJB6fypqLaYpYR1u-o6cdHHQI",
     "phone": "9 8803 4225",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 14750
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   },
   {
     "id": "prt-38",
@@ -2042,6 +2323,13 @@
     "scheduleSource": "google-places",
     "placeId": "ChIJtym8DV3aYpYRgCJQvDt7Zgo",
     "phone": "9 8803 4225",
-    "status": "operational"
+    "status": "operational",
+    "prices": [
+      {
+        "label": "Autos y camionetas",
+        "amount": 14750
+      }
+    ],
+    "pricesUpdatedAt": "2026-05-01"
   }
 ]

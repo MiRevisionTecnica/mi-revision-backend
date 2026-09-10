@@ -117,6 +117,20 @@ export type WeeklySchedule = Record<
   TimeRange[]
 >;
 
+/**
+ * Un valor de la revisión técnica.
+ *
+ * Se guarda como lista y no como un número suelto porque el trámite no tiene un
+ * precio único: cambia por clase de vehículo y la revisión de gases puede ir
+ * aparte. Una sola fila también es una lista válida.
+ */
+export type PlantPrice = {
+  /** Qué cubre este valor: "Clase A", "Gases", "Motos". */
+  label: string;
+  /** Monto en pesos chilenos, sin decimales. */
+  amount: number;
+};
+
 export type PlantDoc = {
   company: string;
   comuna: string;
@@ -136,6 +150,26 @@ export type PlantDoc = {
   precision: string;
   /** 'operational' | 'closed' según Google. Las cerradas no se listan. */
   status?: string;
+
+  // --- Datos que NO vienen de Google ---
+  // El refresco mensual escribe con merge y solo toca los campos de Places, así
+  // que estos sobreviven. Es intencional: se cargan a mano y se perderían en el
+  // primer refresco si ahí se escribiera el documento completo.
+
+  /** Valores de la revisión. `null` = no tenemos el dato. */
+  prices?: PlantPrice[] | null;
+  /** Cuándo se verificaron los valores. Un precio sin fecha no dice nada. */
+  pricesUpdatedAt?: string | null;
+  /**
+   * Página pública de la planta donde se ve la cámara del patio.
+   *
+   * Se enlaza la página de la planta y no el video crudo: esas cámaras muestran
+   * patentes y personas, y redistribuir la señal desde nuestra app es distinto
+   * de que la planta la publique. Enlazando, la planta conserva su atribución y
+   * el enlace no se rompe si cambian de proveedor.
+   */
+  cameraUrl?: string | null;
+
   updatedAt: string;
 };
 

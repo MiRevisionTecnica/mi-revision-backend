@@ -109,6 +109,9 @@ function toResponse(plant: StoredPlant, distance?: number): PlantResponse {
     schedule: plant.schedule,
     scheduleSource: plant.scheduleSource ?? null,
     precision: plant.precision ?? 'address',
+    prices: plant.prices ?? null,
+    pricesUpdatedAt: plant.pricesUpdatedAt ?? null,
+    cameraUrl: plant.cameraUrl ?? null,
     ...(distance !== undefined ? { distanceKm: Number(distance.toFixed(2)) } : {}),
   };
 }
