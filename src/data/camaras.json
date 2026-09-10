@@ -23,10 +23,14 @@
     "             consulta sin autenticación; cada una trae su enlace de streaming.",
     "  SGS      — un embed por planta, en el HTML de su página de cámaras.",
     "",
+    "solo que responda 200, y probar SIN desactivar la verificación de certificado.",
+    "",
     "Antes de agregar una fuente hay que comprobar que se VEA en un teléfono, no",
     "solo que responda 200, y probar SIN desactivar la verificación de certificado.",
-    "UVT estuvo acá y hubo que sacarla: su reproductor es flowplayer 3.1.4, o sea",
-    "Flash, que ningún teléfono ejecuta desde hace más de una década."
+    "",
+    "UVT estuvo descartada por usar flowplayer, que es Flash. Era una conclusión",
+    "apresurada: el reproductor es solo la envoltura, y debajo hay un MJPEG que su",
+    "propia página pide a modelo/ajax/a.listado.camaras.php. De ahí salen estas."
   ],
   "porPlanta": {
     "B-1338": {
@@ -128,6 +132,26 @@
     "B-1332": {
       "tipo": "pagina",
       "url": "https://rtsp.me/embed/9h2nhZfa/"
+    },
+    "B-1348": {
+      "tipo": "imagen",
+      "url": "http://200.111.249.150:8096/webcam.mjpg"
+    },
+    "B-1346": {
+      "tipo": "imagen",
+      "url": "http://200.111.249.150:8137/webcam.mjpg"
+    },
+    "A-1303": {
+      "tipo": "imagen",
+      "url": "http://200.111.249.150:8104/webcam.mjpg"
+    },
+    "A-1304": {
+      "tipo": "imagen",
+      "url": "http://200.111.249.150:8100/webcam.mjpg"
+    },
+    "B-1345": {
+      "tipo": "imagen",
+      "url": "http://200.111.249.150:8180/webcam.mjpg"
     }
   },
   "porEmpresa": {},

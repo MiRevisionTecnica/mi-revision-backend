@@ -19,7 +19,9 @@ import { rootCertificates } from 'node:tls';
  *    la app hable HTTP obliga a abrirle una excepción en el sistema; que lo haga
  *    el servidor no le cuesta nada a nadie.
  *  - **Datos móviles.** La misma foto pedida por diez personas se descarga una
- *    vez del servidor de la planta, no diez.
+ *    vez del servidor de la planta, no diez. Y de las cámaras que solo emiten
+ *    flujo continuo se toma un cuadro y se corta: el flujo entrega megabytes por
+ *    segundo, y para mirar una fila basta una foto.
  *
  * La caché es corta a propósito: la gracia de mirar el patio es ver la fila que
  * hay ahora.
@@ -88,7 +90,9 @@ export class CamaraProxy {
         }
 
         const tipo = respuesta.headers['content-type'] ?? 'image/jpeg';
-        if (!tipo.startsWith('image/')) {
+        const esFlujo = tipo.startsWith('multipart/');
+
+        if (!tipo.startsWith('image/') && !esFlujo) {
           respuesta.resume();
           fallar(new Error(`devolvió ${tipo}, que no es una imagen`));
           return;
@@ -100,8 +104,6 @@ export class CamaraProxy {
         respuesta.on('data', (trozo: Buffer) => {
           total += trozo.length;
 
-          // Algunas cámaras sirven un flujo continuo por la misma ruta: sin este
-          // tope la petición no terminaría nunca.
           if (total > MAX_BYTES) {
             respuesta.destroy();
             fallar(new Error('la imagen supera el tamaño máximo'));
@@ -109,9 +111,32 @@ export class CamaraProxy {
           }
 
           trozos.push(trozo);
+
+          // En un flujo continuo no hay "fin": se corta al tener el primer
+          // cuadro completo. Sin esto la petición no terminaría nunca, y bajaría
+          // megabytes por segundo para mostrar una sola imagen.
+          if (!esFlujo) return;
+
+          const cuadro = primerCuadro(Buffer.concat(trozos));
+          if (!cuadro) return;
+
+          respuesta.destroy();
+          cumplir({ bytes: cuadro, tipo: 'image/jpeg' });
         });
 
-        respuesta.on('end', () => cumplir({ bytes: Buffer.concat(trozos), tipo }));
+        respuesta.on('end', () => {
+          if (esFlujo) {
+            const cuadro = primerCuadro(Buffer.concat(trozos));
+            if (cuadro) {
+              cumplir({ bytes: cuadro, tipo: 'image/jpeg' });
+              return;
+            }
+            fallar(new Error('el flujo no entregó ningún cuadro completo'));
+            return;
+          }
+
+          cumplir({ bytes: Buffer.concat(trozos), tipo });
+        });
       });
 
       peticion.on('error', fallar);
@@ -125,4 +150,21 @@ export class CamaraProxy {
   static sinFoto(): never {
     throw new NotFoundException('Esta planta no publica una foto de su patio.');
   }
+}
+
+/**
+ * El primer JPEG completo dentro de un flujo MJPEG.
+ *
+ * Se buscan las marcas de inicio y fin que define el formato --FF D8 y FF D9--
+ * en vez de interpretar los límites del multipart: cada cámara arma sus
+ * cabeceras a su manera, pero un JPEG empieza y termina igual en todas.
+ */
+function primerCuadro(datos: Buffer): Buffer | null {
+  const inicio = datos.indexOf(Buffer.from([0xff, 0xd8]));
+  if (inicio < 0) return null;
+
+  const fin = datos.indexOf(Buffer.from([0xff, 0xd9]), inicio + 2);
+  if (fin < 0) return null;
+
+  return datos.subarray(inicio, fin + 2);
 }

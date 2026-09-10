@@ -803,9 +803,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null,
+    "cameraUrl": "http://200.111.249.150:8096/webcam.mjpg",
     "officialCode": "B-1348",
-    "cameraType": null,
+    "cameraType": "imagen",
     "tariffUrl": "https://uvt.cl/nuestras-tarifas/"
   },
   {
@@ -1005,9 +1005,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null,
+    "cameraUrl": "http://200.111.249.150:8104/webcam.mjpg",
     "officialCode": "A-1303",
-    "cameraType": null,
+    "cameraType": "imagen",
     "tariffUrl": "https://uvt.cl/nuestras-tarifas/"
   },
   {
@@ -1249,9 +1249,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null,
+    "cameraUrl": "http://200.111.249.150:8100/webcam.mjpg",
     "officialCode": "A-1304",
-    "cameraType": null,
+    "cameraType": "imagen",
     "tariffUrl": "https://uvt.cl/nuestras-tarifas/"
   },
   {
@@ -1447,9 +1447,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null,
+    "cameraUrl": "http://200.111.249.150:8180/webcam.mjpg",
     "officialCode": "B-1345",
-    "cameraType": null,
+    "cameraType": "imagen",
     "tariffUrl": "https://uvt.cl/nuestras-tarifas/"
   },
   {
@@ -1711,9 +1711,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null,
+    "cameraUrl": "http://200.111.249.150:8137/webcam.mjpg",
     "officialCode": "B-1346",
-    "cameraType": null,
+    "cameraType": "imagen",
     "tariffUrl": "https://uvt.cl/nuestras-tarifas/"
   },
   {
