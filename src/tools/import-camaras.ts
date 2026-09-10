@@ -1,5 +1,6 @@
 /**
- * Carga dónde ver el patio de cada planta.
+ * Carga los enlaces externos de cada planta: la cámara de su patio y el
+ * tarifario de su concesionaria.
  *
  * Uso:  npm run camaras            (prueba en seco: solo muestra)
  *       npm run camaras -- --write (escribe en Firestore y en el JSON)
@@ -32,6 +33,7 @@ type PlantaLocal = {
   officialCode?: string | null;
   cameraUrl?: string | null;
   cameraType?: string | null;
+  tariffUrl?: string | null;
   [clave: string]: unknown;
 };
 
@@ -69,6 +71,9 @@ const raiz = process.cwd();
 const archivoSemilla = resolve(raiz, 'src/data/plants.json');
 
 const camaras = JSON.parse(await readFile(resolve(raiz, 'src/data/camaras.json'), 'utf8')) as Camaras;
+const tarifarios = JSON.parse(
+  await readFile(resolve(raiz, 'src/data/tarifarios.json'), 'utf8'),
+) as { porEmpresa: Record<string, string> };
 const plantas = JSON.parse(await readFile(archivoSemilla, 'utf8')) as PlantaLocal[];
 
 const omitidas = new Set(camaras.omitir);
@@ -76,7 +81,12 @@ const sinCamara = new Map<string, number>();
 let propias = 0;
 let deEmpresa = 0;
 
+let conTarifario = 0;
+
 for (const planta of plantas) {
+  planta.tariffUrl = tarifarios.porEmpresa[planta.company] ?? null;
+  if (planta.tariffUrl) conTarifario++;
+
   if (omitidas.has(planta.id)) {
     planta.cameraUrl = null;
     planta.cameraType = null;
@@ -108,7 +118,8 @@ for (const planta of plantas) {
 
 console.log(`Cámara propia de la planta: ${propias}`);
 console.log(`Página de la concesionaria: ${deEmpresa}`);
-console.log(`Total con cámara: ${propias + deEmpresa} de ${plantas.length}\n`);
+console.log(`Total con cámara: ${propias + deEmpresa} de ${plantas.length}`);
+console.log(`Con tarifario de la concesionaria: ${conTarifario} de ${plantas.length}\n`);
 
 if (sinCamara.size > 0) {
   console.log('Empresas sin cámara conocida:');
@@ -131,7 +142,11 @@ const lote = db.batch();
 for (const planta of plantas) {
   lote.set(
     db.collection('plants').doc(planta.id),
-    { cameraUrl: planta.cameraUrl ?? null, cameraType: planta.cameraType ?? null },
+    {
+      cameraUrl: planta.cameraUrl ?? null,
+      cameraType: planta.cameraType ?? null,
+      tariffUrl: planta.tariffUrl ?? null,
+    },
     { merge: true },
   );
 }

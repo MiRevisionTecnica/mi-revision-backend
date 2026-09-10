@@ -113,6 +113,7 @@ function toResponse(plant: StoredPlant, distance?: number): PlantResponse {
     pricesUpdatedAt: plant.pricesUpdatedAt ?? null,
     cameraUrl: plant.cameraUrl ?? null,
     cameraType: plant.cameraType ?? null,
+    tariffUrl: plant.tariffUrl ?? null,
     ...(distance !== undefined ? { distanceKm: Number(distance.toFixed(2)) } : {}),
   };
 }

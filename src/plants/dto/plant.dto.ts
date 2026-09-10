@@ -93,4 +93,11 @@ export class PlantResponse {
       "Cómo mostrarla: 'imagen' es una foto que se refresca sola, 'pagina' una web con la transmisión.",
   })
   cameraType: string | null;
+
+  @ApiPropertyOptional({
+    nullable: true,
+    description:
+      'Tarifario completo de la concesionaria, con las categorías que el MTT no publica por planta (motos, eléctricos, a gas, carros de arrastre).',
+  })
+  tariffUrl: string | null;
 }

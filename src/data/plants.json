@@ -62,7 +62,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://rtsp.me/embed/G3TtBHn6/",
     "officialCode": "B-1341",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-02",
@@ -127,7 +128,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://rtsp.me/embed/4BSbQNaE/",
     "officialCode": "B-1342",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-03",
@@ -192,7 +194,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.6.222_Cam08/imagen.jpg",
     "officialCode": "B-1337",
-    "cameraType": "imagen"
+    "cameraType": "imagen",
+    "tariffUrl": "https://www.prt.tuv.com/precio-revision-tecnica-prt"
   },
   {
     "id": "prt-04",
@@ -257,7 +260,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.2.222_Cam06/imagen.jpg",
     "officialCode": "B-1328",
-    "cameraType": "imagen"
+    "cameraType": "imagen",
+    "tariffUrl": "https://www.prt.tuv.com/precio-revision-tecnica-prt"
   },
   {
     "id": "prt-05",
@@ -322,7 +326,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://rtsp.me/embed/36DYk5hY/",
     "officialCode": "B-1331",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-06",
@@ -387,7 +392,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "http://200.54.42.127:8086/jpg/image.jpg",
     "officialCode": "B-1325",
-    "cameraType": "imagen"
+    "cameraType": "imagen",
+    "tariffUrl": "https://chrt.cl/tarifas/"
   },
   {
     "id": "prt-07",
@@ -456,7 +462,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://app.applusprt.cl/ApplusStreaming/c2a452ad-2349-4257-b569-94ccb59372d9.html",
     "officialCode": "A-1301",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-08",
@@ -521,7 +528,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.7.222_Cam09/imagen.jpg",
     "officialCode": "B-1339",
-    "cameraType": "imagen"
+    "cameraType": "imagen",
+    "tariffUrl": "https://www.prt.tuv.com/precio-revision-tecnica-prt"
   },
   {
     "id": "prt-09",
@@ -595,7 +603,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "AB1308",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": null
   },
   {
     "id": "prt-10",
@@ -664,7 +673,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "A-1306",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": null
   },
   {
     "id": "prt-11",
@@ -729,7 +739,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.4.222_Cam07/imagen.jpg",
     "officialCode": "B-1340",
-    "cameraType": "imagen"
+    "cameraType": "imagen",
+    "tariffUrl": "https://www.prt.tuv.com/precio-revision-tecnica-prt"
   },
   {
     "id": "prt-12",
@@ -794,7 +805,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "B-1348",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": "https://uvt.cl/nuestras-tarifas/"
   },
   {
     "id": "prt-13",
@@ -859,7 +871,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://rtsp.me/embed/kRHGGA7y/",
     "officialCode": "B-1344",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-14",
@@ -924,7 +937,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://app.applusprt.cl/ApplusStreaming/d52fbf39-d69e-42fd-9525-469563296867.html",
     "officialCode": "B-1334",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-15",
@@ -993,7 +1007,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "A-1303",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": "https://uvt.cl/nuestras-tarifas/"
   },
   {
     "id": "prt-16",
@@ -1058,7 +1073,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://prtcam.revisionestecnicas.cl/prtcerrillos01/embed.html?dvr=false",
     "officialCode": "B-1353",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": "https://www.revisionestecnicas.cl/Tarifas"
   },
   {
     "id": "prt-17",
@@ -1123,7 +1139,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "B-1355",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": null
   },
   {
     "id": "prt-18",
@@ -1143,7 +1160,8 @@
     "phone": "9 7496 4404",
     "status": "closed",
     "cameraUrl": null,
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": "https://www.revisionestecnicas.cl/Tarifas"
   },
   {
     "id": "prt-19",
@@ -1163,7 +1181,8 @@
     "phone": "9 7496 4404",
     "status": "closed",
     "cameraUrl": null,
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": "https://www.revisionestecnicas.cl/Tarifas"
   },
   {
     "id": "prt-20",
@@ -1232,7 +1251,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "A-1304",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": "https://uvt.cl/nuestras-tarifas/"
   },
   {
     "id": "prt-21",
@@ -1297,7 +1317,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://prtcam.revisionestecnicas.cl/prtpenalolen01/embed.html?dvr=false",
     "officialCode": "B-1349",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": "https://www.revisionestecnicas.cl/Tarifas"
   },
   {
     "id": "prt-22",
@@ -1362,7 +1383,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "http://200.54.42.127:8082/jpg/image.jpg",
     "officialCode": "B-1326",
-    "cameraType": "imagen"
+    "cameraType": "imagen",
+    "tariffUrl": "https://chrt.cl/tarifas/"
   },
   {
     "id": "prt-23",
@@ -1427,7 +1449,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "B-1345",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": "https://uvt.cl/nuestras-tarifas/"
   },
   {
     "id": "prt-24",
@@ -1492,7 +1515,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "B-1354",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": null
   },
   {
     "id": "prt-25",
@@ -1557,7 +1581,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.0.222_Cam03/imagen.jpg",
     "officialCode": "B-1338",
-    "cameraType": "imagen"
+    "cameraType": "imagen",
+    "tariffUrl": "https://www.prt.tuv.com/precio-revision-tecnica-prt"
   },
   {
     "id": "prt-26",
@@ -1622,7 +1647,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://rtsp.me/embed/DkSNb322/",
     "officialCode": "B-1343",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-27",
@@ -1687,7 +1713,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "B-1346",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": "https://uvt.cl/nuestras-tarifas/"
   },
   {
     "id": "prt-28",
@@ -1752,7 +1779,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "http://200.54.42.127:8095/jpg/image.jpg",
     "officialCode": "B-1327",
-    "cameraType": "imagen"
+    "cameraType": "imagen",
+    "tariffUrl": "https://chrt.cl/tarifas/"
   },
   {
     "id": "prt-29",
@@ -1817,7 +1845,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.5.222_Cam09/imagen.jpg",
     "officialCode": "B-1329",
-    "cameraType": "imagen"
+    "cameraType": "imagen",
+    "tariffUrl": "https://www.prt.tuv.com/precio-revision-tecnica-prt"
   },
   {
     "id": "prt-30",
@@ -1886,7 +1915,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://app.applusprt.cl/ApplusStreaming/90116d32-109c-4b14-b1b1-5d6698242317.html",
     "officialCode": "A-1302",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-31",
@@ -1951,7 +1981,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://prtcam.revisionestecnicas.cl/prtmacul01/embed.html?dvr=false",
     "officialCode": "B-1350",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": "https://www.revisionestecnicas.cl/Tarifas"
   },
   {
     "id": "prt-32",
@@ -2011,7 +2042,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://rtsp.me/embed/fHaSkB6a/",
     "officialCode": "B-1333",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-33",
@@ -2076,7 +2108,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://rtsp.me/embed/9h2nhZfa/",
     "officialCode": "B-1332",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-34",
@@ -2145,7 +2178,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "A-1305",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": null
   },
   {
     "id": "prt-35",
@@ -2214,7 +2248,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
     "officialCode": "A-1316",
-    "cameraType": null
+    "cameraType": null,
+    "tariffUrl": null
   },
   {
     "id": "prt-36",
@@ -2279,7 +2314,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.3.222_Cam07/imagen.jpg",
     "officialCode": "B-1330",
-    "cameraType": "imagen"
+    "cameraType": "imagen",
+    "tariffUrl": "https://www.prt.tuv.com/precio-revision-tecnica-prt"
   },
   {
     "id": "prt-37",
@@ -2344,7 +2380,8 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://app.applusprt.cl/ApplusStreaming/e54f4d58-215a-4a6a-8769-ecf0c98dc05e.html",
     "officialCode": "B-1335",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   },
   {
     "id": "prt-38",
@@ -2409,6 +2446,7 @@
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://app.applusprt.cl/ApplusStreaming/5e270aeb-0dfc-4fcc-824d-f40efd69c8e7.html",
     "officialCode": "B-1336",
-    "cameraType": "pagina"
+    "cameraType": "pagina",
+    "tariffUrl": null
   }
 ]

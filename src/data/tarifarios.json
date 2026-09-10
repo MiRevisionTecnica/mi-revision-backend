@@ -1,0 +1,32 @@
+{
+  "_comentario": [
+    "Dónde cada concesionaria publica su tarifario completo.",
+    "",
+    "El Ministerio publica por planta solo tres valores: autos y camionetas (TB1),",
+    "camiones y buses (TA2) y taxis (TA1). Las demás categorías --motos, carros de",
+    "arrastre, eléctricos, a gas, y la segunda revisión tras un rechazo-- se",
+    "definen como proporción de TB1, pero cada planta ajusta dentro del rango.",
+    "",
+    "Comprobado contra el tarifario de SGS: su valor de autos calza exacto con el",
+    "oficial, pero sus motos cuestan $11.050 donde la proporción daría $10.900.",
+    "Por eso acá se enlaza el tarifario y no se calcula nada: un valor aproximado",
+    "en una app de trámites es peor que mandar a la fuente.",
+    "",
+    "Cada concesionaria está obligada a publicarlo. Estas son las que sí lo tienen",
+    "en su sitio; verificadas devolviendo montos, no solo un 200."
+  ],
+
+  "porEmpresa": {
+    "SGS": "https://www.revisionestecnicas.cl/Tarifas",
+    "TÜV Rheinland": "https://www.prt.tuv.com/precio-revision-tecnica-prt",
+    "TÜV Rheinland Andino": "https://www.prt.tuv.com/precio-revision-tecnica-prt",
+    "UVT": "https://uvt.cl/nuestras-tarifas/",
+    "Chilena de Revisiones Técnicas": "https://chrt.cl/tarifas/"
+  },
+
+  "_faltan": [
+    "San Dámaso, Applus, DEKRA, Mival y Systech no publican tarifario en su sitio,",
+    "o no de forma que se pueda enlazar. Se revisó su menú, y en el caso de Applus",
+    "también su API de plantas, que no trae tarifas."
+  ]
+}

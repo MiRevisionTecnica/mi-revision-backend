@@ -174,6 +174,13 @@ export type PlantDoc = {
    * 'pagina' es una web con la transmisión. Lo decide la fuente, no nosotros.
    */
   cameraType?: string | null;
+  /**
+   * Dónde la concesionaria publica su tarifario completo.
+   *
+   * El listado del MTT trae tres valores por planta; motos, eléctricos, a gas y
+   * carros de arrastre pagan otra cosa y solo la publica cada empresa.
+   */
+  tariffUrl?: string | null;
 
   updatedAt: string;
 };
