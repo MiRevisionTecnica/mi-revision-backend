@@ -30,7 +30,10 @@
     "",
     "UVT estuvo descartada por usar flowplayer, que es Flash. Era una conclusión",
     "apresurada: el reproductor es solo la envoltura, y debajo hay un MJPEG que su",
-    "propia página pide a modelo/ajax/a.listado.camaras.php. De ahí salen estas."
+    "propia página pide a modelo/ajax/a.listado.camaras.php. De ahí salen estas.",
+    "",
+    "Mival comparte el sistema de UVT: mismo endpoint, mismos MJPEG, y su listado",
+    "informa el código oficial de cada planta, así que el calce es exacto."
   ],
   "porPlanta": {
     "B-1338": {
@@ -152,6 +155,18 @@
     "B-1345": {
       "tipo": "imagen",
       "url": "http://200.111.249.150:8180/webcam.mjpg"
+    },
+    "A-1306": {
+      "tipo": "imagen",
+      "url": "http://200.111.249.150:8198/webcam.mjpg"
+    },
+    "A-1305": {
+      "tipo": "imagen",
+      "url": "http://200.111.249.150:8170/webcam.mjpg"
+    },
+    "AB1308": {
+      "tipo": "pagina",
+      "url": "https://systechchile.cl/lampa"
     }
   },
   "porEmpresa": {},

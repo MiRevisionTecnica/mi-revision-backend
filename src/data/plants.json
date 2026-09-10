@@ -601,9 +601,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null,
+    "cameraUrl": "https://systechchile.cl/lampa",
     "officialCode": "AB1308",
-    "cameraType": null,
+    "cameraType": "pagina",
     "tariffUrl": null
   },
   {
@@ -671,9 +671,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null,
+    "cameraUrl": "http://200.111.249.150:8198/webcam.mjpg",
     "officialCode": "A-1306",
-    "cameraType": null,
+    "cameraType": "imagen",
     "tariffUrl": null
   },
   {
@@ -2176,9 +2176,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null,
+    "cameraUrl": "http://200.111.249.150:8170/webcam.mjpg",
     "officialCode": "A-1305",
-    "cameraType": null,
+    "cameraType": "imagen",
     "tariffUrl": null
   },
   {
