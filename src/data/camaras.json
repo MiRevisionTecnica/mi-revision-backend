@@ -7,13 +7,21 @@
     "que la planta publicándola. Enlazando, la empresa conserva su atribución y el",
     "enlace no se rompe cuando cambian de proveedor de streaming.",
     "",
-    "Para agregar una empresa basta una línea en 'porEmpresa'."
+    "Para agregar una empresa basta una línea en 'porEmpresa'.",
+    "",
+    "chrt.cl va por HTTP a propósito: su HTTPS redirige de vuelta a HTTP, así que",
+    "poner https:// solo agregaría un salto. El navegador va a mostrar 'no seguro',",
+    "que es correcto y no depende de nosotros."
   ],
 
   "porEmpresa": {
     "San Dámaso": "https://sandamaso.cl/streaming",
     "SGS": "https://www.revisionestecnicas.cl/camaras",
-    "UVT": "https://uvt.cl/plantas-en-vivo/"
+    "UVT": "https://uvt.cl/plantas-en-vivo/",
+    "Applus": "https://www.applusprt.cl/#/se%C3%B1al",
+    "TÜV Rheinland": "https://pti-cameras.cl.tuv.com/",
+    "TÜV Rheinland Andino": "https://pti-cameras.cl.tuv.com/",
+    "Chilena de Revisiones Técnicas": "http://envivo.chrt.cl/"
   },
 
   "_omitirComentario": [
@@ -21,7 +29,7 @@
     "listado del MTT ni en el sitio de la empresa, que solo declara Macul,",
     "Cerrillos y Peñalolén. Sus cámaras siguen respondiendo, pero son restos de",
     "plantas que ya no operan: enlazarlas mandaría a mirar el patio equivocado.",
-    "Cuando se den de baja del catálogo, esta lista sobra."
+    "El refresco mensual ya las marca como cerradas; esta lista es el cinturón."
   ],
   "omitir": ["prt-18", "prt-19"]
 }
