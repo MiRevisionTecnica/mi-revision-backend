@@ -24,6 +24,8 @@ export const COLLECTIONS = {
   devices: 'devices',
   reminderLogs: 'reminderLogs',
   plants: 'plants',
+  /** id = sha256 del código de recuperación. */
+  passwordResets: 'passwordResets',
 } as const;
 
 /** Cómo se autentica la cuenta. Una misma cuenta puede tener ambos. */
@@ -31,7 +33,16 @@ export type AuthProvider = 'password' | 'google';
 
 export type UserDoc = {
   email: string;
+  /**
+   * Nombre para mostrar. Se arma con el nombre y el apellido cuando existen, y
+   * se conserva como campo propio porque las cuentas antiguas solo tienen esto.
+   */
   name: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  /** Cómo prefiere que le hablemos. Si está, manda sobre el nombre. */
+  alias?: string | null;
+  phone?: string | null;
   /** null en cuentas creadas con Google, que nunca tuvieron contraseña. */
   passwordHash: string | null;
   /** Identificador estable de Google (el claim "sub" del ID token). */
@@ -203,3 +214,20 @@ export function reminderLogId(
 ): string {
   return `${vehicleId}_${kind}_${dueDate}_${daysBefore}_${channel}`;
 }
+
+/**
+ * Un código de recuperación de contraseña.
+ *
+ * Se guarda el hash del código y no el código: si alguien llegara a leer la
+ * base, no podría usarlos para entrar a las cuentas. Es el mismo criterio que
+ * con los refresh tokens.
+ */
+export type PasswordResetDoc = {
+  userId: string;
+  email: string;
+  expiresAt: string;
+  usedAt: string | null;
+  /** Cuántas veces se intentó con un código equivocado para esta cuenta. */
+  attempts: number;
+  createdAt: string;
+};

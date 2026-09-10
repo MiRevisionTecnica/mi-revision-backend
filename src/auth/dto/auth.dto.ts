@@ -84,6 +84,42 @@ export class UpdateProfileDto {
   @MaxLength(80)
   name?: string;
 
+  @ApiProperty({ required: false, example: 'Iván' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  firstName?: string;
+
+  @ApiProperty({ required: false, example: 'Pérez' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  lastName?: string;
+
+  @ApiProperty({
+    required: false,
+    nullable: true,
+    example: 'Nacho',
+    description: 'Cómo prefiere que le hablemos. Si está, manda sobre el nombre.',
+  })
+  @IsOptional()
+  @ValidateIf((_object: unknown, valor: unknown) => valor !== null)
+  @IsString()
+  @MaxLength(40)
+  alias?: string | null;
+
+  @ApiProperty({
+    required: false,
+    nullable: true,
+    example: '+56 9 1234 5678',
+    description: 'Teléfono de contacto. Se guarda tal como lo escribe la persona.',
+  })
+  @IsOptional()
+  @ValidateIf((_object: unknown, valor: unknown) => valor !== null)
+  @IsString()
+  @Matches(/^[0-9+()\s-]{8,20}$/, { message: 'Revisa el número de teléfono.' })
+  phone?: string | null;
+
   @ApiProperty({ required: false, description: 'Recibir avisos de vencimiento por correo.' })
   @IsOptional()
   @IsBoolean()
@@ -116,6 +152,10 @@ export class UserResponse {
   @ApiProperty() emailReminders: boolean;
   @ApiProperty() createdAt: Date;
   @ApiProperty({ nullable: true, example: '2031-05-20' }) licenseExpiresAt: string | null;
+  @ApiProperty({ nullable: true }) firstName: string | null;
+  @ApiProperty({ nullable: true }) lastName: string | null;
+  @ApiProperty({ nullable: true, description: 'Cómo prefiere que le hablemos.' }) alias: string | null;
+  @ApiProperty({ nullable: true }) phone: string | null;
 }
 
 export class SessionResponse {
@@ -126,4 +166,27 @@ export class SessionResponse {
   refreshToken: string;
   @ApiProperty({ description: 'Segundos de validez del access token.', example: 3600 })
   expiresIn: number;
+}
+
+export class ForgotPasswordDto {
+  @ApiProperty({ example: 'ivan@ejemplo.cl' })
+  @IsEmail({}, { message: 'Revisa tu correo electrónico.' })
+  email: string;
+}
+
+export class ResetPasswordDto {
+  @ApiProperty({ example: 'ivan@ejemplo.cl' })
+  @IsEmail({}, { message: 'Revisa tu correo electrónico.' })
+  email: string;
+
+  @ApiProperty({ example: '482913', description: 'El código de seis dígitos que llegó al correo.' })
+  @IsString()
+  @Matches(/^\d{6}$/, { message: 'El código son seis dígitos.' })
+  code: string;
+
+  @ApiProperty({ example: 'unaClaveSegura', minLength: 8 })
+  @IsString()
+  @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
+  @MaxLength(72)
+  password: string;
 }

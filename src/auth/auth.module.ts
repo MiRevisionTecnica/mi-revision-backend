@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { GoogleAuthService } from './google.service.js';
 import { JwtStrategy } from './jwt.strategy.js';
+import { RemindersModule } from '../reminders/reminders.module.js';
 
 @Module({
   imports: [
@@ -20,6 +21,8 @@ import { JwtStrategy } from './jwt.strategy.js';
         },
       }),
     }),
+    // Por el envío de correo: la recuperación de contraseña manda un código.
+    RemindersModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, GoogleAuthService, JwtStrategy],

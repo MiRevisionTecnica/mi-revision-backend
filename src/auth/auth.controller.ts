@@ -20,6 +20,8 @@ import {
   SessionResponse,
   UpdateProfileDto,
   UserResponse,
+  ForgotPasswordDto,
+  ResetPasswordDto,
 } from './dto/auth.dto.js';
 
 @ApiTags('Autenticación')
@@ -62,6 +64,31 @@ export class AuthController {
   }
 
   @Public()
+  @Public()
+  @Post('forgot-password')
+  @HttpCode(202)
+  @ApiOperation({
+    summary: 'Pedir un código para recuperar la contraseña',
+    description:
+      'Responde 202 exista o no la cuenta. Confirmar cuáles correos están registrados convertiría este endpoint en una forma de averiguarlo.',
+  })
+  @ApiResponse({ status: 202, description: 'Si la cuenta existe, se envió el código' })
+  async forgotPassword(@Body() dto: ForgotPasswordDto): Promise<{ message: string }> {
+    await this.auth.forgotPassword(dto.email);
+    return { message: 'Si el correo está registrado, te enviamos un código.' };
+  }
+
+  @Public()
+  @Post('reset-password')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Cambiar la contraseña con el código recibido' })
+  @ApiResponse({ status: 200, description: 'Contraseña actualizada' })
+  @ApiResponse({ status: 401, description: 'El código no es válido o ya venció' })
+  async resetPassword(@Body() dto: ResetPasswordDto): Promise<{ message: string }> {
+    await this.auth.resetPassword(dto.email, dto.code, dto.password);
+    return { message: 'Tu contraseña quedó actualizada. Inicia sesión con la nueva.' };
+  }
+
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({

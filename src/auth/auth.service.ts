@@ -1,16 +1,18 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
 import { compare, hash } from 'bcryptjs';
-import { createHash, randomBytes } from 'node:crypto';
+import { createHash, randomBytes, randomInt } from 'node:crypto';
 import {
   COLLECTIONS,
   type AuthProvider,
+  type PasswordResetDoc,
   type RefreshTokenDoc,
   type UserDoc,
 } from '../firebase/collections.js';
 import { GoogleAuthService } from './google.service.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
+import { MailService } from '../reminders/mail.service.js';
 import type {
   LoginDto,
   RegisterDto,
@@ -21,16 +23,136 @@ import type {
 
 const BCRYPT_ROUNDS = 12;
 
+/**
+ * Cuánto dura un código de recuperación.
+ *
+ * Corto a propósito: es lo que separa "me llegó y lo uso" de "quedó dando vueltas
+ * en un correo que alguien puede leer después".
+ */
+const RESET_MINUTES = 15;
+
 type StoredUser = UserDoc & { id: string };
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly firebase: FirebaseService,
     private readonly jwt: JwtService,
     private readonly config: ConfigService,
     private readonly google: GoogleAuthService,
+    private readonly mail: MailService,
   ) {}
+
+  /**
+   * Empieza una recuperación de contraseña.
+   *
+   * Responde igual exista o no la cuenta. Decir "ese correo no está registrado"
+   * convierte este endpoint en una forma de averiguar quién tiene cuenta, que es
+   * justo lo que no queremos regalar.
+   *
+   * El código va por correo y dura poco. Se guarda solo su hash: si alguien
+   * leyera la base, no podría usarlo para entrar.
+   */
+  async forgotPassword(email: string): Promise<void> {
+    const limpio = email.trim().toLowerCase();
+    const user = await this.findByEmail(limpio);
+
+    if (!user) return;
+
+    // Una cuenta creada con Google no tiene contraseña que recuperar.
+    if (!user.passwordHash) return;
+
+    if (!this.mail.enabled) {
+      this.logger.error(
+        'Alguien pidió recuperar su contraseña, pero no hay SMTP configurado y el ' +
+          'correo no salió. Revisa SMTP_HOST y compañía en el .env.',
+      );
+      return;
+    }
+
+    const code = String(randomInt(0, 1_000_000)).padStart(6, '0');
+    const expiresAt = new Date(Date.now() + RESET_MINUTES * 60 * 1000).toISOString();
+
+    await this.firebase.db
+      .collection(COLLECTIONS.passwordResets)
+      .doc(hashToken(`${limpio}:${code}`))
+      .set({
+        userId: user.id,
+        email: limpio,
+        expiresAt,
+        usedAt: null,
+        attempts: 0,
+        createdAt: new Date().toISOString(),
+      });
+
+    await this.mail.send({
+      to: limpio,
+      subject: 'Tu código para recuperar la contraseña',
+      text:
+        `Tu código es ${code}. Vence en ${RESET_MINUTES} minutos.
+
+` +
+        'Si no pediste recuperar tu contraseña, ignora este correo: tu cuenta sigue igual.',
+      html:
+        `<p>Tu código es <strong style="font-size:22px;letter-spacing:3px">${code}</strong></p>` +
+        `<p>Vence en ${RESET_MINUTES} minutos.</p>` +
+        '<p style="color:#5B6B84">Si no pediste recuperar tu contraseña, ignora este correo: ' +
+        'tu cuenta sigue igual.</p>',
+    });
+  }
+
+  /**
+   * Termina la recuperación: valida el código y cambia la contraseña.
+   *
+   * Al cambiarla se revocan todas las sesiones abiertas. Si alguien había
+   * entrado con la contraseña anterior, deja de tener acceso; ese es el punto de
+   * recuperarla.
+   */
+  async resetPassword(email: string, code: string, password: string): Promise<void> {
+    const limpio = email.trim().toLowerCase();
+    const ref = this.firebase.db
+      .collection(COLLECTIONS.passwordResets)
+      .doc(hashToken(`${limpio}:${code}`));
+
+    const snapshot = await ref.get();
+    const reset = snapshot.data() as PasswordResetDoc | undefined;
+
+    const invalido = new UnauthorizedException('El código no es válido o ya venció.');
+
+    if (!reset || reset.usedAt || reset.expiresAt < new Date().toISOString()) throw invalido;
+    if (reset.email !== limpio) throw invalido;
+
+    const userRef = this.firebase.db.collection(COLLECTIONS.users).doc(reset.userId);
+    const user = (await userRef.get()).data() as UserDoc | undefined;
+    if (!user) throw invalido;
+
+    await userRef.update({
+      passwordHash: await hash(password, 12),
+      providers: [...new Set([...(user.providers ?? []), 'password'])],
+      updatedAt: new Date().toISOString(),
+    });
+
+    await ref.update({ usedAt: new Date().toISOString() });
+    await this.revokeAllRefreshTokens(reset.userId);
+  }
+
+  /** Cierra todas las sesiones de una cuenta. */
+  private async revokeAllRefreshTokens(userId: string): Promise<void> {
+    const abiertos = await this.firebase.db
+      .collection(COLLECTIONS.refreshTokens)
+      .where('userId', '==', userId)
+      .where('revokedAt', '==', null)
+      .get();
+
+    if (abiertos.empty) return;
+
+    const lote = this.firebase.db.batch();
+    const now = new Date().toISOString();
+    abiertos.docs.forEach((doc) => lote.update(doc.ref, { revokedAt: now }));
+    await lote.commit();
+  }
 
   async register(dto: RegisterDto): Promise<SessionResponse> {
     const email = dto.email.trim().toLowerCase();
@@ -216,6 +338,15 @@ export class AuthService {
 
     await ref.update({
       ...(dto.name !== undefined ? { name: dto.name.trim() } : {}),
+      ...(dto.firstName !== undefined ? { firstName: dto.firstName.trim() } : {}),
+      ...(dto.lastName !== undefined ? { lastName: dto.lastName.trim() } : {}),
+      ...(dto.alias !== undefined ? { alias: dto.alias?.trim() || null } : {}),
+      ...(dto.phone !== undefined ? { phone: dto.phone?.trim() || null } : {}),
+      // `name` sigue siendo el nombre para mostrar --lo usan los correos y las
+      // cuentas antiguas-- así que se rearma cuando cambian sus partes.
+      ...(dto.firstName !== undefined || dto.lastName !== undefined
+        ? { name: [dto.firstName, dto.lastName].filter(Boolean).join(' ').trim() || undefined }
+        : {}),
       ...(dto.emailReminders !== undefined ? { emailReminders: dto.emailReminders } : {}),
       // null significa "dejar de controlarla", que es distinto de no tocarla.
       ...(dto.licenseExpiresAt !== undefined ? { licenseExpiresAt: dto.licenseExpiresAt } : {}),
@@ -305,6 +436,10 @@ function toUserResponse(user: StoredUser): UserResponse {
     email: user.email,
     providers: user.providers ?? ['password'],
     licenseExpiresAt: user.licenseExpiresAt ?? null,
+    firstName: user.firstName ?? null,
+    lastName: user.lastName ?? null,
+    alias: user.alias ?? null,
+    phone: user.phone ?? null,
     photoUrl: user.photoUrl ?? null,
     emailReminders: user.emailReminders,
     createdAt: new Date(user.createdAt),
