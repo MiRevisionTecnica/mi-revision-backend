@@ -84,7 +84,7 @@ export type ResultadoTarifas = {
  */
 async function descargar(url: string): Promise<Buffer> {
   const aqui = dirname(fileURLToPath(import.meta.url));
-  const cadena = await readFile(resolve(aqui, 'certs/prt-cadena.pem'), 'utf8');
+  const cadena = await readFile(resolve(aqui, 'certs/cadenas-faltantes.pem'), 'utf8');
 
   // Los certificados propios se SUMAN a los de fábrica: pasar solo los nuestros
   // los reemplazaría, y entonces fallaría cualquier otra descarga.
