@@ -2,6 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
+import { MailService } from '../reminders/mail.service.js';
 import { RemindersService } from '../reminders/reminders.service.js';
 
 @ApiTags('Estado')
@@ -11,6 +12,7 @@ export class HealthController {
   constructor(
     private readonly firebase: FirebaseService,
     private readonly reminders: RemindersService,
+    private readonly mail: MailService,
   ) {}
 
   @Get()
@@ -34,6 +36,10 @@ export class HealthController {
       // igual responde y todo parece normal. Sin esto, la falla que más importa
       // es justo la que no se ve.
       reminders: this.reminders.lastAutomaticRun ?? 'sin ejecuciones desde el último arranque',
+      // Sin SMTP los avisos salen solo por push y la recuperación de contraseña
+      // no funciona, pero la API responde igual: sin esto, la única forma de
+      // saberlo es abrir los logs del proveedor.
+      correo: this.mail.enabled ? 'configurado' : 'sin configurar',
       latencyMs: Date.now() - startedAt,
       uptimeSeconds: Math.round(process.uptime()),
       timestamp: new Date().toISOString(),
