@@ -2,24 +2,31 @@
   "_comentario": [
     "Dónde ver el patio de cada planta.",
     "",
-    "'porPlanta' se indexa por el código oficial del MTT (B-1338, A-1303…), que es",
-    "estable y significativo, a diferencia de nuestros ids internos. Ese código lo",
-    "trae el refresco mensual, así que el calce no depende de comparar nombres de",
-    "comuna.",
+    "Se indexa por el código oficial del MTT (B-1338, A-1303…), que es estable y",
+    "significativo, a diferencia de nuestros ids internos. Ese código lo trae el",
+    "refresco mensual, así que el calce no depende de comparar nombres de comuna.",
     "",
     "Tipos:",
     "  imagen  — una foto del patio que el servidor de la planta actualiza. La app",
-    "            la vuelve a pedir cada pocos segundos.",
+    "            la pide a nuestra API, que completa la cadena TLS y sirve por HTTPS",
+    "            lo que algunas fuentes publican sin cifrar.",
     "  pagina  — una web con la transmisión, que se abre dentro de la app.",
     "",
-    "Antes de agregar una fuente hay que comprobar que se VEA en un teléfono, no",
-    "solo que responda 200. UVT estuvo acá y hubo que sacarla: su reproductor es",
-    "flowplayer 3.1.4, o sea Flash, que ningún teléfono ejecuta desde hace más de",
-    "una década. Una pantalla negra es peor que decir que no tenemos la cámara.",
+    "De dónde salió cada una:",
+    "  TÜV      — su servidor de cámaras rotula cada una por comuna.",
+    "  CHRT     — foto suelta de cada cámara. El MJPEG entrega 3,3 MB por segundo,",
+    "             y un minuto mirando serían 200 MB del plan de datos de alguien.",
+    "  Applus   — su API pública (plantas.listado_de_plantas.php) trae el enlace de",
+    "             cada planta. Se usa su página de reproductor, que son 4 KB, y no",
+    "             el sitio completo.",
+    "  S.Dámaso — sus sucursales están en un Firestore público que su propia web",
+    "             consulta sin autenticación; cada una trae su enlace de streaming.",
+    "  SGS      — un embed por planta, en el HTML de su página de cámaras.",
     "",
-    "Las de Chilena de Revisiones Técnicas se piden como foto suelta y no como",
-    "MJPEG: el flujo continuo entrega 3,3 MB por segundo, y un minuto mirando la",
-    "fila serían 200 MB del plan de datos de alguien."
+    "Antes de agregar una fuente hay que comprobar que se VEA en un teléfono, no",
+    "solo que responda 200, y probar SIN desactivar la verificación de certificado.",
+    "UVT estuvo acá y hubo que sacarla: su reproductor es flowplayer 3.1.4, o sea",
+    "Flash, que ningún teléfono ejecuta desde hace más de una década."
   ],
   "porPlanta": {
     "B-1338": {
@@ -73,12 +80,57 @@
     "B-1327": {
       "tipo": "imagen",
       "url": "http://200.54.42.127:8095/jpg/image.jpg"
+    },
+    "A-1301": {
+      "tipo": "pagina",
+      "url": "https://app.applusprt.cl/ApplusStreaming/c2a452ad-2349-4257-b569-94ccb59372d9.html"
+    },
+    "B-1334": {
+      "tipo": "pagina",
+      "url": "https://app.applusprt.cl/ApplusStreaming/d52fbf39-d69e-42fd-9525-469563296867.html"
+    },
+    "A-1302": {
+      "tipo": "pagina",
+      "url": "https://app.applusprt.cl/ApplusStreaming/90116d32-109c-4b14-b1b1-5d6698242317.html"
+    },
+    "B-1335": {
+      "tipo": "pagina",
+      "url": "https://app.applusprt.cl/ApplusStreaming/e54f4d58-215a-4a6a-8769-ecf0c98dc05e.html"
+    },
+    "B-1336": {
+      "tipo": "pagina",
+      "url": "https://app.applusprt.cl/ApplusStreaming/5e270aeb-0dfc-4fcc-824d-f40efd69c8e7.html"
+    },
+    "B-1341": {
+      "tipo": "pagina",
+      "url": "https://rtsp.me/embed/G3TtBHn6/"
+    },
+    "B-1342": {
+      "tipo": "pagina",
+      "url": "https://rtsp.me/embed/4BSbQNaE/"
+    },
+    "B-1331": {
+      "tipo": "pagina",
+      "url": "https://rtsp.me/embed/36DYk5hY/"
+    },
+    "B-1344": {
+      "tipo": "pagina",
+      "url": "https://rtsp.me/embed/kRHGGA7y/"
+    },
+    "B-1343": {
+      "tipo": "pagina",
+      "url": "https://rtsp.me/embed/DkSNb322/"
+    },
+    "B-1333": {
+      "tipo": "pagina",
+      "url": "https://rtsp.me/embed/fHaSkB6a/"
+    },
+    "B-1332": {
+      "tipo": "pagina",
+      "url": "https://rtsp.me/embed/9h2nhZfa/"
     }
   },
-  "porEmpresa": {
-    "San Dámaso": "https://sandamaso.cl/streaming",
-    "Applus": "https://www.applusprt.cl/#/se%C3%B1al"
-  },
+  "porEmpresa": {},
   "_omitirComentario": [
     "Plantas que ya no operan. El refresco mensual las marca como cerradas; esta",
     "lista es el cinturón, para no enlazar una cámara mientras tanto."
