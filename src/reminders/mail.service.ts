@@ -38,6 +38,19 @@ export class MailService implements OnModuleInit {
       host,
       port,
       secure: port === 465,
+
+      // IPv4 obligado. Los contenedores de Railway no tienen ruta IPv6, y
+      // smtp.gmail.com resuelve a las dos: Node elegía la v6 y la conexión moría
+      // con ENETUNREACH, que parece un bloqueo de puerto y no lo es.
+      family: 4,
+
+      // Sin estos límites, un servidor que no responde deja la petición colgada
+      // hasta que algo más arriba se cansa. Es mejor fallar rápido y dejarlo
+      // escrito en el log.
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 20_000,
+
       auth: {
         user: this.config.get<string>('SMTP_USER'),
         pass: this.config.get<string>('SMTP_PASSWORD'),

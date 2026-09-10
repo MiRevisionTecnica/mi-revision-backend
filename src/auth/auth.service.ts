@@ -87,20 +87,35 @@ export class AuthService {
         createdAt: new Date().toISOString(),
       });
 
-    await this.mail.send({
-      to: limpio,
-      subject: 'Tu código para recuperar la contraseña',
-      text:
-        `Tu código es ${code}. Vence en ${RESET_MINUTES} minutos.
+    // El correo se manda sin esperarlo. Gmail a veces tarda varios segundos en
+    // aceptarlo, y bloquear la respuesta hasta entonces hace que la app corte por
+    // tiempo de espera y muestre un error de red que no es tal: el código ya
+    // quedó guardado y va en camino. El 202 dice exactamente eso.
+    void this.mail
+      .send({
+        to: limpio,
+        subject: 'Tu código para recuperar la contraseña',
+        text:
+          `Tu código es ${code}. Vence en ${RESET_MINUTES} minutos.
 
 ` +
-        'Si no pediste recuperar tu contraseña, ignora este correo: tu cuenta sigue igual.',
-      html:
-        `<p>Tu código es <strong style="font-size:22px;letter-spacing:3px">${code}</strong></p>` +
-        `<p>Vence en ${RESET_MINUTES} minutos.</p>` +
-        '<p style="color:#5B6B84">Si no pediste recuperar tu contraseña, ignora este correo: ' +
-        'tu cuenta sigue igual.</p>',
-    });
+          'Si no pediste recuperar tu contraseña, ignora este correo: tu cuenta sigue igual.',
+        html:
+          `<p>Tu código es <strong style="font-size:22px;letter-spacing:3px">${code}</strong></p>` +
+          `<p>Vence en ${RESET_MINUTES} minutos.</p>` +
+          '<p style="color:#5B6B84">Si no pediste recuperar tu contraseña, ignora este correo: ' +
+          'tu cuenta sigue igual.</p>',
+      })
+      .then((enviado) => {
+        if (!enviado) {
+          this.logger.error(`El código de recuperación de ${limpio} no se pudo enviar.`);
+        }
+      })
+      .catch((error: unknown) => {
+        this.logger.error(
+          `Falló el envío del código de recuperación: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      });
   }
 
   /**
