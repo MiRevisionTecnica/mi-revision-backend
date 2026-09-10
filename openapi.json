@@ -1,51 +1,17 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/api/auth/register": {
+    "/api/auth/session": {
       "post": {
-        "operationId": "AuthController_register",
+        "description": "Se llama apenas Firebase entrega una sesión. Crea el perfil si es la primera vez y deja registrada la versión de los términos aceptada.",
+        "operationId": "AuthController_sincronizar",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SessionResponse"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "El correo ya está registrado"
-          }
-        },
-        "summary": "Crear una cuenta",
-        "tags": [
-          "Autenticación"
-        ]
-      }
-    },
-    "/api/auth/login": {
-      "post": {
-        "operationId": "AuthController_login",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginDto"
+                "$ref": "#/components/schemas/SyncSessionDto"
               }
             }
           }
@@ -56,101 +22,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SessionResponse"
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
-          },
-          "401": {
-            "description": "Credenciales incorrectas"
-          }
-        },
-        "summary": "Iniciar sesión",
-        "tags": [
-          "Autenticación"
-        ]
-      }
-    },
-    "/api/auth/google": {
-      "post": {
-        "description": "Recibe el ID token que la app obtuvo de Google, lo verifica y devuelve una sesión propia. Si el correo ya tenía cuenta con contraseña, la vincula en vez de duplicarla.",
-        "operationId": "AuthController_google",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GoogleAuthDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SessionResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "El ID token no es válido o el correo no está verificado"
-          },
-          "503": {
-            "description": "Falta configurar GOOGLE_OAUTH_CLIENT_IDS en el servidor"
-          }
-        },
-        "summary": "Entrar con Google",
-        "tags": [
-          "Autenticación"
-        ]
-      }
-    },
-    "/api/auth/refresh": {
-      "post": {
-        "description": "Entrega un access token nuevo y rota el refresh token usado.",
-        "operationId": "AuthController_refresh",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RefreshDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SessionResponse"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Renovar la sesión",
-        "tags": [
-          "Autenticación"
-        ]
-      }
-    },
-    "/api/auth/logout": {
-      "post": {
-        "description": "Sin refreshToken en el cuerpo, cierra todas las sesiones del usuario.",
-        "operationId": "AuthController_logout",
-        "parameters": [],
-        "responses": {
-          "204": {
-            "description": ""
           }
         },
         "security": [
@@ -158,9 +33,9 @@
             "bearer": []
           }
         ],
-        "summary": "Cerrar sesión",
+        "summary": "Registrar la sesión recién abierta",
         "tags": [
-          "Autenticación"
+          "Cuenta"
         ]
       }
     },
@@ -187,7 +62,7 @@
         ],
         "summary": "Datos del usuario autenticado",
         "tags": [
-          "Autenticación"
+          "Cuenta"
         ]
       },
       "patch": {
@@ -220,13 +95,13 @@
             "bearer": []
           }
         ],
-        "summary": "Actualizar nombre o preferencia de correos",
+        "summary": "Actualizar el perfil o la preferencia de correos",
         "tags": [
-          "Autenticación"
+          "Cuenta"
         ]
       },
       "delete": {
-        "description": "Borra el usuario con sus vehículos, documentos y dispositivos.",
+        "description": "Borra el usuario con sus vehículos, documentos y dispositivos, y también su cuenta en Firebase Authentication.",
         "operationId": "AuthController_deleteAccount",
         "parameters": [],
         "responses": {
@@ -241,7 +116,7 @@
         ],
         "summary": "Eliminar la cuenta",
         "tags": [
-          "Autenticación"
+          "Cuenta"
         ]
       }
     },
@@ -425,6 +300,72 @@
         "summary": "Eliminar un vehículo con sus documentos y fechas",
         "tags": [
           "Vehículos"
+        ]
+      }
+    },
+    "/api/documents": {
+      "get": {
+        "description": "Los que no pertenecen a un vehículo, como la licencia de conducir. Van en la cuenta porque son de quien maneja, no del auto.",
+        "operationId": "DocumentsController_listPersonal",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Documentos de la persona",
+        "tags": [
+          "Documentos"
+        ]
+      },
+      "post": {
+        "operationId": "DocumentsController_createPersonal",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDocumentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Adjuntar un documento de la persona",
+        "tags": [
+          "Documentos"
         ]
       }
     },
@@ -640,6 +581,37 @@
         ]
       }
     },
+    "/api/plants/{id}/camara": {
+      "get": {
+        "description": "Devuelve la imagen que publica la planta. Va por acá y no directo desde la app porque algunas fuentes sirven sin cifrar y otras no entregan su certificado intermedio, que Android no sabe completar.",
+        "operationId": "PlantsController_camara",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "La imagen (image/jpeg)"
+          },
+          "404": {
+            "description": "La planta no publica foto de su patio"
+          },
+          "503": {
+            "description": "La cámara de la planta no respondió"
+          }
+        },
+        "summary": "Foto del patio de la planta",
+        "tags": [
+          "Plantas PRT"
+        ]
+      }
+    },
     "/api/plants/{id}": {
       "get": {
         "operationId": "PlantsController_findOne",
@@ -850,28 +822,15 @@
       }
     },
     "schemas": {
-      "RegisterDto": {
+      "SyncSessionDto": {
         "type": "object",
         "properties": {
-          "name": {
+          "acceptedTermsVersion": {
             "type": "string",
-            "example": "Iván Pérez"
-          },
-          "email": {
-            "type": "string",
-            "example": "ivan@ejemplo.cl"
-          },
-          "password": {
-            "type": "string",
-            "example": "unaClaveSegura",
-            "minLength": 8
+            "example": "2026-09-09",
+            "description": "Versión de los términos aceptados, en formato AAAA-MM-DD. Se manda al crear la cuenta y queda registrada con ella; en un inicio de sesión normal se omite."
           }
-        },
-        "required": [
-          "name",
-          "email",
-          "password"
-        ]
+        }
       },
       "UserResponse": {
         "type": "object",
@@ -906,6 +865,28 @@
           "createdAt": {
             "format": "date-time",
             "type": "string"
+          },
+          "licenseExpiresAt": {
+            "type": "object",
+            "nullable": true,
+            "example": "2031-05-20"
+          },
+          "firstName": {
+            "type": "object",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "object",
+            "nullable": true
+          },
+          "alias": {
+            "type": "object",
+            "nullable": true,
+            "description": "Cómo prefiere que le hablemos."
+          },
+          "phone": {
+            "type": "object",
+            "nullable": true
           }
         },
         "required": [
@@ -914,75 +895,12 @@
           "email",
           "providers",
           "emailReminders",
-          "createdAt"
-        ]
-      },
-      "SessionResponse": {
-        "type": "object",
-        "properties": {
-          "user": {
-            "$ref": "#/components/schemas/UserResponse"
-          },
-          "accessToken": {
-            "type": "string",
-            "description": "Token para el header Authorization: Bearer."
-          },
-          "refreshToken": {
-            "type": "string",
-            "description": "Token de larga duración para renovar la sesión."
-          },
-          "expiresIn": {
-            "type": "number",
-            "description": "Segundos de validez del access token.",
-            "example": 3600
-          }
-        },
-        "required": [
-          "user",
-          "accessToken",
-          "refreshToken",
-          "expiresIn"
-        ]
-      },
-      "LoginDto": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "example": "ivan@ejemplo.cl"
-          },
-          "password": {
-            "type": "string",
-            "example": "unaClaveSegura"
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ]
-      },
-      "GoogleAuthDto": {
-        "type": "object",
-        "properties": {
-          "idToken": {
-            "type": "string",
-            "description": "ID token que entrega Google en el teléfono. El backend lo verifica contra los client ID configurados; la app nunca habla con Firebase."
-          }
-        },
-        "required": [
-          "idToken"
-        ]
-      },
-      "RefreshDto": {
-        "type": "object",
-        "properties": {
-          "refreshToken": {
-            "type": "string",
-            "description": "Refresh token entregado al iniciar sesión."
-          }
-        },
-        "required": [
-          "refreshToken"
+          "createdAt",
+          "licenseExpiresAt",
+          "firstName",
+          "lastName",
+          "alias",
+          "phone"
         ]
       },
       "UpdateProfileDto": {
@@ -992,9 +910,35 @@
             "type": "string",
             "example": "Iván Pérez"
           },
+          "firstName": {
+            "type": "string",
+            "example": "Iván"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Pérez"
+          },
+          "alias": {
+            "type": "object",
+            "nullable": true,
+            "example": "Nacho",
+            "description": "Cómo prefiere que le hablemos. Si está, manda sobre el nombre."
+          },
+          "phone": {
+            "type": "object",
+            "nullable": true,
+            "example": "+56 9 1234 5678",
+            "description": "Teléfono de contacto. Se guarda tal como lo escribe la persona."
+          },
           "emailReminders": {
             "type": "boolean",
             "description": "Recibir avisos de vencimiento por correo."
+          },
+          "licenseExpiresAt": {
+            "type": "object",
+            "example": "2031-05-20",
+            "nullable": true,
+            "description": "Vencimiento de la licencia de conducir (AAAA-MM-DD). Va en la cuenta y no en el vehículo porque la licencia es de la persona. Enviar null para dejar de controlarla."
           }
         }
       },
@@ -1005,8 +949,10 @@
             "type": "string",
             "enum": [
               "REVISION_TECNICA",
+              "GASES",
               "SOAP",
               "PERMISO_CIRCULACION",
+              "LICENCIA_CONDUCIR",
               "OTRO"
             ]
           },
@@ -1082,8 +1028,10 @@
             "type": "string",
             "enum": [
               "REVISION_TECNICA",
+              "GASES",
               "SOAP",
               "PERMISO_CIRCULACION",
+              "LICENCIA_CONDUCIR",
               "OTRO"
             ],
             "example": "REVISION_TECNICA"
@@ -1167,14 +1115,16 @@
             "type": "string"
           },
           "vehicleId": {
-            "type": "string"
+            "type": "object"
           },
           "kind": {
             "type": "string",
             "enum": [
               "REVISION_TECNICA",
+              "GASES",
               "SOAP",
               "PERMISO_CIRCULACION",
+              "LICENCIA_CONDUCIR",
               "OTRO"
             ]
           },
@@ -1213,8 +1163,10 @@
             "type": "string",
             "enum": [
               "REVISION_TECNICA",
+              "GASES",
               "SOAP",
               "PERMISO_CIRCULACION",
+              "LICENCIA_CONDUCIR",
               "OTRO"
             ],
             "example": "REVISION_TECNICA"
@@ -1309,6 +1261,42 @@
             "type": "number",
             "example": 2.4,
             "description": "Distancia en km. Solo cuando se envían lat y lng."
+          },
+          "prices": {
+            "type": "object",
+            "nullable": true,
+            "example": [
+              {
+                "label": "Clase A",
+                "amount": 25000
+              }
+            ],
+            "description": "Valores de la revisión. null = no tenemos el dato."
+          },
+          "pricesUpdatedAt": {
+            "type": "object",
+            "nullable": true,
+            "example": "2026-09-10",
+            "description": "Cuándo se verificaron los valores."
+          },
+          "cameraUrl": {
+            "type": "object",
+            "nullable": true,
+            "description": "Dónde ver el patio de la planta."
+          },
+          "cameraType": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "imagen",
+              "pagina"
+            ],
+            "description": "Cómo mostrarla: 'imagen' es una foto que se refresca sola, 'pagina' una web con la transmisión."
+          },
+          "tariffUrl": {
+            "type": "object",
+            "nullable": true,
+            "description": "Tarifario completo de la concesionaria, con las categorías que el MTT no publica por planta (motos, eléctricos, a gas, carros de arrastre)."
           }
         },
         "required": [

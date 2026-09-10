@@ -12,7 +12,6 @@ process.env.NODE_ENV ??= 'development';
 process.env.FIREBASE_PROJECT_ID ??= 'contrato-local';
 process.env.FIREBASE_CLIENT_EMAIL ??= 'contrato@local';
 process.env.FIREBASE_PRIVATE_KEY ??= 'contrato';
-process.env.JWT_SECRET ??= 'solo-para-generar-el-contrato-no-es-un-secreto-real';
 process.env.REMINDERS_ENABLED ??= 'false';
 
 const { Test } = await import('@nestjs/testing');

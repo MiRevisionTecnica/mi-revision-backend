@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module.js';
-import { JwtAuthGuard } from './auth/jwt-auth.guard.js';
+import { FirebaseAuthGuard } from './auth/firebase-auth.guard.js';
 import { validateEnv } from './config/env.js';
 import { DevicesModule } from './devices/devices.module.js';
 import { DocumentsModule } from './documents/documents.module.js';
@@ -28,7 +28,7 @@ import { VehiclesModule } from './vehicles/vehicles.module.js';
   ],
   providers: [
     // Todo endpoint exige token salvo los marcados con @Public().
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: FirebaseAuthGuard },
   ],
 })
 export class AppModule {}

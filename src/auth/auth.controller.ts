@@ -10,111 +10,39 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '../common/decorators/current-user.decorator.js';
-import { Public } from '../common/decorators/public.decorator.js';
 import { AuthService } from './auth.service.js';
-import {
-  GoogleAuthDto,
-  LoginDto,
-  RefreshDto,
-  RegisterDto,
-  SessionResponse,
-  UpdateProfileDto,
-  UserResponse,
-  ForgotPasswordDto,
-  ResetPasswordDto,
-} from './dto/auth.dto.js';
+import { SyncSessionDto, UpdateProfileDto, UserResponse } from './dto/auth.dto.js';
 
-@ApiTags('Autenticación')
+/**
+ * Perfil de la cuenta.
+ *
+ * Crear la cuenta, iniciar sesión, entrar con Google, recuperar la contraseña y
+ * cerrar sesión ocurren en la app contra Firebase Authentication: ninguno de
+ * esos pasos pasa por acá. Lo que queda es el perfil, y todo pide el ID token
+ * de Firebase en el encabezado.
+ */
+@ApiTags('Cuenta')
+@ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
-  @Public()
-  @Post('register')
-  @ApiOperation({ summary: 'Crear una cuenta' })
-  @ApiResponse({ status: 201, type: SessionResponse })
-  @ApiResponse({ status: 409, description: 'El correo ya está registrado' })
-  register(@Body() dto: RegisterDto): Promise<SessionResponse> {
-    return this.auth.register(dto);
-  }
-
-  @Public()
-  @Post('login')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Iniciar sesión' })
-  @ApiResponse({ status: 200, type: SessionResponse })
-  @ApiResponse({ status: 401, description: 'Credenciales incorrectas' })
-  login(@Body() dto: LoginDto): Promise<SessionResponse> {
-    return this.auth.login(dto);
-  }
-
-  @Public()
-  @Post('google')
+  @Post('session')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Entrar con Google',
+    summary: 'Registrar la sesión recién abierta',
     description:
-      'Recibe el ID token que la app obtuvo de Google, lo verifica y devuelve una sesión propia. Si el correo ya tenía cuenta con contraseña, la vincula en vez de duplicarla.',
+      'Se llama apenas Firebase entrega una sesión. Crea el perfil si es la primera vez y deja registrada la versión de los términos aceptada.',
   })
-  @ApiResponse({ status: 200, type: SessionResponse })
-  @ApiResponse({ status: 401, description: 'El ID token no es válido o el correo no está verificado' })
-  @ApiResponse({ status: 503, description: 'Falta configurar GOOGLE_OAUTH_CLIENT_IDS en el servidor' })
-  google(@Body() dto: GoogleAuthDto): Promise<SessionResponse> {
-    return this.auth.loginWithGoogle(dto.idToken, dto.acceptedTermsVersion);
-  }
-
-  @Public()
-  @Public()
-  @Post('forgot-password')
-  @HttpCode(202)
-  @ApiOperation({
-    summary: 'Pedir un código para recuperar la contraseña',
-    description:
-      'Responde 202 exista o no la cuenta. Confirmar cuáles correos están registrados convertiría este endpoint en una forma de averiguarlo.',
-  })
-  @ApiResponse({ status: 202, description: 'Si la cuenta existe, se envió el código' })
-  async forgotPassword(@Body() dto: ForgotPasswordDto): Promise<{ message: string }> {
-    await this.auth.forgotPassword(dto.email);
-    return { message: 'Si el correo está registrado, te enviamos un código.' };
-  }
-
-  @Public()
-  @Post('reset-password')
-  @HttpCode(200)
-  @ApiOperation({ summary: 'Cambiar la contraseña con el código recibido' })
-  @ApiResponse({ status: 200, description: 'Contraseña actualizada' })
-  @ApiResponse({ status: 401, description: 'El código no es válido o ya venció' })
-  async resetPassword(@Body() dto: ResetPasswordDto): Promise<{ message: string }> {
-    await this.auth.resetPassword(dto.email, dto.code, dto.password);
-    return { message: 'Tu contraseña quedó actualizada. Inicia sesión con la nueva.' };
-  }
-
-  @Post('refresh')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Renovar la sesión',
-    description: 'Entrega un access token nuevo y rota el refresh token usado.',
-  })
-  @ApiResponse({ status: 200, type: SessionResponse })
-  refresh(@Body() dto: RefreshDto): Promise<SessionResponse> {
-    return this.auth.refresh(dto.refreshToken);
-  }
-
-  @ApiBearerAuth()
-  @Post('logout')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({
-    summary: 'Cerrar sesión',
-    description: 'Sin refreshToken en el cuerpo, cierra todas las sesiones del usuario.',
-  })
-  logout(
+  @ApiResponse({ status: 200, type: UserResponse })
+  sincronizar(
     @CurrentUser('id') userId: string,
-    @Body() dto: Partial<RefreshDto>,
-  ): Promise<void> {
-    return this.auth.logout(userId, dto?.refreshToken);
+    @CurrentUser('email') email: string,
+    @Body() dto: SyncSessionDto,
+  ): Promise<UserResponse> {
+    return this.auth.sincronizar(userId, email, dto);
   }
 
-  @ApiBearerAuth()
   @Get('me')
   @ApiOperation({ summary: 'Datos del usuario autenticado' })
   @ApiResponse({ status: 200, type: UserResponse })
@@ -122,9 +50,8 @@ export class AuthController {
     return this.auth.me(userId);
   }
 
-  @ApiBearerAuth()
   @Patch('me')
-  @ApiOperation({ summary: 'Actualizar nombre o preferencia de correos' })
+  @ApiOperation({ summary: 'Actualizar el perfil o la preferencia de correos' })
   @ApiResponse({ status: 200, type: UserResponse })
   updateProfile(
     @CurrentUser('id') userId: string,
@@ -133,12 +60,12 @@ export class AuthController {
     return this.auth.updateProfile(userId, dto);
   }
 
-  @ApiBearerAuth()
   @Delete('me')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Eliminar la cuenta',
-    description: 'Borra el usuario con sus vehículos, documentos y dispositivos.',
+    description:
+      'Borra el usuario con sus vehículos, documentos y dispositivos, y también su cuenta en Firebase Authentication.',
   })
   deleteAccount(@CurrentUser('id') userId: string): Promise<void> {
     return this.auth.deleteAccount(userId);

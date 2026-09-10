@@ -15,7 +15,7 @@ La app móvil vive en [`../mi-revision-app`](../mi-revision-app).
 
 ```bash
 npm install
-cp .env.example .env     # completa las credenciales de Firebase y JWT_SECRET
+cp .env.example .env     # completa las credenciales de Firebase
 npm run seed             # carga las 38 plantas PRT de la RM en Firestore
 npm run start:dev
 ```
@@ -71,51 +71,54 @@ da acceso a Firestore, allá autoriza el envío de notificaciones.
 
 ## Endpoints
 
-25 rutas, todas bajo `/api` salvo `/health`. El contrato completo está en
+24 rutas, todas bajo `/api` salvo `/health`. El contrato completo está en
 [`openapi.json`](openapi.json) y en `/docs`.
 
 | Grupo | Rutas |
 | --- | --- |
-| **Autenticación** | `POST /auth/register` · `POST /auth/login` · `POST /auth/google` · `POST /auth/refresh` · `POST /auth/logout` · `GET/PATCH/DELETE /auth/me` |
+| **Cuenta** | `POST /auth/session` · `GET/PATCH/DELETE /auth/me` |
 | **Vehículos** | `GET/POST /vehicles` · `GET/PATCH/DELETE /vehicles/:id` |
-| **Documentos** | `GET/POST /vehicles/:vehicleId/documents` · `DELETE /documents/:id` |
-| **Plantas PRT** | `GET /plants` · `GET /plants/comunas` · `GET /plants/:id` *(públicos)* |
+| **Documentos** | `GET/POST /vehicles/:vehicleId/documents` · `GET/POST /documents` · `DELETE /documents/:id` |
+| **Plantas PRT** | `GET /plants` · `GET /plants/comunas` · `GET /plants/:id` · `GET /plants/:id/camara` *(públicos)* |
 | **Dispositivos** | `GET/POST /devices` · `DELETE /devices/:expoPushToken` |
 | **Recordatorios** | `GET /reminders/preview` · `POST /reminders/run` |
 | **Estado** | `GET /health` |
 
-Todo exige `Authorization: Bearer <accessToken>` salvo lo marcado con `@Public()`:
-registro, login, entrar con Google, refresh, el catálogo de plantas y el health check.
+Todo exige `Authorization: Bearer <ID token de Firebase>` salvo lo marcado con `@Public()`:
+el catálogo de plantas y el health check.
 
 ### Autenticación
 
-`login` y `register` devuelven un **access token** (1 h por defecto) y un **refresh token**
-(30 días). Del refresh token solo se guarda su hash SHA-256, que además es el id del documento
-en Firestore, y **rota**: al usarlo en `POST /auth/refresh` queda revocado y se entrega uno
-nuevo. Las contraseñas se guardan con bcrypt (12 rondas).
+**La API no emite sesiones.** Quién es cada persona lo maneja Firebase Authentication desde
+la app: ahí se crea la cuenta, se valida la contraseña, se vincula Google y se manda el correo
+para recuperarla. Acá solo se **verifica** el ID token que llega en cada petición, con
+`verifyIdToken(token, true)` del SDK de administrador.
 
-Un correo inexistente y una clave errónea devuelven el mismo mensaje, para no revelar qué
-correos están registrados.
+Esto es lo que se ganó al dejar de hacerlo nosotros:
+
+- **No guardamos contraseñas.** Ni hashes, ni códigos de recuperación, ni refresh tokens.
+- **Recuperar la contraseña no necesita servidor de correo.** Lo manda Google. Railway bloquea
+  los puertos de SMTP salientes, así que la implementación propia dependía de un tercero por
+  HTTPS solo para eso.
+- **Un solo identificador.** El id de `users` en Firestore *es* el `uid` de Firebase.
+- La revocación es inmediata: `checkRevoked` en true hace que un token vigente deje de servir
+  apenas se borra la cuenta o se cierran las sesiones desde la consola.
+
+`POST /auth/session` es lo único que la app llama al entrar: crea el perfil si es la primera
+vez y registra la versión de los términos aceptada. Es idempotente.
+
+Las cuentas que existían antes de la migración se importaron con su hash de bcrypt y con su
+id anterior como `uid` (`npm run migrar:auth`), así que nadie tuvo que cambiar su contraseña ni
+se movió una sola referencia en Firestore.
 
 ### Entrar con Google
 
-`POST /auth/google` recibe el **ID token** que la app obtuvo de Google, verifica su firma
-contra las claves públicas de Google y comprueba que la audiencia sea uno de los client ID
-de `GOOGLE_OAUTH_CLIENT_IDS`. Recién ahí crea la sesión propia. La app sigue sin hablar con
-Firebase, y un token emitido para otra aplicación no sirve porque la audiencia no calza.
+Lo resuelve Firebase en la app: obtiene el ID token de Google con
+`@react-native-google-signin` y se lo entrega a `signInWithCredential`. Si el correo ya tenía
+cuenta con contraseña, Firebase entra a la misma en vez de duplicarla.
 
-- Si el correo **ya tenía cuenta con contraseña**, se vincula en vez de duplicar: el correo
-  verificado por Google es prueba suficiente de que es la misma persona. `UserResponse.providers`
-  muestra con qué puede entrar (`["password", "google"]`).
-- Una cuenta creada con Google **no tiene contraseña**: si intenta entrar por `/auth/login`, la
-  API responde explicando que use el botón de Google, en vez de un genérico "clave incorrecta".
-- Se rechaza el token si Google marca el correo como no verificado, porque si no cualquiera
-  podría reclamar el correo de otra persona.
-- Sin `GOOGLE_OAUTH_CLIENT_IDS` configurado el endpoint responde **503**, no un error confuso.
-
-Para obtener los client ID: consola de Firebase → **Authentication → Sign-in method →
-habilitar Google**. Eso crea el cliente OAuth *web*; el de Android aparece después de
-registrar la huella SHA-1 del keystore (ver `../mi-revision-app`).
+Del lado de la API no hay nada que configurar: `providers` en `UserResponse` sale de lo que
+reporta Firebase (`["password", "google"]`), y se refresca en cada `POST /auth/session`.
 
 ### Vehículos y vencimientos
 
@@ -197,7 +200,7 @@ npx firebase-tools deploy --only firestore:rules
 
 1. Crear un proyecto y conectar este repositorio. `railway.toml` ya indica que se construya
    con el `Dockerfile`, con health check en `/health`. **No hace falta agregar Postgres.**
-2. Definir las variables de [`.env.example`](.env.example): como mínimo `JWT_SECRET` y las
+2. Definir las variables de [`.env.example`](.env.example): como mínimo las
    credenciales de Firebase.
 3. Desplegar y cargar el catálogo una vez: `railway run npm run seed`.
 
@@ -280,5 +283,6 @@ Para agregar o quitar plantas del listado, editar `src/data/plants.json` y corre
 3. Subida de archivos a Cloud Storage, si se decide sincronizar los documentos entre
    dispositivos. El bucket del proyecto ya existe y `documents.storageUrl` está listo.
 4. Cargar los horarios con `npm run enrich:plants` (necesita `GOOGLE_MAPS_API_KEY`).
-5. Limitar la tasa de intentos en `/auth/login`. `@nestjs/throttler` todavía no soporta
-   NestJS 12, así que hay que esperar esa versión o resolverlo en el borde.
+5. ~~Limitar la tasa de intentos en `/auth/login`.~~ Resuelto al migrar a Firebase
+   Authentication: los intentos de inicio de sesión ya no pasan por la API, y Firebase corta
+   solo con `auth/too-many-requests`.

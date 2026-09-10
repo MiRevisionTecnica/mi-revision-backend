@@ -1,31 +1,15 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule, type JwtSignOptions } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
-import { GoogleAuthService } from './google.service.js';
-import { JwtStrategy } from './jwt.strategy.js';
-import { RemindersModule } from '../reminders/reminders.module.js';
 
+/**
+ * No hay nada que registrar para firmar tokens: los emite Firebase y los
+ * verifica el guard con el SDK de administrador, que ya está disponible en toda
+ * la aplicación porque FirebaseModule es global.
+ */
 @Module({
-  imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        secret: config.getOrThrow<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: config.get<string>('JWT_EXPIRES_IN', '1h') as JwtSignOptions['expiresIn'],
-        },
-      }),
-    }),
-    // Por el envío de correo: la recuperación de contraseña manda un código.
-    RemindersModule,
-  ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleAuthService, JwtStrategy],
+  providers: [AuthService],
   exports: [AuthService],
 })
 export class AuthModule {}

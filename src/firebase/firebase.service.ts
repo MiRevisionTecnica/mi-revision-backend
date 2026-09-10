@@ -24,7 +24,7 @@ import { existsSync } from 'node:fs';
 @Injectable()
 export class FirebaseService implements OnModuleInit {
   private readonly logger = new Logger(FirebaseService.name);
-  private app: App;
+  private instancia: App;
   private firestore: Firestore;
 
   constructor(private readonly config: ConfigService) {}
@@ -32,12 +32,12 @@ export class FirebaseService implements OnModuleInit {
   async onModuleInit(): Promise<void> {
     // getApps() evita reinicializar cuando Nest recarga en modo watch.
     const existing = getApps();
-    this.app = existing.length > 0 ? existing[0] : initializeApp(this.credentials());
+    this.instancia = existing.length > 0 ? existing[0] : initializeApp(this.credentials());
 
-    this.firestore = getFirestore(this.app);
+    this.firestore = getFirestore(this.instancia);
     this.firestore.settings({ ignoreUndefinedProperties: true });
 
-    this.logger.log(`Firebase inicializado (proyecto ${this.app.options.projectId})`);
+    this.logger.log(`Firebase inicializado (proyecto ${this.instancia.options.projectId})`);
 
     // Se comprueba la conexión al arrancar. Si las credenciales están mal, es
     // mejor decirlo ahora y con un mensaje claro que dejar que cada consulta
@@ -50,6 +50,11 @@ export class FirebaseService implements OnModuleInit {
 
   get db(): Firestore {
     return this.firestore;
+  }
+
+  /** La app de firebase-admin, para los servicios que no son Firestore. */
+  get app(): App {
+    return this.instancia;
   }
 
   /** Comprobación de conectividad para el health check. */

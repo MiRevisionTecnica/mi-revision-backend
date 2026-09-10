@@ -5,27 +5,22 @@ import type { DocumentKind, ReminderChannel } from '../common/enums.js';
  *
  * Firestore no tiene esquema ni claves únicas, así que las reglas del modelo se
  * sostienen desde aquí:
- *  - la unicidad de correo se apoya en `userEmails/{email}` escrito en la misma
- *    transacción que el usuario;
+ *  - el id de `users` es el `uid` de Firebase Authentication, que ya garantiza
+ *    un solo usuario por correo;
  *  - la unicidad de patente por usuario se valida dentro de una transacción;
  *  - `devices` usa el token de push como id del documento;
  *  - `reminderLogs` usa una clave compuesta como id, lo que hace el envío
  *    idempotente sin necesidad de leer antes de escribir.
  */
 export const COLLECTIONS = {
+  /** id = uid de Firebase Authentication. */
   users: 'users',
-  /** Índice de unicidad: id = correo en minúsculas → { userId }. */
-  userEmails: 'userEmails',
-  /** id = sha256 del refresh token, para buscarlo de un acceso directo. */
-  refreshTokens: 'refreshTokens',
   vehicles: 'vehicles',
   documents: 'documents',
   /** id = ExponentPushToken[...]. */
   devices: 'devices',
   reminderLogs: 'reminderLogs',
   plants: 'plants',
-  /** id = sha256 del código de recuperación. */
-  passwordResets: 'passwordResets',
 } as const;
 
 /** Cómo se autentica la cuenta. Una misma cuenta puede tener ambos. */
@@ -43,9 +38,7 @@ export type UserDoc = {
   /** Cómo prefiere que le hablemos. Si está, manda sobre el nombre. */
   alias?: string | null;
   phone?: string | null;
-  /** null en cuentas creadas con Google, que nunca tuvieron contraseña. */
-  passwordHash: string | null;
-  /** Identificador estable de Google (el claim "sub" del ID token). */
+  /** Identificador estable de Google, tal como lo reporta Firebase. */
   googleId: string | null;
   photoUrl: string | null;
   providers: AuthProvider[];
@@ -68,13 +61,6 @@ export type UserDoc = {
   acceptedTermsAt: string | null;
   createdAt: string;
   updatedAt: string;
-};
-
-export type RefreshTokenDoc = {
-  userId: string;
-  expiresAt: string;
-  revokedAt: string | null;
-  createdAt: string;
 };
 
 export type VehicleDoc = {
@@ -222,12 +208,3 @@ export function reminderLogId(
  * base, no podría usarlos para entrar a las cuentas. Es el mismo criterio que
  * con los refresh tokens.
  */
-export type PasswordResetDoc = {
-  userId: string;
-  email: string;
-  expiresAt: string;
-  usedAt: string | null;
-  /** Cuántas veces se intentó con un código equivocado para esta cuenta. */
-  attempts: number;
-  createdAt: string;
-};

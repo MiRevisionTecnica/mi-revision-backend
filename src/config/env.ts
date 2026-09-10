@@ -53,33 +53,12 @@ export class Env {
   FIREBASE_PRIVATE_KEY?: string;
 
   /**
-   * IDs de cliente OAuth aceptados al validar el ID token de Google, separados
-   * por coma (el de web y el de Android/iOS). Sin esto, /auth/google responde 503.
-   * Se obtienen al habilitar Google como proveedor en Firebase Authentication.
-   */
-  @IsOptional()
-  @IsString()
-  GOOGLE_OAUTH_CLIENT_IDS?: string;
-
-  /**
    * Clave de Google Cloud con "Places API (New)" habilitada. Sin ella el
    * catálogo de plantas no se refresca solo y hay que mantenerlo a mano.
    */
   @IsOptional()
   @IsString()
   GOOGLE_MAPS_API_KEY?: string;
-
-  /** Secreto para firmar los access token. Mínimo 32 caracteres. */
-  @IsString()
-  @MinLength(32)
-  JWT_SECRET: string;
-
-  @IsString()
-  JWT_EXPIRES_IN: string = '1h';
-
-  @IsInt()
-  @Min(1)
-  REFRESH_TOKEN_DAYS: number = 30;
 
   /** Orígenes permitidos por CORS, separados por coma. '*' permite todos. */
   @IsString()
@@ -165,7 +144,6 @@ export function validateEnv(raw: Record<string, unknown>): Env {
     ...present,
     PORT: toNumber(present.PORT),
     SMTP_PORT: toNumber(present.SMTP_PORT),
-    REFRESH_TOKEN_DAYS: toNumber(present.REFRESH_TOKEN_DAYS),
     MAX_VEHICLES_PER_USER: toNumber(present.MAX_VEHICLES_PER_USER),
     REMINDER_HOUR: toNumber(present.REMINDER_HOUR),
     REMINDERS_ENABLED: toBoolean(present.REMINDERS_ENABLED),

@@ -1,345 +1,89 @@
-import { ConflictException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService, type JwtSignOptions } from '@nestjs/jwt';
-import { compare, hash } from 'bcryptjs';
-import { createHash, randomBytes, randomInt } from 'node:crypto';
-import {
-  COLLECTIONS,
-  type AuthProvider,
-  type PasswordResetDoc,
-  type RefreshTokenDoc,
-  type UserDoc,
-} from '../firebase/collections.js';
-import { GoogleAuthService } from './google.service.js';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { getAuth, type UserRecord } from 'firebase-admin/auth';
+import { COLLECTIONS, type AuthProvider, type UserDoc } from '../firebase/collections.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
-import { MailService } from '../reminders/mail.service.js';
-import type {
-  LoginDto,
-  RegisterDto,
-  SessionResponse,
-  UpdateProfileDto,
-  UserResponse,
-} from './dto/auth.dto.js';
-
-const BCRYPT_ROUNDS = 12;
-
-/**
- * Cuánto dura un código de recuperación.
- *
- * Corto a propósito: es lo que separa "me llegó y lo uso" de "quedó dando vueltas
- * en un correo que alguien puede leer después".
- */
-const RESET_MINUTES = 15;
+import type { SyncSessionDto, UpdateProfileDto, UserResponse } from './dto/auth.dto.js';
 
 type StoredUser = UserDoc & { id: string };
 
+/**
+ * El perfil del usuario. La autenticación en sí ya no vive acá.
+ *
+ * Quién es cada persona, su contraseña, el vínculo con Google y el correo de
+ * recuperación los maneja Firebase Authentication desde la app. Este servicio
+ * solo se ocupa de lo que Firebase no sabe: el perfil que mostramos, la
+ * preferencia de avisos, el vencimiento de la licencia y el borrado en cascada.
+ *
+ * El identificador del usuario es el `uid` de Firebase, y con él se guarda su
+ * documento en `users`. No hay dos numeraciones que mantener sincronizadas.
+ */
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
-  constructor(
-    private readonly firebase: FirebaseService,
-    private readonly jwt: JwtService,
-    private readonly config: ConfigService,
-    private readonly google: GoogleAuthService,
-    private readonly mail: MailService,
-  ) {}
+  constructor(private readonly firebase: FirebaseService) {}
 
   /**
-   * Empieza una recuperación de contraseña.
+   * Deja el perfil listo después de entrar.
    *
-   * Responde igual exista o no la cuenta. Decir "ese correo no está registrado"
-   * convierte este endpoint en una forma de averiguar quién tiene cuenta, que es
-   * justo lo que no queremos regalar.
+   * La app llama a esto apenas Firebase le entrega una sesión. Si es la primera
+   * vez, crea el documento; si no, refresca lo que pudo cambiar en Firebase
+   * --el correo, los proveedores vinculados, la foto-- sin tocar lo que el
+   * usuario haya editado a mano.
    *
-   * El código va por correo y dura poco. Se guarda solo su hash: si alguien
-   * leyera la base, no podría usarlo para entrar.
+   * Es idempotente a propósito: llamarlo en cada inicio de sesión no cuesta nada
+   * y evita que una cuenta creada en Firebase quede sin perfil acá.
    */
-  async forgotPassword(email: string): Promise<void> {
-    const limpio = email.trim().toLowerCase();
-    const user = await this.findByEmail(limpio);
-
-    if (!user) return;
-
-    // Una cuenta creada con Google no tiene contraseña que recuperar.
-    if (!user.passwordHash) return;
-
-    if (!this.mail.enabled) {
-      this.logger.error(
-        'Alguien pidió recuperar su contraseña, pero no hay SMTP configurado y el ' +
-          'correo no salió. Revisa SMTP_HOST y compañía en el .env.',
-      );
-      return;
-    }
-
-    const code = String(randomInt(0, 1_000_000)).padStart(6, '0');
-    const expiresAt = new Date(Date.now() + RESET_MINUTES * 60 * 1000).toISOString();
-
-    await this.firebase.db
-      .collection(COLLECTIONS.passwordResets)
-      .doc(hashToken(`${limpio}:${code}`))
-      .set({
-        userId: user.id,
-        email: limpio,
-        expiresAt,
-        usedAt: null,
-        attempts: 0,
-        createdAt: new Date().toISOString(),
-      });
-
-    // El correo se manda sin esperarlo. Gmail a veces tarda varios segundos en
-    // aceptarlo, y bloquear la respuesta hasta entonces hace que la app corte por
-    // tiempo de espera y muestre un error de red que no es tal: el código ya
-    // quedó guardado y va en camino. El 202 dice exactamente eso.
-    void this.mail
-      .send({
-        to: limpio,
-        subject: 'Tu código para recuperar la contraseña',
-        text:
-          `Tu código es ${code}. Vence en ${RESET_MINUTES} minutos.
-
-` +
-          'Si no pediste recuperar tu contraseña, ignora este correo: tu cuenta sigue igual.',
-        html:
-          `<p>Tu código es <strong style="font-size:22px;letter-spacing:3px">${code}</strong></p>` +
-          `<p>Vence en ${RESET_MINUTES} minutos.</p>` +
-          '<p style="color:#5B6B84">Si no pediste recuperar tu contraseña, ignora este correo: ' +
-          'tu cuenta sigue igual.</p>',
-      })
-      .then((enviado) => {
-        if (!enviado) {
-          this.logger.error(`El código de recuperación de ${limpio} no se pudo enviar.`);
-        }
-      })
-      .catch((error: unknown) => {
-        this.logger.error(
-          `Falló el envío del código de recuperación: ${error instanceof Error ? error.message : String(error)}`,
-        );
-      });
-  }
-
-  /**
-   * Termina la recuperación: valida el código y cambia la contraseña.
-   *
-   * Al cambiarla se revocan todas las sesiones abiertas. Si alguien había
-   * entrado con la contraseña anterior, deja de tener acceso; ese es el punto de
-   * recuperarla.
-   */
-  async resetPassword(email: string, code: string, password: string): Promise<void> {
-    const limpio = email.trim().toLowerCase();
-    const ref = this.firebase.db
-      .collection(COLLECTIONS.passwordResets)
-      .doc(hashToken(`${limpio}:${code}`));
-
+  async sincronizar(userId: string, email: string, dto: SyncSessionDto): Promise<UserResponse> {
+    const ref = this.firebase.db.collection(COLLECTIONS.users).doc(userId);
     const snapshot = await ref.get();
-    const reset = snapshot.data() as PasswordResetDoc | undefined;
-
-    const invalido = new UnauthorizedException('El código no es válido o ya venció.');
-
-    if (!reset || reset.usedAt || reset.expiresAt < new Date().toISOString()) throw invalido;
-    if (reset.email !== limpio) throw invalido;
-
-    const userRef = this.firebase.db.collection(COLLECTIONS.users).doc(reset.userId);
-    const user = (await userRef.get()).data() as UserDoc | undefined;
-    if (!user) throw invalido;
-
-    await userRef.update({
-      passwordHash: await hash(password, 12),
-      providers: [...new Set([...(user.providers ?? []), 'password'])],
-      updatedAt: new Date().toISOString(),
-    });
-
-    await ref.update({ usedAt: new Date().toISOString() });
-    await this.revokeAllRefreshTokens(reset.userId);
-  }
-
-  /** Cierra todas las sesiones de una cuenta. */
-  private async revokeAllRefreshTokens(userId: string): Promise<void> {
-    const abiertos = await this.firebase.db
-      .collection(COLLECTIONS.refreshTokens)
-      .where('userId', '==', userId)
-      .where('revokedAt', '==', null)
-      .get();
-
-    if (abiertos.empty) return;
-
-    const lote = this.firebase.db.batch();
-    const now = new Date().toISOString();
-    abiertos.docs.forEach((doc) => lote.update(doc.ref, { revokedAt: now }));
-    await lote.commit();
-  }
-
-  async register(dto: RegisterDto): Promise<SessionResponse> {
-    const email = dto.email.trim().toLowerCase();
-    const db = this.firebase.db;
-
-    const userRef = db.collection(COLLECTIONS.users).doc();
-    const emailRef = db.collection(COLLECTIONS.userEmails).doc(email);
     const now = new Date().toISOString();
 
-    const passwordHash = await hash(dto.password, BCRYPT_ROUNDS);
+    const cuenta = await getAuth(this.firebase.app)
+      .getUser(userId)
+      .catch(() => null);
 
-    // Firestore no tiene índices únicos: la unicidad del correo se sostiene
-    // escribiendo users/{id} y userEmails/{correo} en la misma transacción.
-    const user = await db.runTransaction(async (tx) => {
-      const taken = await tx.get(emailRef);
-      if (taken.exists) {
-        throw new ConflictException('Ya existe una cuenta con este correo.');
-      }
+    const providers = proveedoresDe(cuenta);
 
+    if (!snapshot.exists) {
       const data: UserDoc = {
         email,
-        name: dto.name.trim(),
-        passwordHash,
-        googleId: null,
-        photoUrl: null,
-        providers: ['password'],
-        emailReminders: true,
-        acceptedTermsVersion: dto.acceptedTermsVersion,
-        acceptedTermsAt: now,
-        createdAt: now,
-        updatedAt: now,
-      };
-
-      tx.set(userRef, data);
-      tx.set(emailRef, { userId: userRef.id });
-
-      return { id: userRef.id, ...data };
-    });
-
-    return this.buildSession(user);
-  }
-
-  async login(dto: LoginDto): Promise<SessionResponse> {
-    const email = dto.email.trim().toLowerCase();
-    const user = await this.findByEmail(email);
-
-    // Una cuenta creada con Google no tiene contraseña que comparar.
-    if (user && !user.passwordHash) {
-      throw new UnauthorizedException(
-        'Esta cuenta se creó con Google. Inicia sesión con el botón de Google.',
-      );
-    }
-
-    // Mismo mensaje para usuario inexistente y clave errónea: no revelamos
-    // qué correos están registrados.
-    const valid = user?.passwordHash ? await compare(dto.password, user.passwordHash) : false;
-    if (!user || !valid) {
-      throw new UnauthorizedException('Correo o contraseña incorrectos.');
-    }
-
-    return this.buildSession(user);
-  }
-
-  /**
-   * Inicia sesión con Google, creando la cuenta si es la primera vez.
-   *
-   * Si ya existe una cuenta con ese correo (creada con contraseña), se vincula
-   * en vez de duplicar: el correo verificado por Google es prueba suficiente de
-   * que se trata de la misma persona.
-   */
-  async loginWithGoogle(idToken: string, acceptedTermsVersion?: string): Promise<SessionResponse> {
-    const profile = await this.google.verify(idToken);
-    const db = this.firebase.db;
-    const now = new Date().toISOString();
-
-    const existing = await this.findByEmail(profile.email);
-
-    if (existing) {
-      const providers: AuthProvider[] = existing.providers?.includes('google')
-        ? existing.providers
-        : [...(existing.providers ?? ['password']), 'google'];
-
-      const patch = {
-        googleId: profile.googleId,
-        photoUrl: existing.photoUrl ?? profile.photoUrl,
+        name: cuenta?.displayName?.trim() || email.split('@')[0],
+        googleId: idDeGoogle(cuenta),
+        photoUrl: cuenta?.photoURL ?? null,
         providers,
-        updatedAt: now,
-      };
-
-      await db.collection(COLLECTIONS.users).doc(existing.id).update(patch);
-      return this.buildSession({ ...existing, ...patch });
-    }
-
-    const userRef = db.collection(COLLECTIONS.users).doc();
-    const emailRef = db.collection(COLLECTIONS.userEmails).doc(profile.email);
-
-    const created = await db.runTransaction(async (tx) => {
-      // Otra petición pudo crear la cuenta entremedio; la transacción lo detecta.
-      const taken = await tx.get(emailRef);
-      if (taken.exists) return null;
-
-      const data: UserDoc = {
-        email: profile.email,
-        name: profile.name,
-        passwordHash: null,
-        googleId: profile.googleId,
-        photoUrl: profile.photoUrl,
-        providers: ['google'],
         emailReminders: true,
-        acceptedTermsVersion: acceptedTermsVersion ?? null,
-        acceptedTermsAt: acceptedTermsVersion ? now : null,
+        acceptedTermsVersion: dto.acceptedTermsVersion ?? null,
+        acceptedTermsAt: dto.acceptedTermsVersion ? now : null,
         createdAt: now,
         updatedAt: now,
       };
 
-      tx.set(userRef, data);
-      tx.set(emailRef, { userId: userRef.id });
-
-      return { id: userRef.id, ...data };
-    });
-
-    if (created) return this.buildSession(created);
-
-    // La cuenta apareció mientras creábamos: reintentamos por la vía de vínculo.
-    const raced = await this.findByEmail(profile.email);
-    if (!raced) throw new UnauthorizedException('No pudimos crear tu cuenta.');
-    return this.buildSession(raced);
-  }
-
-  /** Rota el refresh token: el anterior queda revocado al usarse. */
-  async refresh(refreshToken: string): Promise<SessionResponse> {
-    // El hash del token es el id del documento, así que basta un acceso directo.
-    const ref = this.firebase.db.collection(COLLECTIONS.refreshTokens).doc(hashToken(refreshToken));
-    const snapshot = await ref.get();
-    const stored = snapshot.data() as RefreshTokenDoc | undefined;
-
-    if (!stored || stored.revokedAt || new Date(stored.expiresAt).getTime() < Date.now()) {
-      throw new UnauthorizedException('La sesión expiró. Vuelve a iniciar sesión.');
+      await ref.set(data);
+      this.logger.log(`Perfil creado para ${email}`);
+      return toUserResponse({ id: userId, ...data });
     }
 
-    await ref.update({ revokedAt: new Date().toISOString() });
+    const actual = snapshot.data() as UserDoc;
 
-    const user = await this.findById(stored.userId);
-    if (!user) throw new UnauthorizedException('La sesión ya no es válida.');
+    const patch: Partial<UserDoc> = {
+      // El correo lo manda Firebase: si la persona lo cambió allá, acá se sigue.
+      ...(actual.email !== email ? { email } : {}),
+      ...(idDeGoogle(cuenta) && !actual.googleId ? { googleId: idDeGoogle(cuenta) } : {}),
+      // La foto solo se rellena si no hay: no pisamos una elección del usuario.
+      ...(cuenta?.photoURL && !actual.photoUrl ? { photoUrl: cuenta.photoURL } : {}),
+      ...(distintos(actual.providers, providers) ? { providers } : {}),
+      // Los términos se registran una sola vez, con la versión que se aceptó.
+      ...(dto.acceptedTermsVersion && actual.acceptedTermsVersion !== dto.acceptedTermsVersion
+        ? { acceptedTermsVersion: dto.acceptedTermsVersion, acceptedTermsAt: now }
+        : {}),
+    };
 
-    return this.buildSession(user);
-  }
-
-  async logout(userId: string, refreshToken?: string): Promise<void> {
-    const tokens = this.firebase.db.collection(COLLECTIONS.refreshTokens);
-
-    if (refreshToken) {
-      // Solo puede revocar un token propio: el filtro por userId lo garantiza.
-      const ref = tokens.doc(hashToken(refreshToken));
-      const snapshot = await ref.get();
-      if (snapshot.exists && (snapshot.data() as RefreshTokenDoc).userId === userId) {
-        await ref.update({ revokedAt: new Date().toISOString() });
-      }
-      return;
+    if (Object.keys(patch).length > 0) {
+      await ref.update({ ...patch, updatedAt: now });
     }
 
-    // Sin token explícito cerramos todas las sesiones del usuario.
-    const active = await tokens
-      .where('userId', '==', userId)
-      .where('revokedAt', '==', null)
-      .get();
-    if (active.empty) return;
-
-    const batch = this.firebase.db.batch();
-    const revokedAt = new Date().toISOString();
-    active.docs.forEach((doc) => batch.update(doc.ref, { revokedAt }));
-    await batch.commit();
+    return toUserResponse({ id: userId, ...actual, ...patch });
   }
 
   async me(userId: string): Promise<UserResponse> {
@@ -370,78 +114,79 @@ export class AuthService {
 
     const user = await this.findById(userId);
     if (!user) throw new UnauthorizedException('La sesión ya no es válida.');
+
+    // El nombre para mostrar también vive en Firebase: es el que aparece en los
+    // correos que manda Authentication, así que se mantiene igual al nuestro.
+    if (user.name) {
+      await getAuth(this.firebase.app)
+        .updateUser(userId, { displayName: user.name })
+        .catch((error: unknown) => {
+          this.logger.warn(`No se pudo actualizar el nombre en Firebase: ${describir(error)}`);
+        });
+    }
+
     return toUserResponse(user);
   }
 
   /**
    * Borra la cuenta y todo lo que cuelga de ella. Firestore no tiene borrado en
    * cascada, así que hay que recorrer cada colección a mano.
+   *
+   * La cuenta de Firebase se borra al final, y a propósito: si algo falla antes,
+   * la persona conserva su acceso y puede reintentar. Al revés quedaría con los
+   * datos adentro y sin manera de entrar a borrarlos.
    */
   async deleteAccount(userId: string): Promise<void> {
     const db = this.firebase.db;
-    const user = await this.findById(userId);
-    if (!user) return;
 
-    const [vehicles, documents, devices, tokens] = await Promise.all([
+    const [vehicles, documents, devices] = await Promise.all([
       db.collection(COLLECTIONS.vehicles).where('userId', '==', userId).get(),
       db.collection(COLLECTIONS.documents).where('userId', '==', userId).get(),
       db.collection(COLLECTIONS.devices).where('userId', '==', userId).get(),
-      db.collection(COLLECTIONS.refreshTokens).where('userId', '==', userId).get(),
     ]);
 
     const batch = db.batch();
-    [...vehicles.docs, ...documents.docs, ...devices.docs, ...tokens.docs].forEach((doc) =>
-      batch.delete(doc.ref),
-    );
-    batch.delete(db.collection(COLLECTIONS.userEmails).doc(user.email));
+    [...vehicles.docs, ...documents.docs, ...devices.docs].forEach((doc) => batch.delete(doc.ref));
     batch.delete(db.collection(COLLECTIONS.users).doc(userId));
 
     await batch.commit();
+
+    await getAuth(this.firebase.app)
+      .deleteUser(userId)
+      .catch((error: unknown) => {
+        this.logger.error(`Quedó una cuenta huérfana en Firebase (${userId}): ${describir(error)}`);
+      });
   }
 
   async findById(userId: string): Promise<StoredUser | null> {
     const snapshot = await this.firebase.db.collection(COLLECTIONS.users).doc(userId).get();
-    return snapshot.exists ? ({ id: snapshot.id, ...(snapshot.data() as UserDoc) }) : null;
-  }
-
-  private async findByEmail(email: string): Promise<StoredUser | null> {
-    const index = await this.firebase.db.collection(COLLECTIONS.userEmails).doc(email).get();
-    if (!index.exists) return null;
-    return this.findById((index.data() as { userId: string }).userId);
-  }
-
-  private async buildSession(user: StoredUser): Promise<SessionResponse> {
-    const expiresIn = this.config.get<string>('JWT_EXPIRES_IN', '1h');
-    const accessToken = await this.jwt.signAsync(
-      { sub: user.id, email: user.email },
-      { expiresIn: expiresIn as JwtSignOptions['expiresIn'] },
-    );
-
-    const refreshToken = randomBytes(48).toString('base64url');
-    const days = this.config.get<number>('REFRESH_TOKEN_DAYS', 30);
-
-    await this.firebase.db
-      .collection(COLLECTIONS.refreshTokens)
-      .doc(hashToken(refreshToken))
-      .set({
-        userId: user.id,
-        expiresAt: new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString(),
-        revokedAt: null,
-        createdAt: new Date().toISOString(),
-      });
-
-    return {
-      user: toUserResponse(user),
-      accessToken,
-      refreshToken,
-      expiresIn: parseDuration(expiresIn),
-    };
+    return snapshot.exists ? { id: snapshot.id, ...(snapshot.data() as UserDoc) } : null;
   }
 }
 
-/** Guardamos solo el hash: si se filtra la base, los tokens no sirven. */
-function hashToken(token: string): string {
-  return createHash('sha256').update(token).digest('hex');
+/** Traduce los proveedores de Firebase a los nombres que usa la app. */
+function proveedoresDe(cuenta: UserRecord | null): AuthProvider[] {
+  const encontrados = (cuenta?.providerData ?? [])
+    .map((proveedor) => {
+      if (proveedor.providerId === 'google.com') return 'google';
+      if (proveedor.providerId === 'password') return 'password';
+      return null;
+    })
+    .filter((proveedor): proveedor is AuthProvider => proveedor !== null);
+
+  return encontrados.length > 0 ? [...new Set(encontrados)] : ['password'];
+}
+
+function idDeGoogle(cuenta: UserRecord | null): string | null {
+  return cuenta?.providerData.find((proveedor) => proveedor.providerId === 'google.com')?.uid ?? null;
+}
+
+function distintos(a: AuthProvider[] | undefined, b: AuthProvider[]): boolean {
+  return [...(a ?? [])].sort().join(',') !== [...b].sort().join(',');
+}
+
+function describir(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 function toUserResponse(user: StoredUser): UserResponse {
@@ -459,13 +204,4 @@ function toUserResponse(user: StoredUser): UserResponse {
     emailReminders: user.emailReminders,
     createdAt: new Date(user.createdAt),
   };
-}
-
-/** '1h' → 3600. Solo para informar al cliente cuándo renovar. */
-function parseDuration(value: string): number {
-  const match = /^(\d+)([smhd])$/.exec(value.trim());
-  if (!match) return 3600;
-  const amount = Number(match[1]);
-  const unit = { s: 1, m: 60, h: 3600, d: 86400 }[match[2]] ?? 1;
-  return amount * unit;
 }
