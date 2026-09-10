@@ -1,6 +1,13 @@
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createTransport, type Transporter } from 'nodemailer';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport/index.js';
+
+/**
+ * `family` no está declarado en los tipos de nodemailer, pero sí se le pasa a
+ * net.connect y es la única forma de forzar IPv4 desde acá.
+ */
+type OpcionesSmtp = SMTPTransport.Options & { family?: 4 | 6 };
 
 export type MailMessage = {
   to: string;
@@ -34,7 +41,7 @@ export class MailService implements OnModuleInit {
       'Mi Revisión Técnica <mirevision.soporte@gmail.com>',
     );
 
-    this.transporter = createTransport({
+    const opciones: OpcionesSmtp = {
       host,
       port,
       secure: port === 465,
@@ -55,7 +62,9 @@ export class MailService implements OnModuleInit {
         user: this.config.get<string>('SMTP_USER'),
         pass: this.config.get<string>('SMTP_PASSWORD'),
       },
-    });
+    };
+
+    this.transporter = createTransport(opciones);
 
     this.logger.log(`Correo habilitado vía ${host}:${port}`);
   }
