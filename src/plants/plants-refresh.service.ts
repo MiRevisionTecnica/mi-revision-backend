@@ -5,6 +5,7 @@ import { CronJob } from 'cron';
 import { COLLECTIONS, type PlantDoc } from '../firebase/collections.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
 import { refreshFromPlaces, saveToFirestore, type PlantSeed, type RefreshResult } from './places-refresh.js';
+import { refreshTarifas, saveTarifas, type PlantaCatalogo } from './tarifas-refresh.js';
 import { PlantsService } from './plants.service.js';
 
 /**
@@ -29,11 +30,13 @@ export class PlantsRefreshService implements OnModuleInit {
 
   onModuleInit(): void {
     if (!this.config.get<string>('GOOGLE_MAPS_API_KEY')) {
+      // El refresco sigue programado igual: las tarifas y las clases salen del
+      // listado del MTT, que no necesita ninguna clave. Sin la de Google solo se
+      // pierden las coordenadas y los horarios.
       this.logger.warn(
-        'Sin GOOGLE_MAPS_API_KEY: el catálogo de plantas no se refrescará solo. ' +
-          'Ver README.md → "Catálogo de plantas PRT".',
+        'Sin GOOGLE_MAPS_API_KEY: el refresco mensual traerá tarifas y clases, ' +
+          'pero no actualizará ubicaciones ni horarios. Ver README.md.',
       );
-      return;
     }
 
     const job = CronJob.from({
@@ -51,10 +54,16 @@ export class PlantsRefreshService implements OnModuleInit {
     this.logger.log('Catálogo de plantas: refresco automático el día 1 de cada mes a las 03:00');
   }
 
-  /** Consulta Places y guarda. Devuelve el resumen de lo que cambió. */
+  /**
+   * Refresca el catálogo y devuelve el resumen de lo que cambió.
+   *
+   * Primero el listado del MTT y después Google: el MTT es la fuente oficial de
+   * qué plantas existen, cuánto cobran y qué vehículos atienden, y conviene
+   * marcar las cerradas antes de gastar llamadas a Places averiguando el horario
+   * de una planta que ya no opera.
+   */
   async run(): Promise<RefreshResult | null> {
     const key = this.config.get<string>('GOOGLE_MAPS_API_KEY');
-    if (!key) return null;
 
     // Dos corridas simultáneas gastarían el doble de API para el mismo resultado.
     if (this.running) {
@@ -89,6 +98,13 @@ export class PlantsRefreshService implements OnModuleInit {
         return null;
       }
 
+      await this.refrescarTarifas(seed as unknown as PlantaCatalogo[]);
+
+      if (!key) {
+        this.plants.invalidateCache();
+        return null;
+      }
+
       const { plants, result } = await refreshFromPlaces(seed, key);
       await saveToFirestore(this.firebase.db, plants);
       this.plants.invalidateCache();
@@ -110,6 +126,35 @@ export class PlantsRefreshService implements OnModuleInit {
       return null;
     } finally {
       this.running = false;
+    }
+  }
+  /**
+   * Trae del MTT las tarifas, las clases y qué plantas siguen operando.
+   *
+   * Si falla no se aborta el refresco completo: el sitio del Ministerio se cae o
+   * cambia de formato de vez en cuando, y perder las tarifas de este mes no es
+   * motivo para perder también la actualización de ubicaciones y horarios.
+   */
+  private async refrescarTarifas(catalogo: PlantaCatalogo[]): Promise<void> {
+    try {
+      const resultado = await refreshTarifas(catalogo);
+      await saveTarifas(this.firebase.db, catalogo, resultado);
+
+      this.logger.log(
+        `Tarifas del MTT (${resultado.vigencia}): ${resultado.actualizadas} plantas actualizadas, ` +
+          `${resultado.sinFilaOficial.length} marcadas como cerradas, ` +
+          `${resultado.faltantes.length} oficiales sin registrar en el catálogo.`,
+      );
+
+      for (const fila of resultado.faltantes) {
+        this.logger.warn(
+          `Planta oficial sin registrar: ${fila.codigo} · ${fila.comuna} · ${fila.direccion}`,
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        `No se pudieron actualizar las tarifas del MTT: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 }

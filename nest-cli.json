@@ -5,7 +5,8 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "assets": [
-      "data/*.json"
+      "data/*.json",
+      "plants/certs/*.pem"
     ],
     "watchAssets": true
   }

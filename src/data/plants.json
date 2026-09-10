@@ -5,7 +5,6 @@
     "comuna": "Colina",
     "address": "Camino Antiguo Coquimbo s/n, Chacra El Carmen, Parcela 2, Lote 13",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.291971,
@@ -61,7 +60,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://sandamaso.cl/streaming"
+    "cameraUrl": "https://sandamaso.cl/streaming",
+    "officialCode": "B-1341"
   },
   {
     "id": "prt-02",
@@ -69,7 +69,6 @@
     "comuna": "Huechuraba",
     "address": "Av. Américo Vespucio Norte 191",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.391071,
@@ -125,7 +124,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://sandamaso.cl/streaming"
+    "cameraUrl": "https://sandamaso.cl/streaming",
+    "officialCode": "B-1342"
   },
   {
     "id": "prt-03",
@@ -133,7 +133,6 @@
     "comuna": "Huechuraba",
     "address": "Av. Santa Clara 523",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.380989,
@@ -189,7 +188,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1337"
   },
   {
     "id": "prt-04",
@@ -197,7 +197,6 @@
     "comuna": "Quilicura",
     "address": "Cañaveral Lotes 450 y 500",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.323279,
@@ -253,7 +252,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1328"
   },
   {
     "id": "prt-05",
@@ -261,7 +261,6 @@
     "comuna": "Quilicura",
     "address": "Av. Eduardo Frei Montalva 9500",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.340378,
@@ -317,7 +316,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://sandamaso.cl/streaming"
+    "cameraUrl": "https://sandamaso.cl/streaming",
+    "officialCode": "B-1331"
   },
   {
     "id": "prt-06",
@@ -325,7 +325,6 @@
     "comuna": "Quilicura",
     "address": "Senador Jaime Guzmán 96",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.365944,
@@ -381,7 +380,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1325"
   },
   {
     "id": "prt-07",
@@ -389,8 +389,7 @@
     "comuna": "Quilicura",
     "address": "Av. Galvarino 9430",
     "classes": [
-      "A",
-      "B"
+      "A"
     ],
     "lat": -33.334661,
     "lng": -70.704605,
@@ -449,7 +448,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "A-1301"
   },
   {
     "id": "prt-08",
@@ -457,7 +457,6 @@
     "comuna": "Recoleta",
     "address": "Av. Einstein 1010",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.404182,
@@ -513,7 +512,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1339"
   },
   {
     "id": "prt-09",
@@ -585,7 +585,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "AB1308"
   },
   {
     "id": "prt-10",
@@ -652,7 +653,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "A-1306"
   },
   {
     "id": "prt-11",
@@ -660,7 +662,6 @@
     "comuna": "Pudahuel",
     "address": "Av. Américo Vespucio 1393",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.420746,
@@ -716,7 +717,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1340"
   },
   {
     "id": "prt-12",
@@ -724,7 +726,6 @@
     "comuna": "Maipú",
     "address": "Caletera Américo Vespucio 2562",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.466614,
@@ -780,7 +781,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://uvt.cl/plantas-en-vivo/"
+    "cameraUrl": "https://uvt.cl/plantas-en-vivo/",
+    "officialCode": "B-1348"
   },
   {
     "id": "prt-13",
@@ -788,7 +790,6 @@
     "comuna": "Maipú",
     "address": "Camino a Melipilla 17600",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.547678,
@@ -844,7 +845,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://sandamaso.cl/streaming"
+    "cameraUrl": "https://sandamaso.cl/streaming",
+    "officialCode": "B-1344"
   },
   {
     "id": "prt-14",
@@ -852,7 +854,6 @@
     "comuna": "Quinta Normal",
     "address": "Av. Carrascal 5720",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.419666,
@@ -908,7 +909,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1334"
   },
   {
     "id": "prt-15",
@@ -916,8 +918,7 @@
     "comuna": "Cerrillos",
     "address": "Caletera General Velásquez 7319",
     "classes": [
-      "A",
-      "B"
+      "A"
     ],
     "lat": -33.510345,
     "lng": -70.699735,
@@ -976,7 +977,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://uvt.cl/plantas-en-vivo/"
+    "cameraUrl": "https://uvt.cl/plantas-en-vivo/",
+    "officialCode": "A-1303"
   },
   {
     "id": "prt-16",
@@ -984,7 +986,6 @@
     "comuna": "Cerrillos",
     "address": "Vista Alegre 2253",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.520731,
@@ -1040,7 +1041,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.revisionestecnicas.cl/camaras"
+    "cameraUrl": "https://www.revisionestecnicas.cl/camaras",
+    "officialCode": "B-1353"
   },
   {
     "id": "prt-17",
@@ -1048,7 +1050,6 @@
     "comuna": "Independencia",
     "address": "Catorce de la Fama 2850",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.402552,
@@ -1104,7 +1105,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1355"
   },
   {
     "id": "prt-18",
@@ -1150,8 +1152,7 @@
     "comuna": "Peñalolén",
     "address": "Av. Las Torres 6900",
     "classes": [
-      "A",
-      "B"
+      "A"
     ],
     "lat": -33.504855,
     "lng": -70.562051,
@@ -1210,7 +1211,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://uvt.cl/plantas-en-vivo/"
+    "cameraUrl": "https://uvt.cl/plantas-en-vivo/",
+    "officialCode": "A-1304"
   },
   {
     "id": "prt-21",
@@ -1218,7 +1220,6 @@
     "comuna": "Peñalolén",
     "address": "Manuel Carvallo 1144",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.464438,
@@ -1274,7 +1275,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.revisionestecnicas.cl/camaras"
+    "cameraUrl": "https://www.revisionestecnicas.cl/camaras",
+    "officialCode": "B-1349"
   },
   {
     "id": "prt-22",
@@ -1282,7 +1284,6 @@
     "comuna": "Peñalolén",
     "address": "Av. Américo Vespucio 4446",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.497839,
@@ -1338,7 +1339,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1326"
   },
   {
     "id": "prt-23",
@@ -1346,7 +1348,6 @@
     "comuna": "La Reina",
     "address": "Av. Alcalde Fernando Castillo Velasco 8712",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.450996,
@@ -1402,7 +1403,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://uvt.cl/plantas-en-vivo/"
+    "cameraUrl": "https://uvt.cl/plantas-en-vivo/",
+    "officialCode": "B-1345"
   },
   {
     "id": "prt-24",
@@ -1410,7 +1412,6 @@
     "comuna": "La Reina",
     "address": "Los Hilanderos 8500",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.452765,
@@ -1466,7 +1467,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1354"
   },
   {
     "id": "prt-25",
@@ -1474,7 +1476,6 @@
     "comuna": "La Florida",
     "address": "Av. Vicuña Mackenna Poniente 7955",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.527618,
@@ -1530,7 +1531,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1338"
   },
   {
     "id": "prt-26",
@@ -1538,7 +1540,6 @@
     "comuna": "La Florida",
     "address": "Av. Tobalaba 7609, Lote 3",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.524113,
@@ -1594,7 +1595,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://sandamaso.cl/streaming"
+    "cameraUrl": "https://sandamaso.cl/streaming",
+    "officialCode": "B-1343"
   },
   {
     "id": "prt-27",
@@ -1602,7 +1604,6 @@
     "comuna": "La Florida",
     "address": "Av. La Florida 11573",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.560663,
@@ -1658,7 +1659,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://uvt.cl/plantas-en-vivo/"
+    "cameraUrl": "https://uvt.cl/plantas-en-vivo/",
+    "officialCode": "B-1346"
   },
   {
     "id": "prt-28",
@@ -1666,7 +1668,6 @@
     "comuna": "La Pintana",
     "address": "Lo Blanco 1789",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.586715,
@@ -1722,7 +1723,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1327"
   },
   {
     "id": "prt-29",
@@ -1730,7 +1732,6 @@
     "comuna": "La Pintana",
     "address": "Av. Gabriela 3470",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.582865,
@@ -1786,7 +1787,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1329"
   },
   {
     "id": "prt-30",
@@ -1794,8 +1796,7 @@
     "comuna": "La Pintana",
     "address": "Av. Gabriela 2891",
     "classes": [
-      "A",
-      "B"
+      "A"
     ],
     "lat": -33.585319,
     "lng": -70.62075,
@@ -1854,7 +1855,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "A-1302"
   },
   {
     "id": "prt-31",
@@ -1862,7 +1864,6 @@
     "comuna": "Macul",
     "address": "Av. Maratón 3401",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.486358,
@@ -1918,7 +1919,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.revisionestecnicas.cl/camaras"
+    "cameraUrl": "https://www.revisionestecnicas.cl/camaras",
+    "officialCode": "B-1350"
   },
   {
     "id": "prt-32",
@@ -1926,7 +1928,6 @@
     "comuna": "Puente Alto",
     "address": "Av. Santa Rosa 659",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.612131,
@@ -1977,7 +1978,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://sandamaso.cl/streaming"
+    "cameraUrl": "https://sandamaso.cl/streaming",
+    "officialCode": "B-1333"
   },
   {
     "id": "prt-33",
@@ -1985,7 +1987,6 @@
     "comuna": "Puente Alto",
     "address": "Av. Eyzaguirre 3709",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.617418,
@@ -2041,7 +2042,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://sandamaso.cl/streaming"
+    "cameraUrl": "https://sandamaso.cl/streaming",
+    "officialCode": "B-1332"
   },
   {
     "id": "prt-34",
@@ -2108,7 +2110,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "A-1305"
   },
   {
     "id": "prt-35",
@@ -2116,8 +2119,7 @@
     "comuna": "San Bernardo",
     "address": "Santa Margarita 1775",
     "classes": [
-      "A",
-      "B"
+      "A"
     ],
     "lat": -33.546339,
     "lng": -70.711396,
@@ -2176,7 +2178,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "A-1316"
   },
   {
     "id": "prt-36",
@@ -2184,7 +2187,6 @@
     "comuna": "San Joaquín",
     "address": "Av. Salvador Allende 143",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.495556,
@@ -2240,7 +2242,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1330"
   },
   {
     "id": "prt-37",
@@ -2248,7 +2251,6 @@
     "comuna": "San Joaquín",
     "address": "Av. Departamental 390",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.507464,
@@ -2304,7 +2306,8 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1335"
   },
   {
     "id": "prt-38",
@@ -2312,7 +2315,6 @@
     "comuna": "San Ramón",
     "address": "Av. Américo Vespucio 1460",
     "classes": [
-      "A",
       "B"
     ],
     "lat": -33.540043,
@@ -2368,6 +2370,7 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "officialCode": "B-1336"
   }
 ]
