@@ -1,0 +1,3 @@
+# Los certificados se versionan tal cual: normalizar sus saltos de línea altera
+# bytes de un archivo que se usa para verificar una cadena TLS.
+*.pem binary
