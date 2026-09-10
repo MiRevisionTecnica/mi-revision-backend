@@ -385,9 +385,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "http://envivo.chrt.cl/",
+    "cameraUrl": "http://200.54.42.127:8086/jpg/image.jpg",
     "officialCode": "B-1325",
-    "cameraType": "pagina"
+    "cameraType": "imagen"
   },
   {
     "id": "prt-07",
@@ -792,9 +792,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=39",
+    "cameraUrl": null,
     "officialCode": "B-1348",
-    "cameraType": "pagina"
+    "cameraType": null
   },
   {
     "id": "prt-13",
@@ -991,9 +991,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=43",
+    "cameraUrl": null,
     "officialCode": "A-1303",
-    "cameraType": "pagina"
+    "cameraType": null
   },
   {
     "id": "prt-16",
@@ -1230,9 +1230,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=44",
+    "cameraUrl": null,
     "officialCode": "A-1304",
-    "cameraType": "pagina"
+    "cameraType": null
   },
   {
     "id": "prt-21",
@@ -1360,9 +1360,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "http://envivo.chrt.cl/",
+    "cameraUrl": "http://200.54.42.127:8082/jpg/image.jpg",
     "officialCode": "B-1326",
-    "cameraType": "pagina"
+    "cameraType": "imagen"
   },
   {
     "id": "prt-23",
@@ -1425,9 +1425,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=45",
+    "cameraUrl": null,
     "officialCode": "B-1345",
-    "cameraType": "pagina"
+    "cameraType": null
   },
   {
     "id": "prt-24",
@@ -1685,9 +1685,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=41",
+    "cameraUrl": null,
     "officialCode": "B-1346",
-    "cameraType": "pagina"
+    "cameraType": null
   },
   {
     "id": "prt-28",
@@ -1750,9 +1750,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "http://envivo.chrt.cl/",
+    "cameraUrl": "http://200.54.42.127:8095/jpg/image.jpg",
     "officialCode": "B-1327",
-    "cameraType": "pagina"
+    "cameraType": "imagen"
   },
   {
     "id": "prt-29",
