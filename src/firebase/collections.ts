@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import type { DocumentKind, ReminderChannel } from '../common/enums.js';
 
 /**
@@ -8,7 +9,7 @@ import type { DocumentKind, ReminderChannel } from '../common/enums.js';
  *  - el id de `users` es el `uid` de Firebase Authentication, que ya garantiza
  *    un solo usuario por correo;
  *  - la unicidad de patente por usuario se valida dentro de una transacción;
- *  - `devices` usa el token de push como id del documento;
+ *  - `devices` usa el hash del token de push como id del documento;
  *  - `reminderLogs` usa una clave compuesta como id, lo que hace el envío
  *    idempotente sin necesidad de leer antes de escribir.
  */
@@ -17,7 +18,7 @@ export const COLLECTIONS = {
   users: 'users',
   vehicles: 'vehicles',
   documents: 'documents',
-  /** id = ExponentPushToken[...]. */
+  /** id = sha256 del token de push. Ver `deviceId()`. */
   devices: 'devices',
   reminderLogs: 'reminderLogs',
   plants: 'plants',
@@ -50,6 +51,14 @@ export type UserDoc = {
    * más de un auto, colgarla del vehículo daría un aviso por cada uno.
    */
   licenseExpiresAt?: string | null;
+  /**
+   * A qué hora del día quiere recibir los avisos, 0-23, en horario de Chile.
+   *
+   * null significa "la que traiga el servidor". Existe porque la hora buena
+   * depende de la persona --hay quien maneja de madrugada-- y porque sin esto
+   * probar un recordatorio obliga a esperar hasta la hora fija de todos.
+   */
+  reminderHour?: number | null;
   /**
    * Versión del texto legal que la persona aceptó al registrarse, y cuándo.
    *
@@ -94,8 +103,20 @@ export type DocumentDoc = {
   uploadedAt: string;
 };
 
+/** Con qué servicio se le entrega el aviso a este aparato. */
+export type PushProvider = 'fcm' | 'apns';
+
 export type DeviceDoc = {
   userId: string;
+  /**
+   * El token, guardado como campo y no solo como id.
+   *
+   * El id es su hash --los tokens de FCM son largos y traen caracteres que
+   * Firestore no acepta en un id-- así que del id no se puede volver al token,
+   * y para enviar hace falta el token entero.
+   */
+  token: string;
+  provider: PushProvider;
   platform: string | null;
   lastSeenAt: string;
   createdAt: string;
@@ -191,6 +212,18 @@ export type PlantDoc = {
 };
 
 /** id determinista del log de recordatorio: si ya existe, no se reenvía. */
+/**
+ * Id del documento de un aparato: el hash del token.
+ *
+ * Se usa el hash y no el token porque un token de FCM pasa los 160 caracteres y
+ * puede traer `/`, que Firestore no admite en un id. El hash siempre mide lo
+ * mismo y siempre es válido, y como es determinista, registrar dos veces el
+ * mismo teléfono sigue cayendo en el mismo documento.
+ */
+export function deviceId(token: string): string {
+  return createHash('sha256').update(token).digest('hex');
+}
+
 export function reminderLogId(
   vehicleId: string,
   kind: DocumentKind,

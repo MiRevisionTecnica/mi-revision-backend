@@ -645,7 +645,7 @@
     },
     "/api/devices": {
       "post": {
-        "description": "La app lo llama al iniciar sesión y cuando Expo renueva el token.",
+        "description": "La app lo llama al iniciar sesión y cada vez que el sistema renueva el token.",
         "operationId": "DevicesController_register",
         "parameters": [],
         "requestBody": {
@@ -709,12 +709,12 @@
         ]
       }
     },
-    "/api/devices/{expoPushToken}": {
+    "/api/devices/{pushToken}": {
       "delete": {
         "operationId": "DevicesController_remove",
         "parameters": [
           {
-            "name": "expoPushToken",
+            "name": "pushToken",
             "required": true,
             "in": "path",
             "schema": {
@@ -876,6 +876,11 @@
             "nullable": true,
             "example": "2031-05-20"
           },
+          "reminderHour": {
+            "type": "number",
+            "example": 9,
+            "description": "Hora a la que llegan los avisos, en horario de Chile."
+          },
           "firstName": {
             "type": "object",
             "nullable": true
@@ -902,6 +907,7 @@
           "emailReminders",
           "createdAt",
           "licenseExpiresAt",
+          "reminderHour",
           "firstName",
           "lastName",
           "alias",
@@ -938,6 +944,14 @@
           "emailReminders": {
             "type": "boolean",
             "description": "Recibir avisos de vencimiento por correo."
+          },
+          "reminderHour": {
+            "type": "object",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 23,
+            "example": 9,
+            "description": "A qué hora del día llegan los avisos, en horario de Chile. Enviar null para volver a la hora por defecto del servidor."
           },
           "licenseExpiresAt": {
             "type": "object",
@@ -1318,10 +1332,18 @@
       "RegisterDeviceDto": {
         "type": "object",
         "properties": {
-          "expoPushToken": {
+          "pushToken": {
             "type": "string",
-            "example": "ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]",
-            "description": "Token entregado por expo-notifications en el dispositivo."
+            "example": "fH3k…:APA91bF…",
+            "description": "Token de push del aparato. En Android es el token de FCM que entrega expo-notifications; en iOS, el de APNs."
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "fcm",
+              "apns"
+            ],
+            "description": "Con qué servicio se entrega. Lo decide la app según el tipo de token que le dio el sistema, no la plataforma: es lo que evita mandarle a FCM un token de Apple."
           },
           "platform": {
             "type": "string",
@@ -1332,16 +1354,18 @@
           }
         },
         "required": [
-          "expoPushToken"
+          "pushToken",
+          "provider"
         ]
       },
       "DeviceResponse": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Hash del token: es el id del documento."
           },
-          "expoPushToken": {
+          "provider": {
             "type": "string"
           },
           "platform": {
@@ -1355,7 +1379,7 @@
         },
         "required": [
           "id",
-          "expoPushToken",
+          "provider",
           "lastSeenAt"
         ]
       }

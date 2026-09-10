@@ -13,7 +13,7 @@ export class DevicesController {
   @Post()
   @ApiOperation({
     summary: 'Registrar el token de push del teléfono',
-    description: 'La app lo llama al iniciar sesión y cuando Expo renueva el token.',
+    description: 'La app lo llama al iniciar sesión y cada vez que el sistema renueva el token.',
   })
   @ApiResponse({ status: 201, type: DeviceResponse })
   register(
@@ -30,13 +30,13 @@ export class DevicesController {
     return this.devices.list(userId);
   }
 
-  @Delete(':expoPushToken')
+  @Delete(':pushToken')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Dar de baja un dispositivo (al cerrar sesión)' })
   remove(
     @CurrentUser('id') userId: string,
-    @Param('expoPushToken') expoPushToken: string,
+    @Param('pushToken') pushToken: string,
   ): Promise<void> {
-    return this.devices.remove(userId, expoPushToken);
+    return this.devices.remove(userId, pushToken);
   }
 }

@@ -105,11 +105,6 @@ export class Env {
   @IsString()
   MAIL_FROM?: string;
 
-  /** Token de Expo para push con credenciales mejoradas (opcional). */
-  @IsOptional()
-  @IsString()
-  EXPO_ACCESS_TOKEN?: string;
-
   /**
    * Secreto que protege POST /api/reminders/run. Sin esta variable el endpoint
    * queda deshabilitado y los avisos salen solo por el cron interno.

@@ -66,8 +66,8 @@ y pegar el resultado en `FIREBASE_SERVICE_ACCOUNT_BASE64`.
 
 Si no hay ninguna, la API no arranca y el error dice exactamente qué falta.
 
-Es la **misma clave** que se sube a Expo para el push FCM V1, aunque cumple otro rol: aquí
-da acceso a Firestore, allá autoriza el envío de notificaciones.
+Con esa misma credencial se hace todo: Firestore, verificar los tokens de sesión y enviar
+las notificaciones por Cloud Messaging. No hay una segunda clave que mantener al día.
 
 ## Endpoints
 
@@ -80,7 +80,7 @@ da acceso a Firestore, allá autoriza el envío de notificaciones.
 | **Vehículos** | `GET/POST /vehicles` · `GET/PATCH/DELETE /vehicles/:id` |
 | **Documentos** | `GET/POST /vehicles/:vehicleId/documents` · `GET/POST /documents` · `DELETE /documents/:id` |
 | **Plantas PRT** | `GET /plants` · `GET /plants/comunas` · `GET /plants/:id` · `GET /plants/:id/camara` *(públicos)* |
-| **Dispositivos** | `GET/POST /devices` · `DELETE /devices/:expoPushToken` |
+| **Dispositivos** | `GET/POST /devices` · `DELETE /devices/:pushToken` |
 | **Recordatorios** | `GET /reminders/preview` · `POST /reminders/run` |
 | **Estado** | `GET /health` |
 
@@ -120,6 +120,40 @@ cuenta con contraseña, Firebase entra a la misma en vez de duplicarla.
 Del lado de la API no hay nada que configurar: `providers` en `UserResponse` sale de lo que
 reporta Firebase (`["password", "google"]`), y se refresca en cada `POST /auth/session`.
 
+### Notificaciones
+
+Las envía **Firebase Cloud Messaging**, directo desde el servidor con la misma cuenta de
+servicio que usa Firestore.
+
+Antes pasaban por el servicio de Expo, que es un intermediario delante de FCM: el aviso
+viajaba del servidor a Expo, de Expo a FCM y recién ahí al teléfono. Quitarlo sacó un
+servicio de la ruta de entrega y, sobre todo, una credencial que había que subir a Expo y
+mantener sincronizada con la de Firebase.
+
+Cada aparato guarda su `provider`, y no se deduce de la plataforma:
+
+| provider | De dónde sale | Se entrega |
+| --- | --- | --- |
+| `fcm` | `getDevicePushTokenAsync()` en Android | Sí |
+| `apns` | `getDevicePushTokenAsync()` en iOS | Todavía no |
+
+#### Notificaciones en iOS
+
+Falta una pieza, y conviene tenerla clara antes de que exista la app de Apple: en iOS ese
+método entrega un token de **APNs**, y `messaging().send()` solo acepta tokens de **FCM**. No
+son intercambiables.
+
+Cuando haya app de iOS, para que las notificaciones funcionen hay que:
+
+1. Crear la app iOS en el proyecto de Firebase y agregar `GoogleService-Info.plist`.
+2. Subir la clave de APNs (`.p8`) a Firebase → Cloud Messaging.
+3. Incluir el SDK de Firebase en la app (`@react-native-firebase/messaging`), que es lo que
+   convierte el registro de APNs en un token de FCM.
+
+Mientras tanto los tokens de Apple se guardan igual y el servidor deja constancia en el log
+de que no tiene ruta para entregarlos. Se guardan en vez de rechazarlos para que el día que
+se complete lo anterior no haya que pedirle a nadie que vuelva a registrar su teléfono.
+
 ### Vehículos y vencimientos
 
 Las fechas van dentro del vehículo, como lista de `{ kind, dueDate }`, y la respuesta agrega
@@ -144,16 +178,23 @@ El límite por cuenta es `MAX_VEHICLES_PER_USER` (Fase 1: `1`; al superarlo resp
 
 ### Recordatorios
 
-Un cron interno corre todos los días a las `REMINDER_HOUR` en zona `America/Santiago` y avisa
+Un cron interno revisa **cada hora en punto** en zona `America/Santiago` y avisa
 `REMINDER_OFFSETS` días antes de cada vencimiento (por defecto 30, 15, 7, 1 y 0), por push
-(Expo) y por correo (SMTP).
+(Firebase Cloud Messaging) y por correo.
+
+**La hora la elige cada persona**, entre 0 y 23, con `PATCH /auth/me { reminderHour }`. Quien
+no elija ninguna recibe a la de `REMINDER_HOUR`. Por eso la corrida es horaria y no diaria:
+con horas distintas por usuario, un solo disparo al día no alcanza, y revisar cada hora sale
+gratis cuando nadie eligió esa hora. `POST /reminders/run` ignora la hora y envía a todos,
+porque ahí el envío lo pidió alguien a propósito.
 
 - **Es idempotente.** Cada aviso se "reserva" creando `reminderLogs/{vehículo}_{tipo}_{fecha}_{días}_{canal}`
   con `create()`, que falla si el documento ya existe. Repetir la corrida —o correr dos
   instancias a la vez— no duplica avisos. Si el envío no llega a salir, la reserva se libera.
-- **Los tokens muertos se limpian solos:** si Expo responde `DeviceNotRegistered`, el
-  dispositivo se borra.
-- **Sin `SMTP_HOST` configurado** el correo queda inactivo y solo salen los push.
+- **Los tokens muertos se limpian solos:** si FCM responde que el token ya no está
+  registrado, el dispositivo se borra. Un token vencido no se recupera --el teléfono genera
+  otro al reinstalar-- y dejarlo guardado haría fallar un envío en cada corrida, para siempre.
+- **Sin correo configurado** solo salen los push.
 - `GET /reminders/preview` muestra qué avisos tocarían hoy, sin enviar nada.
 - `POST /reminders/run` dispara la corrida para un cron externo. Exige el header
   `x-cron-secret` igual a `CRON_SECRET`; **sin esa variable el endpoint queda cerrado**.
@@ -167,10 +208,9 @@ sostienen desde el código ([`src/firebase/collections.ts`](src/firebase/collect
 | --- | --- | --- |
 | `users` | autogenerado | Cuenta y preferencia de correos |
 | `userEmails` | correo en minúsculas | **Índice de unicidad**: se escribe en la misma transacción que el usuario |
-| `refreshTokens` | sha256 del token | Buscar una sesión es un acceso directo por id |
 | `vehicles` | autogenerado | Único por `(usuario, patente)`, validado dentro de una transacción |
 | `documents` | autogenerado | Guarda `userId` además de `vehicleId`, para filtrar por dueño sin leer el vehículo |
-| `devices` | `ExponentPushToken[...]` | El token como id hace que registrar dos veces no duplique |
+| `devices` | sha256 del token de push | Un token de FCM pasa los 160 caracteres y puede traer `/`, que Firestore no admite en un id; el hash siempre sirve y sigue siendo determinista |
 | `reminderLogs` | clave compuesta | Su id es lo que hace idempotente el envío |
 | `plants` | `prt-01`… | Catálogo público, cacheado 10 minutos en memoria |
 

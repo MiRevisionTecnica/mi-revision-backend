@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsInt,
+  Max,
+  Min,
   IsDateString,
   IsOptional,
   IsString,
@@ -86,6 +89,22 @@ export class UpdateProfileDto {
 
   @ApiProperty({
     required: false,
+    nullable: true,
+    minimum: 0,
+    maximum: 23,
+    example: 9,
+    description:
+      'A qué hora del día llegan los avisos, en horario de Chile. Enviar null para volver a la hora por defecto del servidor.',
+  })
+  @IsOptional()
+  @ValidateIf((_object: unknown, valor: unknown) => valor !== null)
+  @IsInt({ message: 'La hora debe ser un número entero.' })
+  @Min(0, { message: 'La hora va de 0 a 23.' })
+  @Max(23, { message: 'La hora va de 0 a 23.' })
+  reminderHour?: number | null;
+
+  @ApiProperty({
+    required: false,
     example: '2031-05-20',
     nullable: true,
     description:
@@ -111,6 +130,11 @@ export class UserResponse {
   @ApiProperty() emailReminders: boolean;
   @ApiProperty() createdAt: Date;
   @ApiProperty({ nullable: true, example: '2031-05-20' }) licenseExpiresAt: string | null;
+  @ApiProperty({
+    example: 9,
+    description: 'Hora a la que llegan los avisos, en horario de Chile.',
+  })
+  reminderHour: number;
   @ApiProperty({ nullable: true }) firstName: string | null;
   @ApiProperty({ nullable: true }) lastName: string | null;
   @ApiProperty({ nullable: true, description: 'Cómo prefiere que le hablemos.' }) alias: string | null;

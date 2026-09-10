@@ -2,20 +2,19 @@ import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
-import type { ExpoPushMessage } from 'expo-server-sdk';
 import { addDays, formatLong, toDateOnly, toIsoDate, today } from '../common/dates.js';
+import { horaDelUsuario, horaPorDefecto } from '../common/reminder-hour.js';
 import { DocumentKind, ReminderChannel } from '../common/enums.js';
 import {
   COLLECTIONS,
   reminderLogId,
-  type DeviceDoc,
   type ReminderLogDoc,
   type UserDoc,
   type VehicleDoc,
 } from '../firebase/collections.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
 import { MailService } from './mail.service.js';
-import { PushService } from './push.service.js';
+import { PushService, type PushMessage } from './push.service.js';
 
 export type ReminderRunResult = {
   date: string;
@@ -55,6 +54,9 @@ const KIND_LABEL: Record<DocumentKind, string> = {
   OTRO: 'documento',
 };
 
+/** Chile continental. Los recordatorios se piensan en la hora del usuario. */
+const ZONA = 'America/Santiago';
+
 @Injectable()
 export class RemindersService implements OnModuleInit {
   private readonly logger = new Logger(RemindersService.name);
@@ -83,9 +85,15 @@ export class RemindersService implements OnModuleInit {
   ) {}
 
   /**
-   * Programa el envío diario a la hora de `REMINDER_HOUR`, en horario de Chile
-   * continental. El cron se registra en tiempo de ejecución (y no con `@Cron`)
-   * justamente para que la hora sea configurable por entorno.
+   * Revisa cada hora en punto, en horario de Chile continental, y a cada persona
+   * le envía solo cuando da su hora.
+   *
+   * Antes esto corría una vez al día a la hora de `REMINDER_HOUR` e iba para
+   * todos por igual. Con la hora elegible por usuario ya no sirve: alguien que
+   * pide las 7 y alguien que pide las 21 necesitan dos disparos distintos. Una
+   * corrida por hora es barata --si nadie eligió esa hora, no hay nada que
+   * hacer-- y evita tener que reprogramar el cron cada vez que alguien cambia
+   * su preferencia.
    */
   onModuleInit(): void {
     if (!this.config.get<boolean>('REMINDERS_ENABLED', true)) {
@@ -93,18 +101,20 @@ export class RemindersService implements OnModuleInit {
       return;
     }
 
-    const hour = this.config.get<number>('REMINDER_HOUR', 9);
     const job = CronJob.from({
-      cronTime: `0 0 ${hour} * * *`,
-      timeZone: 'America/Santiago',
+      cronTime: '0 0 * * * *',
+      timeZone: ZONA,
       onTick: () => {
-        void this.runAndLog();
+        void this.runAndLog(horaEnChile());
       },
     });
 
     this.scheduler.addCronJob('recordatorios', job as never);
     job.start();
-    this.logger.log(`Recordatorios programados todos los días a las ${hour}:00 (America/Santiago)`);
+    this.logger.log(
+      `Recordatorios activos: se revisa cada hora en punto (${ZONA}) y a cada persona se le ` +
+        `avisa a la hora que eligió. Por defecto, las ${this.horaPorDefecto()}:00.`,
+    );
   }
 
   /**
@@ -112,9 +122,9 @@ export class RemindersService implements OnModuleInit {
    * interno como POST /reminders/run, para que ninguna ejecución quede sin
    * quedar anotada en /health según por dónde se haya disparado.
    */
-  async runTracked(reference?: Date): Promise<ReminderRunResult> {
+  async runTracked(reference?: Date, soloHora?: number): Promise<ReminderRunResult> {
     try {
-      const result = reference ? await this.run(reference) : await this.run();
+      const result = await this.run(reference ?? today(), soloHora);
       this.lastRun = {
         at: new Date().toISOString(),
         ok: true,
@@ -128,12 +138,18 @@ export class RemindersService implements OnModuleInit {
     }
   }
 
-  private async runAndLog(): Promise<void> {
+  private async runAndLog(soloHora?: number): Promise<void> {
     try {
-      const result = await this.runTracked();
+      const result = await this.runTracked(undefined, soloHora);
+
+      // Sin nada que avisar no se dice nada: son 24 corridas al día y llenar el
+      // log de "0 push, 0 correos" haría invisible la corrida que sí importa.
+      if (result.checked === 0) return;
+
       this.logger.log(
-        `Recordatorios: ${result.pushSent} push, ${result.emailsSent} correos, ` +
-          `${result.skipped} ya enviados, sobre ${result.checked} vencimientos.`,
+        `Recordatorios de las ${soloHora}:00 — ${result.pushSent} push, ` +
+          `${result.emailsSent} correos, ${result.skipped} ya enviados, ` +
+          `sobre ${result.checked} vencimientos.`,
       );
     } catch (error) {
       this.logger.error(
@@ -150,7 +166,7 @@ export class RemindersService implements OnModuleInit {
    * dentro del recorrido de vehículos, y agregar la licencia habría significado
    * repetir treinta líneas de push y correo.
    */
-  async run(reference: Date = today()): Promise<ReminderRunResult> {
+  async run(reference: Date = today(), soloHora?: number): Promise<ReminderRunResult> {
     const result: ReminderRunResult = {
       date: toIsoDate(reference),
       checked: 0,
@@ -172,11 +188,15 @@ export class RemindersService implements OnModuleInit {
       ];
 
       for (const aviso of avisos) {
-        result.checked++;
-
         const user = await this.loadUser(users, aviso.userId);
         if (!user) continue;
 
+        // El disparo por hora solo atiende a quien eligió esa hora. Sin hora
+        // --que es como entra POST /reminders/run-- van todos, porque ahí el
+        // envío lo pidió alguien a propósito.
+        if (soloHora !== undefined && this.horaDe(user) !== soloHora) continue;
+
+        result.checked++;
         await this.enviar(aviso, user, dueDate, daysBefore, devices, result);
       }
     }
@@ -246,13 +266,16 @@ export class RemindersService implements OnModuleInit {
       const tokens = await this.loadDevices(devices, aviso.userId);
 
       if (tokens.length > 0) {
-        const messages: ExpoPushMessage[] = tokens.map((to) => ({
-          to,
-          sound: 'default',
+        const messages: PushMessage[] = tokens.map((token) => ({
+          token,
           title,
           body,
-          data: { vehicleId: aviso.plate ? aviso.clave : null, kind: aviso.kind },
-          channelId: 'vencimientos',
+          // FCM solo lleva texto en `data`: un null se rechaza, así que el
+          // vehículo se omite cuando el aviso es de la persona.
+          data: {
+            kind: aviso.kind,
+            ...(aviso.plate ? { vehicleId: aviso.clave } : {}),
+          },
         }));
 
         const delivered = await this.push.send(messages);
@@ -361,17 +384,18 @@ Vence el ${formatLong(toDateOnly(dueDate))}.`,
   private async loadDevices(cache: Map<string, string[]>, userId: string): Promise<string[]> {
     if (cache.has(userId)) return cache.get(userId)!;
 
-    const snapshot = await this.firebase.db
-      .collection(COLLECTIONS.devices)
-      .where('userId', '==', userId)
-      .get();
-
-    const tokens = snapshot.docs
-      .filter((doc) => (doc.data() as DeviceDoc).userId === userId)
-      .map((doc) => doc.id);
-
+    const tokens = await this.push.tokensDe(userId);
     cache.set(userId, tokens);
     return tokens;
+  }
+
+  /** La hora que eligió esta persona, o la del servidor si no eligió ninguna. */
+  private horaDe(user: UserDoc): number {
+    return horaDelUsuario(user.reminderHour, this.horaPorDefecto());
+  }
+
+  private horaPorDefecto(): number {
+    return horaPorDefecto(this.config);
   }
 
   /**
@@ -421,6 +445,22 @@ Vence el ${formatLong(toDateOnly(dueDate))}.`,
       .delete()
       .catch(() => undefined);
   }
+}
+
+/**
+ * La hora que es en Chile, 0-23.
+ *
+ * Se saca con Intl y no del reloj del proceso: el contenedor corre en UTC, y
+ * usar su hora mandaría los avisos con varias horas de corrimiento.
+ */
+function horaEnChile(): number {
+  const hora = new Intl.DateTimeFormat('es-CL', {
+    timeZone: ZONA,
+    hour: 'numeric',
+    hour12: false,
+  }).format(new Date());
+
+  return Number(hora) % 24;
 }
 
 function countdownText(label: string, plate: string, daysBefore: number): string {

@@ -1,7 +1,9 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { getAuth, type UserRecord } from 'firebase-admin/auth';
 import { COLLECTIONS, type AuthProvider, type UserDoc } from '../firebase/collections.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
+import { horaDelUsuario, horaPorDefecto } from '../common/reminder-hour.js';
 import type { SyncSessionDto, UpdateProfileDto, UserResponse } from './dto/auth.dto.js';
 
 type StoredUser = UserDoc & { id: string };
@@ -21,7 +23,10 @@ type StoredUser = UserDoc & { id: string };
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
-  constructor(private readonly firebase: FirebaseService) {}
+  constructor(
+    private readonly firebase: FirebaseService,
+    private readonly config: ConfigService,
+  ) {}
 
   /**
    * Deja el perfil listo después de entrar.
@@ -61,7 +66,7 @@ export class AuthService {
 
       await ref.set(data);
       this.logger.log(`Perfil creado para ${email}`);
-      return toUserResponse({ id: userId, ...data });
+      return toUserResponse({ id: userId, ...data }, this.horaPorDefecto());
     }
 
     const actual = snapshot.data() as UserDoc;
@@ -83,13 +88,13 @@ export class AuthService {
       await ref.update({ ...patch, updatedAt: now });
     }
 
-    return toUserResponse({ id: userId, ...actual, ...patch });
+    return toUserResponse({ id: userId, ...actual, ...patch }, this.horaPorDefecto());
   }
 
   async me(userId: string): Promise<UserResponse> {
     const user = await this.findById(userId);
     if (!user) throw new UnauthorizedException('La sesión ya no es válida.');
-    return toUserResponse(user);
+    return toUserResponse(user, this.horaPorDefecto());
   }
 
   async updateProfile(userId: string, dto: UpdateProfileDto): Promise<UserResponse> {
@@ -107,6 +112,8 @@ export class AuthService {
         ? { name: [dto.firstName, dto.lastName].filter(Boolean).join(' ').trim() || undefined }
         : {}),
       ...(dto.emailReminders !== undefined ? { emailReminders: dto.emailReminders } : {}),
+      // null vuelve a la hora del servidor, que no es lo mismo que no tocarla.
+      ...(dto.reminderHour !== undefined ? { reminderHour: dto.reminderHour } : {}),
       // null significa "dejar de controlarla", que es distinto de no tocarla.
       ...(dto.licenseExpiresAt !== undefined ? { licenseExpiresAt: dto.licenseExpiresAt } : {}),
       updatedAt: new Date().toISOString(),
@@ -125,7 +132,7 @@ export class AuthService {
         });
     }
 
-    return toUserResponse(user);
+    return toUserResponse(user, this.horaPorDefecto());
   }
 
   /**
@@ -156,6 +163,10 @@ export class AuthService {
       .catch((error: unknown) => {
         this.logger.error(`Quedó una cuenta huérfana en Firebase (${userId}): ${describir(error)}`);
       });
+  }
+
+  private horaPorDefecto(): number {
+    return horaPorDefecto(this.config);
   }
 
   async findById(userId: string): Promise<StoredUser | null> {
@@ -189,7 +200,7 @@ function describir(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-function toUserResponse(user: StoredUser): UserResponse {
+function toUserResponse(user: StoredUser, horaDefecto: number): UserResponse {
   return {
     id: user.id,
     name: user.name,
@@ -202,6 +213,7 @@ function toUserResponse(user: StoredUser): UserResponse {
     phone: user.phone ?? null,
     photoUrl: user.photoUrl ?? null,
     emailReminders: user.emailReminders,
+    reminderHour: horaDelUsuario(user.reminderHour, horaDefecto),
     createdAt: new Date(user.createdAt),
   };
 }
