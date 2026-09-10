@@ -40,6 +40,13 @@ export type UserDoc = {
   providers: AuthProvider[];
   emailReminders: boolean;
   /**
+   * Vencimiento de la licencia de conducir, 'AAAA-MM-DD'.
+   *
+   * Va en la cuenta y no en el vehículo porque la licencia es de la persona: con
+   * más de un auto, colgarla del vehículo daría un aviso por cada uno.
+   */
+  licenseExpiresAt?: string | null;
+  /**
    * Versión del texto legal que la persona aceptó al registrarse, y cuándo.
    *
    * Para hacer valer los términos hay que poder demostrar qué texto aceptó y en
@@ -78,7 +85,8 @@ export type VehicleDoc = {
 };
 
 export type DocumentDoc = {
-  vehicleId: string;
+  /** null en los documentos de la persona, como la licencia de conducir. */
+  vehicleId: string | null;
   /** Se guarda también aquí para poder filtrar por dueño sin leer el vehículo. */
   userId: string;
   kind: DocumentKind;

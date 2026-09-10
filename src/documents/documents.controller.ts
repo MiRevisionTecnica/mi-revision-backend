@@ -20,6 +20,27 @@ import { CreateDocumentDto, DocumentResponse } from './dto/document.dto.js';
 export class DocumentsController {
   constructor(private readonly documents: DocumentsService) {}
 
+  @Get('documents')
+  @ApiOperation({
+    summary: 'Documentos de la persona',
+    description:
+      'Los que no pertenecen a un vehículo, como la licencia de conducir. Van en la cuenta porque son de quien maneja, no del auto.',
+  })
+  @ApiResponse({ status: 200, type: [DocumentResponse] })
+  listPersonal(@CurrentUser() userId: string): Promise<DocumentResponse[]> {
+    return this.documents.listPersonal(userId);
+  }
+
+  @Post('documents')
+  @ApiOperation({ summary: 'Adjuntar un documento de la persona' })
+  @ApiResponse({ status: 201, type: DocumentResponse })
+  createPersonal(
+    @CurrentUser() userId: string,
+    @Body() dto: CreateDocumentDto,
+  ): Promise<DocumentResponse> {
+    return this.documents.create(userId, null, dto);
+  }
+
   @Get('vehicles/:vehicleId/documents')
   @ApiOperation({ summary: 'Listar los documentos de un vehículo' })
   @ApiResponse({ status: 200, type: [DocumentResponse] })

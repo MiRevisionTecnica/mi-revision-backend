@@ -217,6 +217,8 @@ export class AuthService {
     await ref.update({
       ...(dto.name !== undefined ? { name: dto.name.trim() } : {}),
       ...(dto.emailReminders !== undefined ? { emailReminders: dto.emailReminders } : {}),
+      // null significa "dejar de controlarla", que es distinto de no tocarla.
+      ...(dto.licenseExpiresAt !== undefined ? { licenseExpiresAt: dto.licenseExpiresAt } : {}),
       updatedAt: new Date().toISOString(),
     });
 
@@ -302,6 +304,7 @@ function toUserResponse(user: StoredUser): UserResponse {
     name: user.name,
     email: user.email,
     providers: user.providers ?? ['password'],
+    licenseExpiresAt: user.licenseExpiresAt ?? null,
     photoUrl: user.photoUrl ?? null,
     emailReminders: user.emailReminders,
     createdAt: new Date(user.createdAt),

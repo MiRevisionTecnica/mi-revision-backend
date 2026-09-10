@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsDateString,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -8,6 +9,7 @@ import {
   Matches,
   MaxLength,
   MinLength,
+  ValidateIf,
 } from 'class-validator';
 
 export class RegisterDto {
@@ -86,6 +88,18 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsBoolean()
   emailReminders?: boolean;
+
+  @ApiProperty({
+    required: false,
+    example: '2031-05-20',
+    nullable: true,
+    description:
+      'Vencimiento de la licencia de conducir (AAAA-MM-DD). Va en la cuenta y no en el vehículo porque la licencia es de la persona. Enviar null para dejar de controlarla.',
+  })
+  @IsOptional()
+  @ValidateIf((_object: unknown, valor: unknown) => valor !== null)
+  @IsDateString({ strict: false }, { message: 'Usa el formato AAAA-MM-DD.' })
+  licenseExpiresAt?: string | null;
 }
 
 export class UserResponse {
@@ -101,6 +115,7 @@ export class UserResponse {
   @ApiProperty({ required: false, nullable: true }) photoUrl: string | null;
   @ApiProperty() emailReminders: boolean;
   @ApiProperty() createdAt: Date;
+  @ApiProperty({ nullable: true, example: '2031-05-20' }) licenseExpiresAt: string | null;
 }
 
 export class SessionResponse {

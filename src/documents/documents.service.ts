@@ -26,12 +26,31 @@ export class DocumentsService {
       .sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
   }
 
+  /**
+   * Documentos de la persona, no de ningún vehículo.
+   *
+   * Hoy es la licencia de conducir. Va acá y no colgando del auto porque es de
+   * quien maneja: con más de un vehículo aparecería repetida, y se perdería al
+   * vender el que la tuviera asociada.
+   */
+  async listPersonal(userId: string): Promise<DocumentResponse[]> {
+    const snapshot = await this.firebase.db
+      .collection(COLLECTIONS.documents)
+      .where('userId', '==', userId)
+      .where('vehicleId', '==', null)
+      .get();
+
+    return snapshot.docs
+      .map((doc) => toResponse(doc.id, doc.data() as DocumentDoc))
+      .sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
+  }
+
   async create(
     userId: string,
-    vehicleId: string,
+    vehicleId: string | null,
     dto: CreateDocumentDto,
   ): Promise<DocumentResponse> {
-    await this.assertOwnership(userId, vehicleId);
+    if (vehicleId !== null) await this.assertOwnership(userId, vehicleId);
     const db = this.firebase.db;
 
     // Fase 1: un archivo por cada tipo con vencimiento, el nuevo reemplaza al
@@ -41,6 +60,8 @@ export class DocumentsService {
         .collection(COLLECTIONS.documents)
         .where('vehicleId', '==', vehicleId)
         .where('kind', '==', dto.kind)
+        // Los personales no se distinguen por vehículo: hay que acotar al dueño.
+        .where('userId', '==', userId)
         .get();
 
       if (!previous.empty) {

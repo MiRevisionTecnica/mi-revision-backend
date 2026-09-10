@@ -38,7 +38,7 @@ export class CreateDocumentDto {
 
 export class DocumentResponse {
   @ApiProperty() id: string;
-  @ApiProperty() vehicleId: string;
+  @ApiProperty() vehicleId: string | null;
   @ApiProperty({ enum: DocumentKind }) kind: DocumentKind;
   @ApiProperty() name: string;
   @ApiPropertyOptional({ nullable: true }) mimeType: string | null;

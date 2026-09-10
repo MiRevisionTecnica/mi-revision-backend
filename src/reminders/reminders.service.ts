@@ -35,10 +35,23 @@ export type ReminderPreview = {
   body: string;
 };
 
+/** Un vencimiento que toca avisar hoy, venga de un vehículo o de la persona. */
+type Aviso = {
+  /** Con qué se marca "ya enviado": el vehículo, o la cuenta si es personal. */
+  clave: string;
+  userId: string;
+  kind: DocumentKind;
+  /** null en los documentos de la persona, que no son de ningún vehículo. */
+  plate: string | null;
+  vehiculo: string;
+};
+
 const KIND_LABEL: Record<DocumentKind, string> = {
   REVISION_TECNICA: 'revisión técnica',
+  GASES: 'revisión de gases',
   SOAP: 'SOAP',
   PERMISO_CIRCULACION: 'permiso de circulación',
+  LICENCIA_CONDUCIR: 'licencia de conducir',
   OTRO: 'documento',
 };
 
@@ -129,7 +142,14 @@ export class RemindersService implements OnModuleInit {
     }
   }
 
-  /** Envía los avisos que corresponden a hoy. Es idempotente: repetirlo no duplica. */
+  /**
+   * Envía los avisos que corresponden a hoy. Es idempotente: repetirlo no duplica.
+   *
+   * Se juntan primero todos los avisos del día --los de los vehículos y los de
+   * las personas-- y después se envían por un solo camino. Antes el envío vivía
+   * dentro del recorrido de vehículos, y agregar la licencia habría significado
+   * repetir treinta líneas de push y correo.
+   */
   async run(reference: Date = today()): Promise<ReminderRunResult> {
     const result: ReminderRunResult = {
       date: toIsoDate(reference),
@@ -146,89 +166,137 @@ export class RemindersService implements OnModuleInit {
     for (const daysBefore of this.offsets()) {
       const dueDate = toIsoDate(addDays(reference, daysBefore));
 
-      // `dueDates` es el arreglo plano que existe justamente para esta consulta:
-      // Firestore no sabe buscar dentro del mapa `expirations`.
-      const snapshot = await this.firebase.db
-        .collection(COLLECTIONS.vehicles)
-        .where('dueDates', 'array-contains', dueDate)
-        .get();
+      const avisos = [
+        ...(await this.avisosDeVehiculos(dueDate)),
+        ...(await this.avisosDeLicencias(dueDate)),
+      ];
 
-      for (const doc of snapshot.docs) {
-        const vehicle = doc.data() as VehicleDoc;
+      for (const aviso of avisos) {
+        result.checked++;
 
-        const kinds = (Object.entries(vehicle.expirations ?? {}) as [DocumentKind, string][])
-          .filter(([, value]) => value === dueDate)
-          .map(([kind]) => kind);
+        const user = await this.loadUser(users, aviso.userId);
+        if (!user) continue;
 
-        for (const kind of kinds) {
-          result.checked++;
-
-          const user = await this.loadUser(users, vehicle.userId);
-          if (!user) continue;
-
-          const label = KIND_LABEL[kind];
-          const title = daysBefore === 0 ? `¡Hoy vence tu ${label}!` : `${capitalize(label)} por vencer`;
-          const body = countdownText(label, vehicle.plate, daysBefore);
-
-          // --- Push ---
-          if (await this.claim(doc.id, kind, dueDate, daysBefore, ReminderChannel.PUSH)) {
-            const tokens = await this.loadDevices(devices, vehicle.userId);
-
-            if (tokens.length > 0) {
-              const messages: ExpoPushMessage[] = tokens.map((to) => ({
-                to,
-                sound: 'default',
-                title,
-                body,
-                data: { vehicleId: doc.id, kind },
-                channelId: 'vencimientos',
-              }));
-
-              const delivered = await this.push.send(messages);
-              result.pushSent += delivered;
-
-              // Si no salió ninguno, se libera la marca para reintentar mañana.
-              if (delivered === 0) {
-                await this.release(doc.id, kind, dueDate, daysBefore, ReminderChannel.PUSH);
-              }
-            } else {
-              await this.release(doc.id, kind, dueDate, daysBefore, ReminderChannel.PUSH);
-            }
-          } else {
-            result.skipped++;
-          }
-
-          // --- Correo ---
-          if (
-            this.mail.enabled &&
-            user.emailReminders &&
-            (await this.claim(doc.id, kind, dueDate, daysBefore, ReminderChannel.EMAIL))
-          ) {
-            const sent = await this.mail.send({
-              to: user.email,
-              subject: title,
-              text: `${body}\n\nVence el ${formatLong(toDateOnly(dueDate))}.`,
-              html: emailTemplate({
-                name: user.name,
-                title,
-                body,
-                plate: vehicle.plate,
-                vehicle: [vehicle.brand, vehicle.model, vehicle.year].filter(Boolean).join(' '),
-                dueDate: formatLong(toDateOnly(dueDate)),
-              }),
-            });
-
-            if (sent) {
-              result.emailsSent++;
-            } else {
-              await this.release(doc.id, kind, dueDate, daysBefore, ReminderChannel.EMAIL);
-            }
-          }
-        }
+        await this.enviar(aviso, user, dueDate, daysBefore, devices, result);
       }
     }
 
     return result;
+  }
+
+  /** Vencimientos de vehículos que caen en esta fecha. */
+  private async avisosDeVehiculos(dueDate: string): Promise<Aviso[]> {
+    // `dueDates` es el arreglo plano que existe justamente para esta consulta:
+    // Firestore no sabe buscar dentro del mapa `expirations`.
+    const snapshot = await this.firebase.db
+      .collection(COLLECTIONS.vehicles)
+      .where('dueDates', 'array-contains', dueDate)
+      .get();
+
+    return snapshot.docs.flatMap((doc) => {
+      const vehicle = doc.data() as VehicleDoc;
+
+      return (Object.entries(vehicle.expirations ?? {}) as [DocumentKind, string][])
+        .filter(([, value]) => value === dueDate)
+        .map(([kind]) => ({
+          clave: doc.id,
+          userId: vehicle.userId,
+          kind,
+          plate: vehicle.plate,
+          vehiculo: [vehicle.brand, vehicle.model, vehicle.year].filter(Boolean).join(' '),
+        }));
+    });
+  }
+
+  /**
+   * Licencias de conducir que vencen en esta fecha.
+   *
+   * Van por la cuenta y no por el vehículo: la licencia es de la persona, y
+   * colgarla del auto daría un aviso por cada uno que tenga.
+   */
+  private async avisosDeLicencias(dueDate: string): Promise<Aviso[]> {
+    const snapshot = await this.firebase.db
+      .collection(COLLECTIONS.users)
+      .where('licenseExpiresAt', '==', dueDate)
+      .get();
+
+    return snapshot.docs.map((doc) => ({
+      clave: doc.id,
+      userId: doc.id,
+      kind: DocumentKind.LICENCIA_CONDUCIR,
+      plate: null,
+      vehiculo: '',
+    }));
+  }
+
+  private async enviar(
+    aviso: Aviso,
+    user: UserDoc,
+    dueDate: string,
+    daysBefore: number,
+    devices: Map<string, string[]>,
+    result: ReminderRunResult,
+  ): Promise<void> {
+    const label = KIND_LABEL[aviso.kind];
+    const title = daysBefore === 0 ? `¡Hoy vence tu ${label}!` : `${capitalize(label)} por vencer`;
+    const body = countdownText(label, aviso.plate ?? '', daysBefore);
+
+    // --- Push ---
+    if (await this.claim(aviso.clave, aviso.kind, dueDate, daysBefore, ReminderChannel.PUSH)) {
+      const tokens = await this.loadDevices(devices, aviso.userId);
+
+      if (tokens.length > 0) {
+        const messages: ExpoPushMessage[] = tokens.map((to) => ({
+          to,
+          sound: 'default',
+          title,
+          body,
+          data: { vehicleId: aviso.plate ? aviso.clave : null, kind: aviso.kind },
+          channelId: 'vencimientos',
+        }));
+
+        const delivered = await this.push.send(messages);
+        result.pushSent += delivered;
+
+        // Si no salió ninguno, se libera la marca para reintentar mañana.
+        if (delivered === 0) {
+          await this.release(aviso.clave, aviso.kind, dueDate, daysBefore, ReminderChannel.PUSH);
+        }
+      } else {
+        await this.release(aviso.clave, aviso.kind, dueDate, daysBefore, ReminderChannel.PUSH);
+      }
+    } else {
+      result.skipped++;
+    }
+
+    // --- Correo ---
+    if (
+      this.mail.enabled &&
+      user.emailReminders &&
+      (await this.claim(aviso.clave, aviso.kind, dueDate, daysBefore, ReminderChannel.EMAIL))
+    ) {
+      const sent = await this.mail.send({
+        to: user.email,
+        subject: title,
+        text: `${body}
+
+Vence el ${formatLong(toDateOnly(dueDate))}.`,
+        html: emailTemplate({
+          name: user.name,
+          title,
+          body,
+          plate: aviso.plate ?? '',
+          vehicle: aviso.vehiculo,
+          dueDate: formatLong(toDateOnly(dueDate)),
+        }),
+      });
+
+      if (sent) {
+        result.emailsSent++;
+      } else {
+        await this.release(aviso.clave, aviso.kind, dueDate, daysBefore, ReminderChannel.EMAIL);
+      }
+    }
   }
 
   /** Qué avisos tocarían hoy para un usuario, sin enviar nada. Sirve para QA. */
