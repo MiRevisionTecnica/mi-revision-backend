@@ -1,0 +1,27 @@
+{
+  "_comentario": [
+    "Páginas públicas donde cada concesionaria transmite las cámaras de sus patios.",
+    "",
+    "Se enlaza la página de la empresa y no el video crudo: esas cámaras muestran",
+    "patentes y personas, y redistribuir la señal desde nuestra app no es lo mismo",
+    "que la planta publicándola. Enlazando, la empresa conserva su atribución y el",
+    "enlace no se rompe cuando cambian de proveedor de streaming.",
+    "",
+    "Para agregar una empresa basta una línea en 'porEmpresa'."
+  ],
+
+  "porEmpresa": {
+    "San Dámaso": "https://sandamaso.cl/streaming",
+    "SGS": "https://www.revisionestecnicas.cl/camaras",
+    "UVT": "https://uvt.cl/plantas-en-vivo/"
+  },
+
+  "_omitirComentario": [
+    "Estas plantas figuran en nuestro catálogo como SGS, pero no aparecen en el",
+    "listado del MTT ni en el sitio de la empresa, que solo declara Macul,",
+    "Cerrillos y Peñalolén. Sus cámaras siguen respondiendo, pero son restos de",
+    "plantas que ya no operan: enlazarlas mandaría a mirar el patio equivocado.",
+    "Cuando se den de baja del catálogo, esta lista sobra."
+  ],
+  "omitir": ["prt-18", "prt-19"]
+}

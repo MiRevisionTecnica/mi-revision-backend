@@ -60,7 +60,8 @@
         "amount": 13500
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://sandamaso.cl/streaming"
   },
   {
     "id": "prt-02",
@@ -123,7 +124,8 @@
         "amount": 13500
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://sandamaso.cl/streaming"
   },
   {
     "id": "prt-03",
@@ -186,7 +188,8 @@
         "amount": 14800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-04",
@@ -249,7 +252,8 @@
         "amount": 14800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-05",
@@ -312,7 +316,8 @@
         "amount": 13600
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://sandamaso.cl/streaming"
   },
   {
     "id": "prt-06",
@@ -375,7 +380,8 @@
         "amount": 20900
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-07",
@@ -442,7 +448,8 @@
         "amount": 15200
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-08",
@@ -505,7 +512,8 @@
         "amount": 14800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-09",
@@ -576,7 +584,8 @@
         "amount": 12700
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-10",
@@ -642,7 +651,8 @@
         "amount": 13750
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-11",
@@ -705,7 +715,8 @@
         "amount": 14800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-12",
@@ -768,7 +779,8 @@
         "amount": 16800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://uvt.cl/plantas-en-vivo/"
   },
   {
     "id": "prt-13",
@@ -831,7 +843,8 @@
         "amount": 13500
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://sandamaso.cl/streaming"
   },
   {
     "id": "prt-14",
@@ -894,7 +907,8 @@
         "amount": 14750
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-15",
@@ -961,7 +975,8 @@
         "amount": 16850
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://uvt.cl/plantas-en-vivo/"
   },
   {
     "id": "prt-16",
@@ -1024,7 +1039,8 @@
         "amount": 21800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://www.revisionestecnicas.cl/camaras"
   },
   {
     "id": "prt-17",
@@ -1087,7 +1103,8 @@
         "amount": 18950
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-18",
@@ -1105,7 +1122,8 @@
     "scheduleSource": null,
     "placeId": "ChIJncFq4MHPYpYRed6W3FmOHRY",
     "phone": "9 7496 4404",
-    "status": "closed"
+    "status": "closed",
+    "cameraUrl": null
   },
   {
     "id": "prt-19",
@@ -1123,7 +1141,8 @@
     "scheduleSource": null,
     "placeId": "ChIJxeAVkvfPYpYR8muxnC8Bg-I",
     "phone": "9 7496 4404",
-    "status": "closed"
+    "status": "closed",
+    "cameraUrl": null
   },
   {
     "id": "prt-20",
@@ -1190,7 +1209,8 @@
         "amount": 16850
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://uvt.cl/plantas-en-vivo/"
   },
   {
     "id": "prt-21",
@@ -1253,7 +1273,8 @@
         "amount": 21800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://www.revisionestecnicas.cl/camaras"
   },
   {
     "id": "prt-22",
@@ -1316,7 +1337,8 @@
         "amount": 20900
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-23",
@@ -1379,7 +1401,8 @@
         "amount": 16800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://uvt.cl/plantas-en-vivo/"
   },
   {
     "id": "prt-24",
@@ -1442,7 +1465,8 @@
         "amount": 18950
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-25",
@@ -1505,7 +1529,8 @@
         "amount": 14800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-26",
@@ -1568,7 +1593,8 @@
         "amount": 13500
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://sandamaso.cl/streaming"
   },
   {
     "id": "prt-27",
@@ -1631,7 +1657,8 @@
         "amount": 16800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://uvt.cl/plantas-en-vivo/"
   },
   {
     "id": "prt-28",
@@ -1694,7 +1721,8 @@
         "amount": 20900
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-29",
@@ -1757,7 +1785,8 @@
         "amount": 14800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-30",
@@ -1824,7 +1853,8 @@
         "amount": 15200
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-31",
@@ -1887,7 +1917,8 @@
         "amount": 21800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://www.revisionestecnicas.cl/camaras"
   },
   {
     "id": "prt-32",
@@ -1945,7 +1976,8 @@
         "amount": 13600
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://sandamaso.cl/streaming"
   },
   {
     "id": "prt-33",
@@ -2008,7 +2040,8 @@
         "amount": 13600
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": "https://sandamaso.cl/streaming"
   },
   {
     "id": "prt-34",
@@ -2074,7 +2107,8 @@
         "amount": 13750
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-35",
@@ -2141,7 +2175,8 @@
         "amount": 17450
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-36",
@@ -2204,7 +2239,8 @@
         "amount": 14800
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-37",
@@ -2267,7 +2303,8 @@
         "amount": 14750
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   },
   {
     "id": "prt-38",
@@ -2330,6 +2367,7 @@
         "amount": 14750
       }
     ],
-    "pricesUpdatedAt": "2026-05-01"
+    "pricesUpdatedAt": "2026-05-01",
+    "cameraUrl": null
   }
 ]

@@ -23,7 +23,8 @@
     "openapi": "npm run build && node dist/tools/openapi.js",
     "seed": "npm run build && node dist/tools/seed.js",
     "enrich:plants": "npm run build && node dist/tools/enrich-plants.js",
-    "tarifas": "npm run build && node --use-system-ca dist/tools/import-tarifas.js"
+    "tarifas": "npm run build && node --use-system-ca dist/tools/import-tarifas.js",
+    "camaras": "npm run build && node dist/tools/import-camaras.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
