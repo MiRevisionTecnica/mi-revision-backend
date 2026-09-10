@@ -1,35 +1,56 @@
 {
   "_comentario": [
-    "Páginas públicas donde cada concesionaria transmite las cámaras de sus patios.",
+    "Dónde ver el patio de cada planta.",
     "",
-    "Se enlaza la página de la empresa y no el video crudo: esas cámaras muestran",
-    "patentes y personas, y redistribuir la señal desde nuestra app no es lo mismo",
-    "que la planta publicándola. Enlazando, la empresa conserva su atribución y el",
-    "enlace no se rompe cuando cambian de proveedor de streaming.",
+    "'porPlanta' se indexa por el código oficial del MTT (B-1338, A-1303…), que es",
+    "estable y significativo, a diferencia de nuestros ids internos. Ese código lo",
+    "trae el refresco mensual, así que el calce no depende de comparar nombres de",
+    "comuna.",
     "",
-    "Para agregar una empresa basta una línea en 'porEmpresa'.",
+    "'porEmpresa' es el respaldo para las concesionarias cuya página no expone una",
+    "URL por planta: se muestra su página completa, con las cámaras de todas sus",
+    "plantas.",
     "",
-    "chrt.cl va por HTTP a propósito: su HTTPS redirige de vuelta a HTTP, así que",
-    "poner https:// solo agregaría un salto. El navegador va a mostrar 'no seguro',",
-    "que es correcto y no depende de nosotros."
+    "Tipos:",
+    "  imagen  — una foto del patio que el servidor de la planta actualiza. Se",
+    "            refresca sola cada pocos segundos.",
+    "  pagina  — una página web con la transmisión, que se abre dentro de la app.",
+    "",
+    "Chilena de Revisiones Técnicas queda a nivel de empresa a propósito. Sus",
+    "cámaras están accesibles como MJPEG en una IP desnuda, sin marca ni dominio;",
+    "tomarlas de ahí sería quedarnos con la señal cruda de otro y además romperse",
+    "el día que cambien de IP. Su propia página se ve igual de bien dentro de la app."
   ],
+
+  "porPlanta": {
+    "B-1338": { "tipo": "imagen", "url": "https://pti-cameras.cl.tuv.com/camaras/10.57.0.222_Cam03/imagen.jpg" },
+    "B-1330": { "tipo": "imagen", "url": "https://pti-cameras.cl.tuv.com/camaras/10.57.3.222_Cam07/imagen.jpg" },
+    "B-1340": { "tipo": "imagen", "url": "https://pti-cameras.cl.tuv.com/camaras/10.57.4.222_Cam07/imagen.jpg" },
+    "B-1329": { "tipo": "imagen", "url": "https://pti-cameras.cl.tuv.com/camaras/10.57.5.222_Cam09/imagen.jpg" },
+    "B-1337": { "tipo": "imagen", "url": "https://pti-cameras.cl.tuv.com/camaras/10.57.6.222_Cam08/imagen.jpg" },
+    "B-1339": { "tipo": "imagen", "url": "https://pti-cameras.cl.tuv.com/camaras/10.57.7.222_Cam09/imagen.jpg" },
+    "B-1328": { "tipo": "imagen", "url": "https://pti-cameras.cl.tuv.com/camaras/10.57.2.222_Cam06/imagen.jpg" },
+
+    "B-1348": { "tipo": "pagina", "url": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=39" },
+    "B-1346": { "tipo": "pagina", "url": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=41" },
+    "A-1303": { "tipo": "pagina", "url": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=43" },
+    "A-1304": { "tipo": "pagina", "url": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=44" },
+    "B-1345": { "tipo": "pagina", "url": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=45" },
+
+    "B-1353": { "tipo": "pagina", "url": "https://prtcam.revisionestecnicas.cl/prtcerrillos01/embed.html?dvr=false" },
+    "B-1350": { "tipo": "pagina", "url": "https://prtcam.revisionestecnicas.cl/prtmacul01/embed.html?dvr=false" },
+    "B-1349": { "tipo": "pagina", "url": "https://prtcam.revisionestecnicas.cl/prtpenalolen01/embed.html?dvr=false" }
+  },
 
   "porEmpresa": {
     "San Dámaso": "https://sandamaso.cl/streaming",
-    "SGS": "https://www.revisionestecnicas.cl/camaras",
-    "UVT": "https://uvt.cl/plantas-en-vivo/",
     "Applus": "https://www.applusprt.cl/#/se%C3%B1al",
-    "TÜV Rheinland": "https://pti-cameras.cl.tuv.com/",
-    "TÜV Rheinland Andino": "https://pti-cameras.cl.tuv.com/",
     "Chilena de Revisiones Técnicas": "http://envivo.chrt.cl/"
   },
 
   "_omitirComentario": [
-    "Estas plantas figuran en nuestro catálogo como SGS, pero no aparecen en el",
-    "listado del MTT ni en el sitio de la empresa, que solo declara Macul,",
-    "Cerrillos y Peñalolén. Sus cámaras siguen respondiendo, pero son restos de",
-    "plantas que ya no operan: enlazarlas mandaría a mirar el patio equivocado.",
-    "El refresco mensual ya las marca como cerradas; esta lista es el cinturón."
+    "Plantas que ya no operan. El refresco mensual las marca como cerradas; esta",
+    "lista es el cinturón, para no enlazar una cámara mientras tanto."
   ],
   "omitir": ["prt-18", "prt-19"]
 }

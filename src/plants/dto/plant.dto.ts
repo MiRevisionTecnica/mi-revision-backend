@@ -82,7 +82,15 @@ export class PlantResponse {
 
   @ApiPropertyOptional({
     nullable: true,
-    description: 'Página pública de la planta donde se ve la cámara del patio.',
+    description: 'Dónde ver el patio de la planta.',
   })
   cameraUrl: string | null;
+
+  @ApiPropertyOptional({
+    nullable: true,
+    enum: ['imagen', 'pagina'],
+    description:
+      "Cómo mostrarla: 'imagen' es una foto que se refresca sola, 'pagina' una web con la transmisión.",
+  })
+  cameraType: string | null;
 }

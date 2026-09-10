@@ -1,12 +1,15 @@
 /**
- * Carga los enlaces a las cámaras de los patios.
+ * Carga dónde ver el patio de cada planta.
  *
  * Uso:  npm run camaras            (prueba en seco: solo muestra)
  *       npm run camaras -- --write (escribe en Firestore y en el JSON)
  *
- * El dato vive en src/data/camaras.json, mapeado por empresa: las
- * concesionarias publican una página con las cámaras de todas sus plantas, no
- * una por planta. Agregar una empresa es una línea en ese archivo.
+ * El dato vive en src/data/camaras.json. Primero se busca la cámara propia de la
+ * planta, indexada por su código oficial del MTT; si no hay, se usa la página de
+ * la concesionaria, que muestra las cámaras de todas sus plantas.
+ *
+ * Se carga a mano y no se descubre solo porque cada empresa publica donde quiere
+ * y con el formato que quiere: no hay una fuente común que consultar.
  */
 import 'dotenv/config';
 import { readFile, writeFile } from 'node:fs/promises';
@@ -26,11 +29,14 @@ type PlantaLocal = {
   id: string;
   company: string;
   comuna: string;
+  officialCode?: string | null;
   cameraUrl?: string | null;
+  cameraType?: string | null;
   [clave: string]: unknown;
 };
 
 type Camaras = {
+  porPlanta: Record<string, { tipo: string; url: string }>;
   porEmpresa: Record<string, string>;
   omitir: string[];
 };
@@ -67,25 +73,45 @@ const plantas = JSON.parse(await readFile(archivoSemilla, 'utf8')) as PlantaLoca
 
 const omitidas = new Set(camaras.omitir);
 const sinCamara = new Map<string, number>();
-let conCamara = 0;
+let propias = 0;
+let deEmpresa = 0;
 
 for (const planta of plantas) {
-  const url = camaras.porEmpresa[planta.company];
-
-  if (!url || omitidas.has(planta.id)) {
+  if (omitidas.has(planta.id)) {
     planta.cameraUrl = null;
-    if (!url) sinCamara.set(planta.company, (sinCamara.get(planta.company) ?? 0) + 1);
+    planta.cameraType = null;
     continue;
   }
 
-  planta.cameraUrl = url;
-  conCamara++;
+  const propia = planta.officialCode ? camaras.porPlanta[planta.officialCode] : undefined;
+
+  if (propia) {
+    planta.cameraUrl = propia.url;
+    planta.cameraType = propia.tipo;
+    propias++;
+    continue;
+  }
+
+  const deLaEmpresa = camaras.porEmpresa[planta.company];
+
+  if (deLaEmpresa) {
+    planta.cameraUrl = deLaEmpresa;
+    planta.cameraType = 'pagina';
+    deEmpresa++;
+    continue;
+  }
+
+  planta.cameraUrl = null;
+  planta.cameraType = null;
+  sinCamara.set(planta.company, (sinCamara.get(planta.company) ?? 0) + 1);
 }
 
-console.log(`Con cámara: ${conCamara} de ${plantas.length} plantas\n`);
+console.log(`Cámara propia de la planta: ${propias}`);
+console.log(`Página de la concesionaria: ${deEmpresa}`);
+console.log(`Total con cámara: ${propias + deEmpresa} de ${plantas.length}\n`);
 
 if (sinCamara.size > 0) {
-  console.log('Empresas sin página de cámaras conocida:');
+  console.log('Empresas sin cámara conocida:');
   for (const [empresa, cuantas] of [...sinCamara].sort((a, b) => b[1] - a[1])) {
     console.log(`   ${String(cuantas).padStart(2)} plantas · ${empresa}`);
   }
@@ -105,11 +131,11 @@ const lote = db.batch();
 for (const planta of plantas) {
   lote.set(
     db.collection('plants').doc(planta.id),
-    { cameraUrl: planta.cameraUrl ?? null },
+    { cameraUrl: planta.cameraUrl ?? null, cameraType: planta.cameraType ?? null },
     { merge: true },
   );
 }
 
 await lote.commit();
-console.log(`Guardadas ${conCamara} cámaras en Firestore y en src/data/plants.json.`);
+console.log(`Guardadas ${propias + deEmpresa} cámaras en Firestore y en src/data/plants.json.`);
 process.exit(0);

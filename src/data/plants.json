@@ -61,7 +61,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://sandamaso.cl/streaming",
-    "officialCode": "B-1341"
+    "officialCode": "B-1341",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-02",
@@ -125,7 +126,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://sandamaso.cl/streaming",
-    "officialCode": "B-1342"
+    "officialCode": "B-1342",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-03",
@@ -188,8 +190,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://pti-cameras.cl.tuv.com/",
-    "officialCode": "B-1337"
+    "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.6.222_Cam08/imagen.jpg",
+    "officialCode": "B-1337",
+    "cameraType": "imagen"
   },
   {
     "id": "prt-04",
@@ -252,8 +255,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://pti-cameras.cl.tuv.com/",
-    "officialCode": "B-1328"
+    "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.2.222_Cam06/imagen.jpg",
+    "officialCode": "B-1328",
+    "cameraType": "imagen"
   },
   {
     "id": "prt-05",
@@ -317,7 +321,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://sandamaso.cl/streaming",
-    "officialCode": "B-1331"
+    "officialCode": "B-1331",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-06",
@@ -381,7 +386,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "http://envivo.chrt.cl/",
-    "officialCode": "B-1325"
+    "officialCode": "B-1325",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-07",
@@ -449,7 +455,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://www.applusprt.cl/#/se%C3%B1al",
-    "officialCode": "A-1301"
+    "officialCode": "A-1301",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-08",
@@ -512,8 +519,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://pti-cameras.cl.tuv.com/",
-    "officialCode": "B-1339"
+    "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.7.222_Cam09/imagen.jpg",
+    "officialCode": "B-1339",
+    "cameraType": "imagen"
   },
   {
     "id": "prt-09",
@@ -586,7 +594,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
-    "officialCode": "AB1308"
+    "officialCode": "AB1308",
+    "cameraType": null
   },
   {
     "id": "prt-10",
@@ -654,7 +663,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
-    "officialCode": "A-1306"
+    "officialCode": "A-1306",
+    "cameraType": null
   },
   {
     "id": "prt-11",
@@ -717,8 +727,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://pti-cameras.cl.tuv.com/",
-    "officialCode": "B-1340"
+    "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.4.222_Cam07/imagen.jpg",
+    "officialCode": "B-1340",
+    "cameraType": "imagen"
   },
   {
     "id": "prt-12",
@@ -781,8 +792,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://uvt.cl/plantas-en-vivo/",
-    "officialCode": "B-1348"
+    "cameraUrl": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=39",
+    "officialCode": "B-1348",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-13",
@@ -846,7 +858,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://sandamaso.cl/streaming",
-    "officialCode": "B-1344"
+    "officialCode": "B-1344",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-14",
@@ -910,7 +923,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://www.applusprt.cl/#/se%C3%B1al",
-    "officialCode": "B-1334"
+    "officialCode": "B-1334",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-15",
@@ -977,8 +991,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://uvt.cl/plantas-en-vivo/",
-    "officialCode": "A-1303"
+    "cameraUrl": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=43",
+    "officialCode": "A-1303",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-16",
@@ -1041,8 +1056,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.revisionestecnicas.cl/camaras",
-    "officialCode": "B-1353"
+    "cameraUrl": "https://prtcam.revisionestecnicas.cl/prtcerrillos01/embed.html?dvr=false",
+    "officialCode": "B-1353",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-17",
@@ -1106,7 +1122,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
-    "officialCode": "B-1355"
+    "officialCode": "B-1355",
+    "cameraType": null
   },
   {
     "id": "prt-18",
@@ -1125,7 +1142,8 @@
     "placeId": "ChIJncFq4MHPYpYRed6W3FmOHRY",
     "phone": "9 7496 4404",
     "status": "closed",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "cameraType": null
   },
   {
     "id": "prt-19",
@@ -1144,7 +1162,8 @@
     "placeId": "ChIJxeAVkvfPYpYR8muxnC8Bg-I",
     "phone": "9 7496 4404",
     "status": "closed",
-    "cameraUrl": null
+    "cameraUrl": null,
+    "cameraType": null
   },
   {
     "id": "prt-20",
@@ -1211,8 +1230,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://uvt.cl/plantas-en-vivo/",
-    "officialCode": "A-1304"
+    "cameraUrl": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=44",
+    "officialCode": "A-1304",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-21",
@@ -1275,8 +1295,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.revisionestecnicas.cl/camaras",
-    "officialCode": "B-1349"
+    "cameraUrl": "https://prtcam.revisionestecnicas.cl/prtpenalolen01/embed.html?dvr=false",
+    "officialCode": "B-1349",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-22",
@@ -1340,7 +1361,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "http://envivo.chrt.cl/",
-    "officialCode": "B-1326"
+    "officialCode": "B-1326",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-23",
@@ -1403,8 +1425,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://uvt.cl/plantas-en-vivo/",
-    "officialCode": "B-1345"
+    "cameraUrl": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=45",
+    "officialCode": "B-1345",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-24",
@@ -1468,7 +1491,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
-    "officialCode": "B-1354"
+    "officialCode": "B-1354",
+    "cameraType": null
   },
   {
     "id": "prt-25",
@@ -1531,8 +1555,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://pti-cameras.cl.tuv.com/",
-    "officialCode": "B-1338"
+    "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.0.222_Cam03/imagen.jpg",
+    "officialCode": "B-1338",
+    "cameraType": "imagen"
   },
   {
     "id": "prt-26",
@@ -1596,7 +1621,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://sandamaso.cl/streaming",
-    "officialCode": "B-1343"
+    "officialCode": "B-1343",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-27",
@@ -1659,8 +1685,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://uvt.cl/plantas-en-vivo/",
-    "officialCode": "B-1346"
+    "cameraUrl": "https://www.uvt.cl/sistemas/reclamos/index.php?Usuario=&CAM=41",
+    "officialCode": "B-1346",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-28",
@@ -1724,7 +1751,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "http://envivo.chrt.cl/",
-    "officialCode": "B-1327"
+    "officialCode": "B-1327",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-29",
@@ -1787,8 +1815,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://pti-cameras.cl.tuv.com/",
-    "officialCode": "B-1329"
+    "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.5.222_Cam09/imagen.jpg",
+    "officialCode": "B-1329",
+    "cameraType": "imagen"
   },
   {
     "id": "prt-30",
@@ -1856,7 +1885,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://www.applusprt.cl/#/se%C3%B1al",
-    "officialCode": "A-1302"
+    "officialCode": "A-1302",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-31",
@@ -1919,8 +1949,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://www.revisionestecnicas.cl/camaras",
-    "officialCode": "B-1350"
+    "cameraUrl": "https://prtcam.revisionestecnicas.cl/prtmacul01/embed.html?dvr=false",
+    "officialCode": "B-1350",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-32",
@@ -1979,7 +2010,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://sandamaso.cl/streaming",
-    "officialCode": "B-1333"
+    "officialCode": "B-1333",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-33",
@@ -2043,7 +2075,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://sandamaso.cl/streaming",
-    "officialCode": "B-1332"
+    "officialCode": "B-1332",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-34",
@@ -2111,7 +2144,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
-    "officialCode": "A-1305"
+    "officialCode": "A-1305",
+    "cameraType": null
   },
   {
     "id": "prt-35",
@@ -2179,7 +2213,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": null,
-    "officialCode": "A-1316"
+    "officialCode": "A-1316",
+    "cameraType": null
   },
   {
     "id": "prt-36",
@@ -2242,8 +2277,9 @@
       }
     ],
     "pricesUpdatedAt": "2026-05-01",
-    "cameraUrl": "https://pti-cameras.cl.tuv.com/",
-    "officialCode": "B-1330"
+    "cameraUrl": "https://pti-cameras.cl.tuv.com/camaras/10.57.3.222_Cam07/imagen.jpg",
+    "officialCode": "B-1330",
+    "cameraType": "imagen"
   },
   {
     "id": "prt-37",
@@ -2307,7 +2343,8 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://www.applusprt.cl/#/se%C3%B1al",
-    "officialCode": "B-1335"
+    "officialCode": "B-1335",
+    "cameraType": "pagina"
   },
   {
     "id": "prt-38",
@@ -2371,6 +2408,7 @@
     ],
     "pricesUpdatedAt": "2026-05-01",
     "cameraUrl": "https://www.applusprt.cl/#/se%C3%B1al",
-    "officialCode": "B-1336"
+    "officialCode": "B-1336",
+    "cameraType": "pagina"
   }
 ]

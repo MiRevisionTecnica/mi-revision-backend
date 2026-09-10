@@ -169,6 +169,11 @@ export type PlantDoc = {
    * el enlace no se rompe si cambian de proveedor.
    */
   cameraUrl?: string | null;
+  /**
+   * Cómo mostrarla: 'imagen' es una foto del patio que se refresca sola,
+   * 'pagina' es una web con la transmisión. Lo decide la fuente, no nosotros.
+   */
+  cameraType?: string | null;
 
   updatedAt: string;
 };
