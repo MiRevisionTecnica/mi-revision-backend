@@ -39,7 +39,7 @@ export class HealthController {
       // Sin SMTP los avisos salen solo por push y la recuperación de contraseña
       // no funciona, pero la API responde igual: sin esto, la única forma de
       // saberlo es abrir los logs del proveedor.
-      correo: this.mail.enabled ? 'configurado' : 'sin configurar',
+      correo: this.mail.transporte,
       latencyMs: Date.now() - startedAt,
       uptimeSeconds: Math.round(process.uptime()),
       timestamp: new Date().toISOString(),

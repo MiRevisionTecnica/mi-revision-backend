@@ -322,6 +322,42 @@ Vence el ${formatLong(toDateOnly(dueDate))}.`,
     }
   }
 
+  /**
+   * Manda un correo de prueba a una dirección, por la misma vía que los avisos.
+   *
+   * Existe porque "el correo está configurado" y "el correo llega" son dos cosas
+   * distintas, y en este proyecto ya se separaron dos veces: una con el SMTP que
+   * Railway bloquea, y otra con Firebase intentando entregar por una cuenta de
+   * Gmail que lo rechazaba. Las dos fallaron en silencio.
+   */
+  async enviarCorreoDePrueba(email: string): Promise<{ enviado: boolean; detalle: string }> {
+    if (!this.mail.enabled) {
+      return { enviado: false, detalle: 'El servicio de correo no está configurado en el servidor.' };
+    }
+
+    const hora = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+
+    const enviado = await this.mail.send({
+      to: email,
+      subject: 'Prueba de correo de Mi Revisión Técnica',
+      text:
+        `Si recibes esto, los avisos de vencimiento te van a llegar por correo.
+
+` +
+        `Enviado a las ${hora}.`,
+      html:
+        '<p>Si recibes esto, los avisos de vencimiento te van a llegar por correo.</p>' +
+        `<p style="color:#5B6B84">Enviado a las ${hora}.</p>`,
+    });
+
+    return {
+      enviado,
+      detalle: enviado
+        ? `Enviado a ${email}. Puede demorar un par de minutos, y a veces cae en correo no deseado.`
+        : 'El proveedor rechazó el envío. Revisa los registros del servidor.',
+    };
+  }
+
   /** Qué avisos tocarían hoy para un usuario, sin enviar nada. Sirve para QA. */
   async preview(userId: string, reference: Date = today()): Promise<ReminderPreview[]> {
     const offsets = this.offsets();

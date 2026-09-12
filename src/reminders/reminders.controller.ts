@@ -31,6 +31,19 @@ export class RemindersController {
     return this.reminders.preview(userId);
   }
 
+  @ApiBearerAuth()
+  @Post('probar-correo')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Enviarme un correo de prueba',
+    description:
+      'Manda un correo a la dirección de la cuenta por la misma vía que usan los recordatorios. Es la única forma de saber si van a llegar: que el servicio esté configurado no significa que el proveedor los acepte, y un envío fallido no se nota hasta que alguien reclama que no le avisaron.',
+  })
+  @ApiResponse({ status: 200, description: 'Resultado del envío' })
+  probarCorreo(@CurrentUser('email') email: string) {
+    return this.reminders.enviarCorreoDePrueba(email);
+  }
+
   @Public()
   @Post('run')
   @HttpCode(HttpStatus.OK)

@@ -97,6 +97,21 @@ export class MailService implements OnModuleInit {
     return this.resendKey !== null || this.transporter !== null;
   }
 
+  /**
+   * Por dónde sale el correo, para publicarlo en /health.
+   *
+   * Saber solo que "está configurado" no alcanza: en Railway el SMTP está
+   * configurado y **no funciona**, porque bloquea los puertos salientes. El
+   * síntoma es un tiempo de espera agotado que parece un problema de
+   * credenciales. Distinguir las dos vías es la diferencia entre diagnosticarlo
+   * en un minuto y perder una tarde.
+   */
+  get transporte(): 'resend' | 'smtp' | 'sin configurar' {
+    if (this.resendKey) return 'resend';
+    if (this.transporter) return 'smtp';
+    return 'sin configurar';
+  }
+
   async send(message: MailMessage): Promise<boolean> {
     if (this.resendKey) return this.enviarPorHttps(message, this.resendKey);
     if (this.transporter) return this.enviarPorSmtp(message, this.transporter);
