@@ -25,7 +25,8 @@
     "enrich:plants": "npm run build && node dist/tools/enrich-plants.js",
     "tarifas": "npm run build && node dist/tools/import-tarifas.js",
     "camaras": "npm run build && node dist/tools/import-camaras.js",
-    "migrar:auth": "npm run build && node dist/tools/migrar-a-firebase-auth.js"
+    "migrar:auth": "npm run build && node dist/tools/migrar-a-firebase-auth.js",
+    "push:prueba": "npm run build && node dist/tools/probar-push.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
