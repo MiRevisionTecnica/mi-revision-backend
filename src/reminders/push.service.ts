@@ -2,10 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { getMessaging, type Message } from 'firebase-admin/messaging';
 import { COLLECTIONS, deviceId, type DeviceDoc } from '../firebase/collections.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
+import { ApnsService } from './apns.service.js';
 
 /** Un aviso listo para enviar, sin nada propio de un proveedor. */
 export type PushMessage = {
   token: string;
+  /** Por dónde sale: Firebase para Android, Apple para iPhone. */
+  provider: 'fcm' | 'apns';
   title: string;
   body: string;
   /** FCM solo transporta texto: los valores tienen que ser strings. */
@@ -29,11 +32,38 @@ export type PushMessage = {
 export class PushService {
   private readonly logger = new Logger(PushService.name);
 
-  constructor(private readonly firebase: FirebaseService) {}
+  constructor(
+    private readonly firebase: FirebaseService,
+    private readonly apple: ApnsService,
+  ) {}
 
+  /**
+   * Entrega los avisos por donde corresponda.
+   *
+   * Android va por Firebase y iPhone directo a Apple: iOS entrega un token de
+   * APNs, que es el que Apple espera, y hacerlo pasar por Firebase obligaría a
+   * meter su SDK nativo en la app solo para traducir el token.
+   */
   async send(messages: PushMessage[]): Promise<number> {
     if (messages.length === 0) return 0;
 
+    const deApple = messages.filter((mensaje) => mensaje.provider === 'apns');
+    const deAndroid = messages.filter((mensaje) => mensaje.provider !== 'apns');
+
+    let delivered = 0;
+
+    if (deApple.length > 0) {
+      const resultado = await this.apple.send(deApple);
+      delivered += resultado.entregados;
+      if (resultado.muertos.length > 0) await this.olvidar(resultado.muertos);
+    }
+
+    if (deAndroid.length > 0) delivered += await this.porFirebase(deAndroid);
+
+    return delivered;
+  }
+
+  private async porFirebase(messages: PushMessage[]): Promise<number> {
     const messaging = getMessaging(this.firebase.app);
     let delivered = 0;
     const muertos: string[] = [];
@@ -69,7 +99,7 @@ export class PushService {
     return delivered;
   }
 
-  /** Borra los aparatos cuyo token FCM ya no sirve. */
+  /** Borra los aparatos cuyo token ya no sirve. */
   private async olvidar(tokens: string[]): Promise<void> {
     const lote = this.firebase.db.batch();
     tokens.forEach((token) =>
@@ -77,11 +107,11 @@ export class PushService {
     );
 
     await lote.commit();
-    this.logger.log(`${tokens.length} token(s) dados de baja: FCM los reporta como inválidos`);
+    this.logger.log(`${tokens.length} token(s) dados de baja: ya no existen en su servicio`);
   }
 
-  /** Los aparatos de un usuario a los que se les puede entregar hoy. */
-  async tokensDe(userId: string): Promise<string[]> {
+  /** Los aparatos de un usuario a los que se les puede entregar. */
+  async tokensDe(userId: string): Promise<Destino[]> {
     const snapshot = await this.firebase.db
       .collection(COLLECTIONS.devices)
       .where('userId', '==', userId)
@@ -89,22 +119,20 @@ export class PushService {
 
     const aparatos = snapshot.docs.map((doc) => doc.data() as DeviceDoc);
 
-    // Los de Apple se guardan pero todavía no se pueden entregar: el token que
-    // da iOS es de APNs, y FCM necesita el suyo. Se avisa en vez de perderlos en
-    // silencio, para que el día que exista la app de iOS se note qué falta.
-    const apple = aparatos.filter((aparato) => aparato.provider === 'apns');
-    if (apple.length > 0) {
+    if (!this.apple.disponible && aparatos.some((aparato) => aparato.provider === 'apns')) {
       this.logger.warn(
-        `${apple.length} aparato(s) de iOS sin ruta de entrega: falta el SDK de Firebase en la ` +
-          'app de Apple para obtener un token de FCM. Ver README.md → "Notificaciones en iOS".',
+        'Hay aparatos de iPhone y no está configurada la clave de APNs: esos avisos no saldrán.',
       );
     }
 
     return aparatos
-      .filter((aparato) => aparato.provider === 'fcm' && Boolean(aparato.token))
-      .map((aparato) => aparato.token);
+      .filter((aparato) => Boolean(aparato.token))
+      .map((aparato) => ({ token: aparato.token, provider: aparato.provider }));
   }
 }
+
+/** Un aparato al que se le puede entregar, con la puerta por la que se entra. */
+export type Destino = { token: string; provider: 'fcm' | 'apns' };
 
 function armar(mensaje: PushMessage): Message {
   return {

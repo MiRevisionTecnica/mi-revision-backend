@@ -21,6 +21,7 @@ import {
 import { getFirestore } from 'firebase-admin/firestore';
 import { getMessaging } from 'firebase-admin/messaging';
 import { COLLECTIONS, type DeviceDoc, type UserDoc } from '../firebase/collections.js';
+import { ApnsService } from '../reminders/apns.service.js';
 
 const argumentos = process.argv.slice(2);
 const ESPERAR = argumentos.includes('--esperar');
@@ -103,26 +104,41 @@ const apple = lista.filter((a) => a.provider === 'apns');
 console.log(`${lista.length} aparato(s) registrado(s):`);
 lista.forEach((a) => console.log(`  ${a.correo}  ${a.platform}  ${a.provider}`));
 
+const hora = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+const TITULO = 'Prueba de notificación';
+const CUERPO = `Si ves esto, los avisos de vencimiento van a llegar. Enviada a las ${hora}.`;
+
+// Los iPhone van directo a Apple, igual que en el servidor. Acá no hay Nest que
+// inyecte la configuración, así que se le pasa el entorno tal cual.
 if (apple.length > 0) {
-  console.log(
-    `\n${apple.length} de iOS sin ruta de entrega todavía. Ver README.md → "Notificaciones en iOS".`,
-  );
+  const apns = new ApnsService({
+    get: (clave: string, porDefecto?: string) => process.env[clave] ?? porDefecto,
+  } as never);
+
+  if (!apns.disponible) {
+    console.log(
+      `\n${apple.length} de iOS sin enviar: falta APNS_KEY, APNS_KEY_ID o APNS_TEAM_ID.`,
+    );
+  } else {
+    const resultado = await apns.send(
+      apple.map((aparato) => ({ token: aparato.token, title: TITULO, body: CUERPO })),
+    );
+    console.log(`\nApple: entregados ${resultado.entregados} de ${apple.length}`);
+    if (resultado.muertos.length > 0) {
+      console.log(`  ${resultado.muertos.length} token(s) que Apple ya no reconoce`);
+    }
+  }
 }
 
 if (entregables.length === 0) {
-  console.log('\nNinguno se puede entregar por FCM.');
-  process.exit(1);
+  console.log('\nNinguno para Android.');
+  process.exit(apple.length > 0 ? 0 : 1);
 }
-
-const hora = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
 
 const respuesta = await messaging.sendEach(
   entregables.map((aparato) => ({
     token: aparato.token,
-    notification: {
-      title: 'Prueba de notificación',
-      body: `Si ves esto, los avisos de vencimiento van a llegar. Enviada a las ${hora}.`,
-    },
+    notification: { title: TITULO, body: CUERPO },
     data: { prueba: 'true' },
     android: {
       priority: 'high' as const,

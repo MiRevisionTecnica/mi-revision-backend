@@ -105,6 +105,41 @@ export class Env {
   @IsString()
   MAIL_FROM?: string;
 
+  // --- Notificaciones de iPhone (opcional: sin esto solo se entrega a Android) ---
+  // La app de iOS entrega un token de APNs, que es el que Apple espera. Se le
+  // habla directo con una clave .p8 de la cuenta de desarrollador, sin pasar por
+  // Firebase: hacerlo por ahí obligaría a meter su SDK nativo en la app solo
+  // para traducir el token.
+
+  /** El contenido del archivo .p8, en base64 (o con saltos de línea escapados). */
+  @IsOptional()
+  @IsString()
+  APNS_KEY?: string;
+
+  /** Identificador de la clave, el que Apple muestra al crearla. */
+  @IsOptional()
+  @IsString()
+  APNS_KEY_ID?: string;
+
+  /** Identificador del equipo de desarrollo en Apple. */
+  @IsOptional()
+  @IsString()
+  APNS_TEAM_ID?: string;
+
+  /** El identificador de la app. Solo cambia si cambia el bundle. */
+  @IsOptional()
+  @IsString()
+  APNS_BUNDLE_ID?: string;
+
+  /**
+   * 'produccion' (por defecto) o 'pruebas'. TestFlight y App Store usan el de
+   * producción; solo una compilación de desarrollo usa el otro, y sus tokens no
+   * valen cruzados.
+   */
+  @IsOptional()
+  @IsIn(['produccion', 'pruebas'])
+  APNS_ENTORNO?: string;
+
   /**
    * Secreto que protege POST /api/reminders/run. Sin esta variable el endpoint
    * queda deshabilitado y los avisos salen solo por el cron interno.

@@ -2,6 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
+import { ApnsService } from '../reminders/apns.service.js';
 import { MailService } from '../reminders/mail.service.js';
 import { RemindersService } from '../reminders/reminders.service.js';
 
@@ -13,6 +14,7 @@ export class HealthController {
     private readonly firebase: FirebaseService,
     private readonly reminders: RemindersService,
     private readonly mail: MailService,
+    private readonly apple: ApnsService,
   ) {}
 
   @Get()
@@ -40,6 +42,9 @@ export class HealthController {
       // no funciona, pero la API responde igual: sin esto, la única forma de
       // saberlo es abrir los logs del proveedor.
       correo: this.mail.transporte,
+      // Sin clave de APNs los iPhone quedan sin avisos, y eso no se nota por
+      // ningún otro lado hasta que alguien reclama.
+      avisosApple: this.apple.disponible ? 'con clave' : 'sin configurar',
       latencyMs: Date.now() - startedAt,
       uptimeSeconds: Math.round(process.uptime()),
       timestamp: new Date().toISOString(),

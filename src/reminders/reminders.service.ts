@@ -14,7 +14,7 @@ import {
 } from '../firebase/collections.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
 import { MailService } from './mail.service.js';
-import { PushService, type PushMessage } from './push.service.js';
+import { PushService, type Destino, type PushMessage } from './push.service.js';
 
 export type ReminderRunResult = {
   date: string;
@@ -177,7 +177,7 @@ export class RemindersService implements OnModuleInit {
 
     // Cache por corrida: varios vehículos pueden ser del mismo usuario.
     const users = new Map<string, UserDoc | null>();
-    const devices = new Map<string, string[]>();
+    const devices = new Map<string, Destino[]>();
 
     for (const daysBefore of this.offsets()) {
       const dueDate = toIsoDate(addDays(reference, daysBefore));
@@ -254,7 +254,7 @@ export class RemindersService implements OnModuleInit {
     user: UserDoc,
     dueDate: string,
     daysBefore: number,
-    devices: Map<string, string[]>,
+    devices: Map<string, Destino[]>,
     result: ReminderRunResult,
   ): Promise<void> {
     const label = KIND_LABEL[aviso.kind];
@@ -266,8 +266,9 @@ export class RemindersService implements OnModuleInit {
       const tokens = await this.loadDevices(devices, aviso.userId);
 
       if (tokens.length > 0) {
-        const messages: PushMessage[] = tokens.map((token) => ({
-          token,
+        const messages: PushMessage[] = tokens.map((destino) => ({
+          token: destino.token,
+          provider: destino.provider,
           title,
           body,
           // FCM solo lleva texto en `data`: un null se rechaza, así que el
@@ -417,7 +418,7 @@ Vence el ${formatLong(toDateOnly(dueDate))}.`,
     return user;
   }
 
-  private async loadDevices(cache: Map<string, string[]>, userId: string): Promise<string[]> {
+  private async loadDevices(cache: Map<string, Destino[]>, userId: string): Promise<Destino[]> {
     if (cache.has(userId)) return cache.get(userId)!;
 
     const tokens = await this.push.tokensDe(userId);

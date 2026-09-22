@@ -139,20 +139,35 @@ Cada aparato guarda su `provider`, y no se deduce de la plataforma:
 
 #### Notificaciones en iOS
 
-Falta una pieza, y conviene tenerla clara antes de que exista la app de Apple: en iOS ese
-método entrega un token de **APNs**, y `messaging().send()` solo acepta tokens de **FCM**. No
-son intercambiables.
+En iOS el teléfono entrega un token de **APNs**, y `messaging().send()` solo acepta tokens de
+**FCM**: no son intercambiables. En vez de traducirlos --lo que obligaría a meter el SDK
+nativo de Firebase en la app solo para eso-- el servidor le habla **directo a Apple**, que es
+justo lo que ese token espera. Un intermediario menos y ningún módulo nativo nuevo.
 
-Cuando haya app de iOS, para que las notificaciones funcionen hay que:
+La credencial es una clave de APNs (`.p8`) del equipo de desarrollo. Se crea una sola vez, no
+caduca y sirve para todas las apps del equipo:
 
-1. Crear la app iOS en el proyecto de Firebase y agregar `GoogleService-Info.plist`.
-2. Subir la clave de APNs (`.p8`) a Firebase → Cloud Messaging.
-3. Incluir el SDK de Firebase en la app (`@react-native-firebase/messaging`), que es lo que
-   convierte el registro de APNs en un token de FCM.
+1. developer.apple.com → **Certificates, Identifiers & Profiles → Keys → +**, marcando **Apple
+   Push Notifications service (APNs)**. El archivo se descarga **una sola vez**.
+2. Anotar el **Key ID** que muestra ahí y el **Team ID** de la cuenta.
+3. Configurar en el servidor:
 
-Mientras tanto los tokens de Apple se guardan igual y el servidor deja constancia en el log
-de que no tiene ruta para entregarlos. Se guardan en vez de rechazarlos para que el día que
-se complete lo anterior no haya que pedirle a nadie que vuelva a registrar su teléfono.
+```
+APNS_KEY=<contenido del .p8 en base64>
+APNS_KEY_ID=ABCD123456
+APNS_TEAM_ID=NQTU6D43AJ
+APNS_BUNDLE_ID=cl.mirevisiontecnica.app   # opcional, este es el valor por defecto
+APNS_ENTORNO=produccion                    # 'pruebas' solo para builds de desarrollo
+```
+
+En base64 porque un `.p8` tiene saltos de línea y las variables de entorno los pierden:
+`base64 -w0 AuthKey_ABCD123456.p8`.
+
+Sin esas variables la API arranca igual: deja constancia en el log, `/health` responde
+`avisosApple: "sin configurar"` y los avisos siguen saliendo para Android y por correo.
+
+Apple responde `410` cuando un token ya no existe --la app se desinstaló--; esos aparatos se
+borran en el acto, igual que los que FCM da por muertos.
 
 ### Vehículos y vencimientos
 
