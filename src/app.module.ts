@@ -9,6 +9,7 @@ import { DevicesModule } from './devices/devices.module.js';
 import { DocumentsModule } from './documents/documents.module.js';
 import { HealthModule } from './health/health.module.js';
 import { PlantsModule } from './plants/plants.module.js';
+import { PrtModule } from './prt/prt.module.js';
 import { FirebaseModule } from './firebase/firebase.module.js';
 import { RemindersModule } from './reminders/reminders.module.js';
 import { VehiclesModule } from './vehicles/vehicles.module.js';
@@ -22,6 +23,7 @@ import { VehiclesModule } from './vehicles/vehicles.module.js';
     VehiclesModule,
     DocumentsModule,
     PlantsModule,
+    PrtModule,
     DevicesModule,
     RemindersModule,
     HealthModule,
