@@ -48,7 +48,7 @@ const SESION_MS = 5 * 60 * 1000;
 /** Tope de consultas abiertas a la vez, para no acumular memoria. */
 const MAX_SESIONES = 500;
 
-type Sesion = { cookies: string[]; at: number };
+type Sesion = { cookies: string[]; patente: string; at: number };
 
 export type Ficha = {
   /** El identificador para enviar el formulario de esta misma consulta. */
@@ -70,7 +70,7 @@ export class FichaProxy {
 
     this.limpiarViejas();
     const sesion = randomUUID();
-    this.sesiones.set(sesion, { cookies, at: Date.now() });
+    this.sesiones.set(sesion, { cookies, patente: limpia, at: Date.now() });
 
     return { sesion, html: prepararParaLaApp(cuerpo) };
   }
@@ -88,8 +88,16 @@ export class FichaProxy {
       throw new ServiceUnavailableException('La consulta expiró. Búscala de nuevo.');
     }
 
+    // La patente viaja en la dirección, no en el formulario: es de ahí de donde
+    // la lee su servidor. Sin ella la respuesta llega sin ningún dato --que era
+    // justo lo que pasaba: volvía solo la patente que la persona había escrito--.
     const cuerpo = new URLSearchParams(campos).toString();
-    const respuesta = await this.pedir('POST', `${RUTA}`, cuerpo, guardada.cookies);
+    const respuesta = await this.pedir(
+      'POST',
+      `${RUTA}?patente=${guardada.patente}`,
+      cuerpo,
+      guardada.cookies,
+    );
 
     this.sesiones.delete(sesion);
     return prepararParaLaApp(respuesta.cuerpo);
@@ -135,7 +143,7 @@ export class FichaProxy {
     if (cuerpo !== null) {
       cabeceras['content-type'] = 'application/x-www-form-urlencoded';
       cabeceras['content-length'] = String(Buffer.byteLength(cuerpo));
-      cabeceras.referer = `${BASE}QRRevisionTecnica.aspx`;
+      cabeceras.referer = `${BASE}QRRevisionTecnica.aspx${ruta.includes('?') ? ruta.slice(ruta.indexOf('?')) : ''}`;
     }
 
     const ca = [...rootCertificates, await this.cadenasFaltantes()];
