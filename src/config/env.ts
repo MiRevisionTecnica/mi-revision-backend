@@ -141,6 +141,16 @@ export class Env {
   APNS_ENTORNO?: string;
 
   /**
+   * Secreto con el que RevenueCat firma sus avisos de compra. Sin él, el
+   * webhook queda cerrado: perder avisos es mejor que aceptar cualquiera, que
+   * sería regalarle el plan a quien lo pida.
+   */
+  @IsOptional()
+  @IsString()
+  @MinLength(16)
+  REVENUECAT_SECRET?: string;
+
+  /**
    * Secreto que protege POST /api/reminders/run. Sin esta variable el endpoint
    * queda deshabilitado y los avisos salen solo por el cron interno.
    */

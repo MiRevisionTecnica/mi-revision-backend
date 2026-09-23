@@ -1,3 +1,4 @@
+import type { Plan } from '../compras/plan.js';
 import { createHash } from 'node:crypto';
 import type { DocumentKind, ReminderChannel } from '../common/enums.js';
 
@@ -60,6 +61,15 @@ export type UserDoc = {
    */
   reminderHour?: number | null;
   /**
+   * El plan pagado, tal como lo informa la tienda a través de RevenueCat.
+   *
+   * Se guarda acá y no se le pregunta a la tienda en cada petición: las dos
+   * tiendas avisan por webhook cuando algo cambia, y consultar en línea dejaría
+   * al servidor dependiendo de que ellas respondan para dejar guardar un
+   * vehículo.
+   */
+  plan?: Plan | null;
+  /**
    * Versión del texto legal que la persona aceptó al registrarse, y cuándo.
    *
    * Para hacer valer los términos hay que poder demostrar qué texto aceptó y en
@@ -80,6 +90,15 @@ export type VehicleDoc = {
   year: number | null;
   /** Fecha 'YYYY-MM-DD' por tipo de documento. */
   expirations: Partial<Record<DocumentKind, string>>;
+  /**
+   * Tasación fiscal en pesos, la que fija el SII cada año.
+   *
+   * Llega leída del permiso de circulación, que la trae anotada porque es la
+   * base sobre la que se cobra el permiso.
+   */
+  appraisal?: number | null;
+  /** Código del SII del modelo, con el que se le consulta la tasación. */
+  appraisalCode?: string | null;
   /**
    * Las mismas fechas en un arreglo plano. Firestore no sabe consultar dentro de
    * un mapa, así que este campo es el que permite al cron preguntar
