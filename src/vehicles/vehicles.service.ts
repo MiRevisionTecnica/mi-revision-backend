@@ -2,7 +2,8 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import { ConfigService } from '@nestjs/config';
 import { daysUntil, statusFor, toDateOnly, toIsoDate } from '../common/dates.js';
 import type { DocumentKind } from '../common/enums.js';
-import { COLLECTIONS, type VehicleDoc } from '../firebase/collections.js';
+import { vehiculosPermitidos } from '../compras/plan.js';
+import { COLLECTIONS, type UserDoc, type VehicleDoc } from '../firebase/collections.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
 import type { CreateVehicleDto, ExpirationDto, UpdateVehicleDto, VehicleResponse } from './dto/vehicle.dto.js';
 
@@ -31,7 +32,6 @@ export class VehiclesService {
   }
 
   async create(userId: string, dto: CreateVehicleDto): Promise<VehicleResponse> {
-    const limit = this.config.get<number>('MAX_VEHICLES_PER_USER', 1);
     const db = this.firebase.db;
     const plate = dto.plate.toUpperCase();
     const expirations = toExpirationMap(dto.expirations);
@@ -40,14 +40,26 @@ export class VehiclesService {
 
     // El límite del plan y la unicidad de la patente se verifican dentro de la
     // transacción: sin eso, dos peticiones simultáneas podrían saltarse ambos.
+    //
+    // El límite se lee de la cuenta y no de la configuración: quien paga tiene
+    // derecho a más, y la app no puede ser quien lo decida --se saltaría
+    // reinstalando--.
     const vehicle = await db.runTransaction(async (tx) => {
+      const cuenta = await tx.get(db.collection(COLLECTIONS.users).doc(userId));
+      const limit = Math.max(
+        vehiculosPermitidos((cuenta.data() as UserDoc | undefined)?.plan ?? undefined),
+        this.config.get<number>('MAX_VEHICLES_PER_USER', 1),
+      );
+
       const owned = await tx.get(
         db.collection(COLLECTIONS.vehicles).where('userId', '==', userId),
       );
 
       if (owned.size >= limit) {
         throw new ForbiddenException(
-          `Tu plan permite ${limit} ${limit === 1 ? 'vehículo' : 'vehículos'}.`,
+          limit === 1
+            ? 'Tu plan gratis permite un vehículo. Con Premium puedes registrar varios.'
+            : `Tu plan permite ${limit} vehículos.`,
         );
       }
 
@@ -61,6 +73,8 @@ export class VehiclesService {
         brand: dto.brand.trim(),
         model: dto.model.trim(),
         year: dto.year ?? null,
+        appraisal: dto.appraisal ?? null,
+        appraisalCode: dto.appraisalCode ?? null,
         expirations,
         dueDates: Object.values(expirations),
         createdAt: now,
@@ -85,6 +99,8 @@ export class VehiclesService {
       ...(dto.brand !== undefined ? { brand: dto.brand.trim() } : {}),
       ...(dto.model !== undefined ? { model: dto.model.trim() } : {}),
       ...(dto.year !== undefined ? { year: dto.year } : {}),
+      ...(dto.appraisal !== undefined ? { appraisal: dto.appraisal } : {}),
+      ...(dto.appraisalCode !== undefined ? { appraisalCode: dto.appraisalCode } : {}),
       ...(dto.expirations ? { expirations, dueDates: Object.values(expirations) } : {}),
       updatedAt: new Date().toISOString(),
     };
@@ -140,6 +156,8 @@ function toResponse(vehicle: StoredVehicle): VehicleResponse {
     brand: vehicle.brand,
     model: vehicle.model,
     year: vehicle.year,
+    appraisal: vehicle.appraisal ?? null,
+    appraisalCode: vehicle.appraisalCode ?? null,
     createdAt: new Date(vehicle.createdAt),
     expirations: expirations
       .map(([kind, dueDate]) => ({

@@ -53,6 +53,26 @@ export class CreateVehicleDto {
   @Max(2100)
   year?: number;
 
+  @ApiPropertyOptional({
+    example: 7365532,
+    description:
+      'Tasación fiscal en pesos, la que fija el SII. Llega leída del permiso de circulación, que la trae anotada porque es la base sobre la que se cobra.',
+  })
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(1000000000)
+  appraisal?: number;
+
+  @ApiPropertyOptional({
+    example: 'HB229019220242',
+    description: 'Código del SII del modelo, el que imprime el permiso de circulación.',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  appraisalCode?: string;
+
   @ApiPropertyOptional({ type: [ExpirationDto] })
   @IsOptional()
   @ValidateNested({ each: true })
@@ -78,5 +98,9 @@ export class VehicleResponse {
   @ApiProperty() model: string;
   @ApiPropertyOptional({ nullable: true }) year: number | null;
   @ApiProperty({ type: [ExpirationResponse] }) expirations: ExpirationResponse[];
+  @ApiPropertyOptional({ nullable: true, example: 7365532, description: 'Tasación fiscal en pesos.' })
+  appraisal: number | null;
+  @ApiPropertyOptional({ nullable: true, example: 'HB229019220242' })
+  appraisalCode: string | null;
   @ApiProperty() createdAt: Date;
 }
