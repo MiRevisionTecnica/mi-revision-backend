@@ -59,18 +59,31 @@ export class SiiClient {
     return filas[0] ?? null;
   }
 
-  /** Las tasaciones que calzan con una marca, un modelo y un año. */
+  /**
+   * Las tasaciones que calzan con una marca, un modelo y un año.
+   *
+   * El SII busca por el modelo pelado --"SWIFT"-- y la gente lo tiene escrito
+   * con su versión, como lo trae el padrón: "SWIFT GL 1.2". Buscar eso tal cual
+   * devuelve cero, así que se va soltando la última palabra hasta que algo
+   * calce. "SWIFT GL 1.2" → "SWIFT GL" → "SWIFT".
+   */
   async porModelo(marca: string, modelo: string, anioFabricacion: string): Promise<Tasacion[]> {
     const marcaSii = await this.marca(marca);
     if (!marcaSii) return [];
 
-    return this.buscar({
-      extra: [marcaSii],
-      modelVehicle: modelo.toUpperCase(),
-      versionVehicle: '',
-      anio: anioFabricacion,
-      anioAfabCase: true,
-    });
+    for (const intento of variantesDe(modelo)) {
+      const filas = await this.buscar({
+        extra: [marcaSii],
+        modelVehicle: intento,
+        versionVehicle: '',
+        anio: anioFabricacion,
+        anioAfabCase: true,
+      });
+
+      if (filas.length > 0) return ordenarPorParecido(filas, modelo);
+    }
+
+    return [];
   }
 
   /** Las marcas que el SII reconoce, para ofrecerlas en una lista. */
@@ -88,12 +101,27 @@ export class SiiClient {
     return marcas;
   }
 
+  /**
+   * La marca tal como la escribe el SII.
+   *
+   * Se acepta que no calce letra por letra: alguien escribe "Mercedes" y el
+   * catálogo dice "MERCEDES BENZ". Primero se busca igual, después por comienzo
+   * y al final por contenido, que es el orden de menos a más riesgo de
+   * confundir una marca con otra.
+   */
   private async marca(nombre: string): Promise<Record<string, unknown> | null> {
     const respuesta = await this.llamar('getMarksByCategory', 1);
     const buscado = nombre.trim().toUpperCase();
+    if (!buscado) return null;
+
+    const marcas = filasDe(respuesta);
+    const nombreDe = (fila: Record<string, unknown>) => String(fila.marca ?? '').toUpperCase();
 
     return (
-      filasDe(respuesta).find((fila) => String(fila.marca ?? '').toUpperCase() === buscado) ?? null
+      marcas.find((fila) => nombreDe(fila) === buscado) ??
+      marcas.find((fila) => nombreDe(fila).startsWith(buscado)) ??
+      marcas.find((fila) => nombreDe(fila).includes(buscado)) ??
+      null
     );
   }
 
@@ -204,6 +232,43 @@ export class SiiClient {
       clearTimeout(espera);
     }
   }
+}
+
+/**
+ * Deja primero la versión que más se parece a lo que la persona tiene escrito.
+ *
+ * El SII devuelve todas las versiones del modelo y entre ellas la tasación
+ * cambia millones: un "SAIL LT 1.5" no vale lo mismo que un "SAIL LS". Sin esto
+ * se mostraría la primera que llegue, que es tan arbitraria como cualquiera.
+ */
+function ordenarPorParecido(filas: Tasacion[], modelo: string): Tasacion[] {
+  // Palabras completas y no trozos: "GL" está contenido en "GLX", y con
+  // coincidencias parciales un Swift GL terminaba mostrando el precio del GLX.
+  const buscadas = modelo.toUpperCase().split(/\s+/).filter(Boolean);
+
+  const parecido = (fila: Tasacion) => {
+    const palabras = new Set(`${fila.modelo} ${fila.version}`.toUpperCase().split(/\s+/));
+    return buscadas.filter((palabra) => palabras.has(palabra)).length;
+  };
+
+  return [...filas].sort((a, b) => parecido(b) - parecido(a));
+}
+
+/**
+ * "SWIFT GL 1.2" → ["SWIFT GL 1.2", "SWIFT GL", "SWIFT"].
+ *
+ * De lo más específico a lo más general: si el nombre completo calza, esa es la
+ * mejor respuesta; si no, se prueba con menos.
+ */
+function variantesDe(modelo: string): string[] {
+  const palabras = modelo.trim().toUpperCase().split(/\s+/).filter(Boolean);
+  const variantes: string[] = [];
+
+  for (let corte = palabras.length; corte > 0; corte--) {
+    variantes.push(palabras.slice(0, corte).join(' '));
+  }
+
+  return variantes;
 }
 
 /** Las respuestas del SII vienen de dos formas según el servicio. */
