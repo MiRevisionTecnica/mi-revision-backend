@@ -1,6 +1,8 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { getAuth, type UserRecord } from 'firebase-admin/auth';
+import { esAnticipacionValida } from '../common/anticipacion.js';
+import { planVigente } from '../compras/plan.js';
 import { COLLECTIONS, type AuthProvider, type UserDoc } from '../firebase/collections.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
 import { horaDelUsuario, horaPorDefecto } from '../common/reminder-hour.js';
@@ -100,6 +102,19 @@ export class AuthService {
   async updateProfile(userId: string, dto: UpdateProfileDto): Promise<UserResponse> {
     const ref = this.firebase.db.collection(COLLECTIONS.users).doc(userId);
 
+    // Dos preferencias son del plan pagado. Se rechazan en vez de guardarlas y
+    // no aplicarlas: alguien creería que configuró un aviso que nunca va a
+    // llegar, y eso es peor que decirle que no.
+    if (dto.extraEmail !== undefined || dto.reminderOffsets !== undefined) {
+      const actual = (await ref.get()).data() as UserDoc | undefined;
+
+      if (!planVigente(actual?.plan ?? undefined)) {
+        throw new ForbiddenException(
+          'Avisar a otra persona y elegir los días de anticipación son parte de Premium.',
+        );
+      }
+    }
+
     await ref.update({
       ...(dto.name !== undefined ? { name: dto.name.trim() } : {}),
       ...(dto.firstName !== undefined ? { firstName: dto.firstName.trim() } : {}),
@@ -116,6 +131,14 @@ export class AuthService {
       ...(dto.reminderHour !== undefined ? { reminderHour: dto.reminderHour } : {}),
       // null significa "dejar de controlarla", que es distinto de no tocarla.
       ...(dto.licenseExpiresAt !== undefined ? { licenseExpiresAt: dto.licenseExpiresAt } : {}),
+      // null quita el correo adicional; una lista vacía vuelve a los días del
+      // servidor. En ambos casos es una decisión, no un "no tocar".
+      ...(dto.extraEmail !== undefined
+        ? { extraEmail: dto.extraEmail?.trim().toLowerCase() || null }
+        : {}),
+      ...(dto.reminderOffsets !== undefined
+        ? { reminderOffsets: dto.reminderOffsets.filter(esAnticipacionValida) }
+        : {}),
       updatedAt: new Date().toISOString(),
     });
 
@@ -214,6 +237,8 @@ function toUserResponse(user: StoredUser, horaDefecto: number): UserResponse {
     photoUrl: user.photoUrl ?? null,
     emailReminders: user.emailReminders,
     reminderHour: horaDelUsuario(user.reminderHour, horaDefecto),
+    extraEmail: user.extraEmail ?? null,
+    reminderOffsets: user.reminderOffsets ?? [],
     createdAt: new Date(user.createdAt),
   };
 }

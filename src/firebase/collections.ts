@@ -70,6 +70,20 @@ export type UserDoc = {
    */
   plan?: Plan | null;
   /**
+   * Otro correo al que también le llegan los avisos.
+   *
+   * Es de Premium: sirve para que el aviso le llegue a la pareja, al socio o a
+   * quien realmente maneja el auto, sin compartir la cuenta.
+   */
+  extraEmail?: string | null;
+  /**
+   * Con cuántos días de anticipación quiere los avisos.
+   *
+   * También de Premium. Vacío o sin plan vigente significa usar los días por
+   * defecto del servidor.
+   */
+  reminderOffsets?: number[] | null;
+  /**
    * Versión del texto legal que la persona aceptó al registrarse, y cuándo.
    *
    * Para hacer valer los términos hay que poder demostrar qué texto aceptó y en

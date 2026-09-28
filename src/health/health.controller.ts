@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
@@ -15,6 +16,7 @@ export class HealthController {
     private readonly reminders: RemindersService,
     private readonly mail: MailService,
     private readonly apple: ApnsService,
+    private readonly config: ConfigService,
   ) {}
 
   @Get()
@@ -45,6 +47,9 @@ export class HealthController {
       // Sin clave de APNs los iPhone quedan sin avisos, y eso no se nota por
       // ningún otro lado hasta que alguien reclama.
       avisosApple: this.apple.disponible ? 'con clave' : 'sin configurar',
+      // Sin el secreto, el webhook de compras queda cerrado: alguien podría
+      // pagar y el plan no activarse nunca, y eso no se nota por ningún lado.
+      compras: this.config.get<string>('REVENUECAT_SECRET') ? 'con secreto' : 'sin configurar',
       latencyMs: Date.now() - startedAt,
       uptimeSeconds: Math.round(process.uptime()),
       timestamp: new Date().toISOString(),

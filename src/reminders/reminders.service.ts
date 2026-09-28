@@ -3,6 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { addDays, formatLong, toDateOnly, toIsoDate, today } from '../common/dates.js';
+import { anticipacionesDe, diasAConsultar } from '../common/anticipacion.js';
+import { planVigente } from '../compras/plan.js';
 import { horaDelUsuario, horaPorDefecto } from '../common/reminder-hour.js';
 import { DocumentKind, ReminderChannel } from '../common/enums.js';
 import {
@@ -179,7 +181,10 @@ export class RemindersService implements OnModuleInit {
     const users = new Map<string, UserDoc | null>();
     const devices = new Map<string, Destino[]>();
 
-    for (const daysBefore of this.offsets()) {
+    // Se revisan todos los días posibles, no solo los de por defecto: alguien
+    // con Premium pudo elegir avisarse con 45 días, y esa fecha también hay que
+    // buscarla. El filtro por persona viene más abajo.
+    for (const daysBefore of diasAConsultar(this.offsets())) {
       const dueDate = toIsoDate(addDays(reference, daysBefore));
 
       const avisos = [
@@ -195,6 +200,10 @@ export class RemindersService implements OnModuleInit {
         // --que es como entra POST /reminders/run-- van todos, porque ahí el
         // envío lo pidió alguien a propósito.
         if (soloHora !== undefined && this.horaDe(user) !== soloHora) continue;
+
+        // Cada quien recibe los avisos que eligió; el resto de los días no son
+        // suyos aunque el vencimiento exista.
+        if (!anticipacionesDe(user, this.offsets()).includes(daysBefore)) continue;
 
         result.checked++;
         await this.enviar(aviso, user, dueDate, daysBefore, devices, result);
@@ -299,6 +308,28 @@ export class RemindersService implements OnModuleInit {
       user.emailReminders &&
       (await this.claim(aviso.clave, aviso.kind, dueDate, daysBefore, ReminderChannel.EMAIL))
     ) {
+      // A la otra persona le llega el mismo aviso. Va como envío aparte y no
+      // en copia para que cada quien vea solo su dirección, y para que si una
+      // rebota la otra igual llegue.
+      const tambienA = planVigente(user.plan ?? undefined) ? user.extraEmail : null;
+      if (tambienA) {
+        await this.mail
+          .send({
+            to: tambienA,
+            subject: title,
+            text: `${body}\n\nVence el ${formatLong(toDateOnly(dueDate))}.`,
+            html: emailTemplate({
+              name: user.name,
+              title,
+              body,
+              plate: aviso.plate ?? '',
+              vehicle: aviso.vehiculo,
+              dueDate: formatLong(toDateOnly(dueDate)),
+            }),
+          })
+          .catch(() => false);
+      }
+
       const sent = await this.mail.send({
         to: user.email,
         subject: title,

@@ -1,6 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  ArrayMaxSize,
+  IsArray,
   IsBoolean,
+  IsEmail,
   IsInt,
   Max,
   Min,
@@ -39,6 +42,29 @@ export class SyncSessionDto {
 }
 
 export class UpdateProfileDto {
+  @ApiPropertyOptional({
+    nullable: true,
+    example: 'pareja@ejemplo.cl',
+    description:
+      'Otro correo que también recibe los avisos. Solo con plan Premium; null lo quita.',
+  })
+  @IsOptional()
+  @ValidateIf((_objeto, valor) => valor !== null)
+  @IsEmail({}, { message: 'Revisa el correo adicional.' })
+  extraEmail?: string | null;
+
+  @ApiPropertyOptional({
+    type: [Number],
+    example: [30, 7, 0],
+    description:
+      'Días de anticipación de los avisos. Solo con plan Premium; vacío vuelve a los del servidor.',
+  })
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(6)
+  @IsInt({ each: true })
+  reminderOffsets?: number[];
+
   @ApiProperty({ required: false, example: 'Iván Pérez' })
   @IsOptional()
   @IsString()
@@ -135,6 +161,12 @@ export class UserResponse {
     description: 'Hora a la que llegan los avisos, en horario de Chile.',
   })
   reminderHour: number;
+
+  @ApiPropertyOptional({ nullable: true, example: 'pareja@ejemplo.cl' })
+  extraEmail: string | null;
+
+  @ApiProperty({ type: [Number], example: [30, 7, 0], description: 'Vacío = los días del servidor.' })
+  reminderOffsets: number[];
   @ApiProperty({ nullable: true }) firstName: string | null;
   @ApiProperty({ nullable: true }) lastName: string | null;
   @ApiProperty({ nullable: true, description: 'Cómo prefiere que le hablemos.' }) alias: string | null;
