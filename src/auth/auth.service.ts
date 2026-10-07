@@ -203,6 +203,7 @@ function proveedoresDe(cuenta: UserRecord | null): AuthProvider[] {
   const encontrados = (cuenta?.providerData ?? [])
     .map((proveedor) => {
       if (proveedor.providerId === 'google.com') return 'google';
+      if (proveedor.providerId === 'apple.com') return 'apple';
       if (proveedor.providerId === 'password') return 'password';
       return null;
     })

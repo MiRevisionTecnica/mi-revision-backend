@@ -77,6 +77,9 @@ export class ComprasService {
         // Sin fecha de término es el pago de por vida.
         hasta: aviso.expiration_at_ms ? new Date(aviso.expiration_at_ms).toISOString() : null,
         tipo: tipoDe(aviso.product_id),
+        // De acá sale cuántos vehículos permite: hay un plan de un vehículo y
+        // otro de tres, y se distinguen por el producto.
+        producto: aviso.product_id,
       };
 
       await this.guardar(userId, plan);
@@ -97,6 +100,7 @@ export class ComprasService {
             ? new Date(aviso.expiration_at_ms).toISOString()
             : null,
         tipo: tipoDe(aviso.product_id),
+        producto: aviso.product_id,
       });
 
       this.logger.log(`Plan dado de baja para ${userId} (${aviso.type})`);
@@ -107,6 +111,15 @@ export class ComprasService {
     return 'ignorado';
   }
 
+  /**
+   * Guarda el plan sin pisar lo que no viene en el aviso.
+   *
+   * Tiene que ser `set` con `merge`, que en Firestore fusiona también los mapas
+   * anidados: así un límite de vehículos puesto a mano para un cliente de
+   * empresa sobrevive a cada renovación. Cambiar esto por un `update` con el
+   * plan completo le borraría el límite a ese cliente en la siguiente
+   * renovación, sin avisar y sin que nadie lo note hasta que reclame.
+   */
   private async guardar(userId: string, plan: Plan): Promise<void> {
     await this.firebase.db
       .collection(COLLECTIONS.users)

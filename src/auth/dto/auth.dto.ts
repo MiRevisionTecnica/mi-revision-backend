@@ -151,7 +151,7 @@ export class UserResponse {
     isArray: true,
     description: 'Formas con las que esta cuenta puede iniciar sesión.',
   })
-  providers: ('password' | 'google')[];
+  providers: ('password' | 'google' | 'apple')[];
   @ApiProperty({ required: false, nullable: true }) photoUrl: string | null;
   @ApiProperty() emailReminders: boolean;
   @ApiProperty() createdAt: Date;

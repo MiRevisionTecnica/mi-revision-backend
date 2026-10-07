@@ -26,7 +26,7 @@ export const COLLECTIONS = {
 } as const;
 
 /** Cómo se autentica la cuenta. Una misma cuenta puede tener ambos. */
-export type AuthProvider = 'password' | 'google';
+export type AuthProvider = 'password' | 'google' | 'apple';
 
 export type UserDoc = {
   email: string;
