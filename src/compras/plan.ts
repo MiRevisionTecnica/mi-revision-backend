@@ -38,6 +38,21 @@ export type Plan = {
    * término y pasó, la cuenta vuelve sola al límite gratis.
    */
   vehiculos?: number;
+  /**
+   * Lo que entregó un código de regalo.
+   *
+   * Va aparte del plan de la tienda a propósito. Si compartieran campo, el
+   * primer aviso de renovación que llegue de RevenueCat lo sobrescribiría y la
+   * persona perdería lo regalado sin que nadie se entere. Separados, los dos
+   * corren en paralelo y vale el que dure más.
+   */
+  regalo?: {
+    /** Hasta cuándo, en ISO. */
+    hasta: string;
+    /** El último código canjeado, para poder rastrearlo. */
+    codigo: string;
+    vehiculos: number;
+  };
 };
 
 /** Un vehículo, sin pagar nada. */
@@ -89,9 +104,38 @@ export function vehiculosDeProducto(producto: string | undefined): number {
  * pasar un rato, y durante ese rato la fecha es la que dice la verdad.
  */
 export function planVigente(plan: Plan | undefined, ahora = new Date()): boolean {
+  return compraVigente(plan, ahora) || regaloVigente(plan, ahora);
+}
+
+/** Lo que se compró en la tienda. */
+export function compraVigente(plan: Plan | undefined, ahora = new Date()): boolean {
   if (!plan?.activo) return false;
   if (plan.hasta === null) return true;
   return new Date(plan.hasta).getTime() > ahora.getTime();
+}
+
+/** Lo que entregó un código. No depende de que haya una compra. */
+export function regaloVigente(plan: Plan | undefined, ahora = new Date()): boolean {
+  const hasta = plan?.regalo?.hasta;
+  return Boolean(hasta) && new Date(hasta!).getTime() > ahora.getTime();
+}
+
+/**
+ * Hasta cuándo tiene Premium esta cuenta.
+ *
+ * El que dure más de los dos. `null` es el pago de por vida, que no vence y
+ * gana siempre.
+ */
+export function premiumHasta(plan: Plan | undefined, ahora = new Date()): string | null {
+  if (compraVigente(plan, ahora) && plan?.hasta === null) return null;
+
+  const fechas = [
+    compraVigente(plan, ahora) ? plan?.hasta : null,
+    regaloVigente(plan, ahora) ? plan?.regalo?.hasta : null,
+  ].filter((fecha): fecha is string => Boolean(fecha));
+
+  if (fechas.length === 0) return null;
+  return fechas.sort((a, b) => new Date(b).getTime() - new Date(a).getTime())[0];
 }
 
 /**
@@ -102,12 +146,20 @@ export function planVigente(plan: Plan | undefined, ahora = new Date()): boolean
  * escrito en la base no puede quitarle a nadie lo que pagó en la tienda.
  */
 export function vehiculosPermitidos(plan: Plan | undefined, ahora = new Date()): number {
-  if (!planVigente(plan, ahora)) return VEHICULOS_GRATIS;
+  let permitidos = VEHICULOS_GRATIS;
 
-  const delProducto = vehiculosDeProducto(plan?.producto);
+  if (compraVigente(plan, ahora)) {
+    permitidos = Math.max(permitidos, vehiculosDeProducto(plan?.producto));
 
-  const aMano = plan?.vehiculos;
-  if (typeof aMano !== 'number' || !Number.isFinite(aMano)) return delProducto;
+    const aMano = plan?.vehiculos;
+    if (typeof aMano === 'number' && Number.isFinite(aMano)) {
+      permitidos = Math.max(permitidos, Math.floor(aMano));
+    }
+  }
 
-  return Math.max(Math.floor(aMano), delProducto);
+  if (regaloVigente(plan, ahora)) {
+    permitidos = Math.max(permitidos, plan?.regalo?.vehiculos ?? VEHICULOS_PREMIUM);
+  }
+
+  return permitidos;
 }

@@ -158,6 +158,8 @@ export class Env {
   @IsString()
   @MinLength(16)
   CRON_SECRET?: string;
+  /** Protege la creación de códigos de regalo. Sin esto, esos endpoints quedan cerrados. */
+  ADMIN_SECRET?: string;
 }
 
 function toNumber(value: unknown): unknown {

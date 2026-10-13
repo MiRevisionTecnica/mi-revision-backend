@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  premiumHasta,
   planVigente,
   vehiculosDeProducto,
   vehiculosPermitidos,
@@ -30,6 +31,67 @@ describe('planVigente', () => {
 
   it('una devolución corta el acceso aunque la fecha no haya llegado', () => {
     expect(planVigente({ activo: false, hasta: '2027-01-01T00:00:00Z' }, HOY)).toBe(false);
+  });
+});
+
+describe('el regalo de un código', () => {
+  const regalo = { hasta: '2027-01-13T00:00:00Z', codigo: 'PREM7K3H9DQ2', vehiculos: 3 };
+
+  it('da premium sin que haya ninguna compra', () => {
+    expect(planVigente({ activo: false, hasta: null, regalo }, HOY)).toBe(true);
+    expect(vehiculosPermitidos({ activo: false, hasta: null, regalo }, HOY)).toBe(3);
+  });
+
+  it('un regalo vencido no da nada', () => {
+    const viejo = { ...regalo, hasta: '2026-01-01T00:00:00Z' };
+    expect(planVigente({ activo: false, hasta: null, regalo: viejo }, HOY)).toBe(false);
+    expect(vehiculosPermitidos({ activo: false, hasta: null, regalo: viejo }, HOY)).toBe(
+      VEHICULOS_GRATIS,
+    );
+  });
+
+  it('no le quita nada a quien ya paga más', () => {
+    // Un regalo de 3 no puede bajar a quien contrató 50 por flotilla.
+    const plan = { activo: true, hasta: null, vehiculos: 50, regalo };
+    expect(vehiculosPermitidos(plan, HOY)).toBe(50);
+  });
+
+  it('suma sobre una compra más chica', () => {
+    const plan = { activo: true, hasta: null, producto: 'premium_mensual', regalo };
+    expect(vehiculosPermitidos(plan, HOY)).toBe(3);
+  });
+});
+
+describe('premiumHasta', () => {
+  it('sin nada, nada', () => {
+    expect(premiumHasta(undefined, HOY)).toBeNull();
+  });
+
+  it('manda el que dure más de los dos', () => {
+    const plan = {
+      activo: true,
+      hasta: '2026-11-01T00:00:00Z',
+      regalo: { hasta: '2027-03-01T00:00:00Z', codigo: 'X', vehiculos: 1 },
+    };
+    expect(premiumHasta(plan, HOY)).toBe('2027-03-01T00:00:00Z');
+  });
+
+  it('el pago de por vida gana siempre', () => {
+    const plan = {
+      activo: true,
+      hasta: null,
+      regalo: { hasta: '2027-03-01T00:00:00Z', codigo: 'X', vehiculos: 1 },
+    };
+    expect(premiumHasta(plan, HOY)).toBeNull();
+  });
+
+  it('una compra vencida no cuenta, pero el regalo vigente sí', () => {
+    const plan = {
+      activo: true,
+      hasta: '2026-01-01T00:00:00Z',
+      regalo: { hasta: '2027-03-01T00:00:00Z', codigo: 'X', vehiculos: 1 },
+    };
+    expect(premiumHasta(plan, HOY)).toBe('2027-03-01T00:00:00Z');
   });
 });
 

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { COLLECTIONS, type UserDoc } from '../firebase/collections.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
-import { planVigente, vehiculosPermitidos, type Plan } from './plan.js';
+import { planVigente, premiumHasta, vehiculosPermitidos, type Plan } from './plan.js';
 
 /**
  * El plan pagado de cada cuenta.
@@ -52,7 +52,10 @@ export class ComprasService {
 
     return {
       premium: planVigente(plan),
-      hasta: plan?.hasta ?? null,
+      // El que dure más entre lo comprado y lo regalado por un código: si se
+      // informara solo lo de la tienda, a quien canjeó un código la app le
+      // diría que su plan venció mientras todavía lo tiene.
+      hasta: premiumHasta(plan),
       vehiculos: vehiculosPermitidos(plan),
     };
   }

@@ -23,6 +23,8 @@ export const COLLECTIONS = {
   devices: 'devices',
   reminderLogs: 'reminderLogs',
   plants: 'plants',
+  /** id = el código normalizado, así Firestore impide dos iguales. */
+  codigos: 'codigos',
 } as const;
 
 /** Cómo se autentica la cuenta. Una misma cuenta puede tener ambos. */
