@@ -10,6 +10,7 @@ import { DocumentsModule } from './documents/documents.module.js';
 import { HealthModule } from './health/health.module.js';
 import { ComprasModule } from './compras/compras.module.js';
 import { PlantsModule } from './plants/plants.module.js';
+import { HomologacionModule } from './homologacion/homologacion.module.js';
 import { TasacionModule } from './tasacion/tasacion.module.js';
 import { PrtModule } from './prt/prt.module.js';
 import { FirebaseModule } from './firebase/firebase.module.js';
@@ -27,6 +28,7 @@ import { VehiclesModule } from './vehicles/vehicles.module.js';
     PlantsModule,
     ComprasModule,
     TasacionModule,
+    HomologacionModule,
     PrtModule,
     DevicesModule,
     RemindersModule,

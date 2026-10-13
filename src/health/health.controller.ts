@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '../common/decorators/public.decorator.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
+import { HomologacionService } from '../homologacion/homologacion.service.js';
 import { ApnsService } from '../reminders/apns.service.js';
 import { MailService } from '../reminders/mail.service.js';
 import { RemindersService } from '../reminders/reminders.service.js';
@@ -16,6 +17,7 @@ export class HealthController {
     private readonly reminders: RemindersService,
     private readonly mail: MailService,
     private readonly apple: ApnsService,
+    private readonly homologacion: HomologacionService,
     private readonly config: ConfigService,
   ) {}
 
@@ -50,6 +52,9 @@ export class HealthController {
       // Sin el secreto, el webhook de compras queda cerrado: alguien podría
       // pagar y el plan no activarse nunca, y eso no se nota por ningún lado.
       compras: this.config.get<string>('REVENUECAT_SECRET') ? 'con secreto' : 'sin configurar',
+      // La nómina del Ministerio se carga sola en la primera consulta. Acá se
+      // mira sin provocar la descarga: solo dice si ya está y de cuándo es.
+      homologacion: this.homologacion.estado(),
       latencyMs: Date.now() - startedAt,
       uptimeSeconds: Math.round(process.uptime()),
       timestamp: new Date().toISOString(),
