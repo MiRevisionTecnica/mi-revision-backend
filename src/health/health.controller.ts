@@ -62,6 +62,14 @@ export class HealthController {
       variablesAdmin: Object.keys(process.env)
         .filter((nombre) => nombre.toUpperCase().includes('ADMIN'))
         .map((nombre) => `"${nombre}"`),
+      // TEMPORAL también: dónde corre esto según el propio Railway, para
+      // compararlo con el panel donde se editan las variables. Son nombres
+      // que Railway inyecta solo; no hay secretos acá.
+      donde: {
+        servicio: process.env.RAILWAY_SERVICE_NAME ?? 'desconocido',
+        entorno: process.env.RAILWAY_ENVIRONMENT_NAME ?? 'desconocido',
+        variables: Object.keys(process.env).filter((n) => !n.startsWith('RAILWAY_')).length,
+      },
       // La nómina del Ministerio se carga sola en la primera consulta. Acá se
       // mira sin provocar la descarga: solo dice si ya está y de cuándo es.
       homologacion: this.homologacion.estado(),
