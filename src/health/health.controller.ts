@@ -59,20 +59,6 @@ export class HealthController {
       // TEMPORAL: qué variables con "ADMIN" en el nombre ve el proceso. Solo
       // los nombres, nunca los valores, y entre comillas para que un espacio
       // al final se note. Se saca en cuanto se resuelva el enredo de Railway.
-      // TEMPORAL: los nombres que contienen "SECRET", con su largo y en
-      // crudo. Un carácter invisible pegado al copiar el nombre no se ve en
-      // el panel de Railway, pero acá delata el largo que no cuadra.
-      variablesSecret: Object.keys(process.env)
-        .filter((nombre) => nombre.toUpperCase().includes('SECRET'))
-        .map((nombre) => `${JSON.stringify(nombre)} (${nombre.length})`),
-      // TEMPORAL también: dónde corre esto según el propio Railway, para
-      // compararlo con el panel donde se editan las variables. Son nombres
-      // que Railway inyecta solo; no hay secretos acá.
-      donde: {
-        servicio: process.env.RAILWAY_SERVICE_NAME ?? 'desconocido',
-        entorno: process.env.RAILWAY_ENVIRONMENT_NAME ?? 'desconocido',
-        variables: Object.keys(process.env).filter((n) => !n.startsWith('RAILWAY_')).length,
-      },
       // La nómina del Ministerio se carga sola en la primera consulta. Acá se
       // mira sin provocar la descarga: solo dice si ya está y de cuándo es.
       homologacion: this.homologacion.estado(),
