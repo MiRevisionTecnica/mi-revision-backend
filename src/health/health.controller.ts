@@ -59,9 +59,12 @@ export class HealthController {
       // TEMPORAL: qué variables con "ADMIN" en el nombre ve el proceso. Solo
       // los nombres, nunca los valores, y entre comillas para que un espacio
       // al final se note. Se saca en cuanto se resuelva el enredo de Railway.
-      variablesAdmin: Object.keys(process.env)
-        .filter((nombre) => nombre.toUpperCase().includes('ADMIN'))
-        .map((nombre) => `"${nombre}"`),
+      // TEMPORAL: los nombres que contienen "SECRET", con su largo y en
+      // crudo. Un carácter invisible pegado al copiar el nombre no se ve en
+      // el panel de Railway, pero acá delata el largo que no cuadra.
+      variablesSecret: Object.keys(process.env)
+        .filter((nombre) => nombre.toUpperCase().includes('SECRET'))
+        .map((nombre) => `${JSON.stringify(nombre)} (${nombre.length})`),
       // TEMPORAL también: dónde corre esto según el propio Railway, para
       // compararlo con el panel donde se editan las variables. Son nombres
       // que Railway inyecta solo; no hay secretos acá.
