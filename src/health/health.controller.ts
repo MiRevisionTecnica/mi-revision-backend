@@ -56,6 +56,12 @@ export class HealthController {
       // códigos de regalo, y el endpoint responde lo mismo que si el secreto
       // estuviera mal escrito. Verlo acá evita perseguir un fantasma.
       codigos: this.config.get<string>('ADMIN_SECRET') ? 'con secreto' : 'sin configurar',
+      // TEMPORAL: qué variables con "ADMIN" en el nombre ve el proceso. Solo
+      // los nombres, nunca los valores, y entre comillas para que un espacio
+      // al final se note. Se saca en cuanto se resuelva el enredo de Railway.
+      variablesAdmin: Object.keys(process.env)
+        .filter((nombre) => nombre.toUpperCase().includes('ADMIN'))
+        .map((nombre) => `"${nombre}"`),
       // La nómina del Ministerio se carga sola en la primera consulta. Acá se
       // mira sin provocar la descarga: solo dice si ya está y de cuándo es.
       homologacion: this.homologacion.estado(),
