@@ -1,7 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { COLLECTIONS, type UserDoc } from '../firebase/collections.js';
 import { FirebaseService } from '../firebase/firebase.service.js';
-import { planVigente, premiumHasta, vehiculosPermitidos, type Plan } from './plan.js';
+import {
+  avisoAtrasado,
+  planVigente,
+  premiumHasta,
+  productoDelAviso,
+  vehiculosPermitidos,
+  type Plan,
+} from './plan.js';
 
 /**
  * El plan pagado de cada cuenta.
@@ -33,8 +40,16 @@ export type AvisoDeCompra = {
   type: string;
   app_user_id?: string;
   product_id?: string;
+  /**
+   * El producto al que se cambió, en un `PRODUCT_CHANGE`.
+   *
+   * Solo viene en algunos casos; cuando falta, manda `product_id`.
+   */
+  new_product_id?: string | null;
   /** Milisegundos desde 1970. Ausente en el pago único, que no vence. */
   expiration_at_ms?: number | null;
+  /** Cuándo ocurrió el evento. Sirve para descartar los que llegan atrasados. */
+  event_timestamp_ms?: number;
   period_type?: string;
   cancel_reason?: string;
 };
@@ -79,13 +94,20 @@ export class ComprasService {
         activo: true,
         // Sin fecha de término es el pago de por vida.
         hasta: aviso.expiration_at_ms ? new Date(aviso.expiration_at_ms).toISOString() : null,
-        tipo: tipoDe(aviso.product_id),
+        tipo: tipoDe(productoDelAviso(aviso)),
         // De acá sale cuántos vehículos permite: hay un plan de un vehículo y
-        // otro de tres, y se distinguen por el producto.
-        producto: aviso.product_id,
+        // otro de tres, y se distinguen por el producto. En un cambio de plan
+        // es el producto nuevo, no aquel del que se viene.
+        producto: productoDelAviso(aviso),
+        eventoMs: aviso.event_timestamp_ms,
       };
 
-      await this.guardar(userId, plan);
+      const aplicado = await this.guardar(userId, plan);
+      if (!aplicado) {
+        this.logger.log(`Aviso atrasado descartado para ${userId} (${aviso.type})`);
+        return 'ignorado';
+      }
+
       this.logger.log(`Plan activado para ${userId} (${aviso.type}, ${plan.tipo ?? 'sin tipo'})`);
       return 'activado';
     }
@@ -95,16 +117,22 @@ export class ComprasService {
       // hasta la fecha pagada. Solo la devolución lo corta en el acto.
       const cortaAhora = aviso.type === 'REFUND' || aviso.type === 'EXPIRATION';
 
-      await this.guardar(userId, {
+      const aplicado = await this.guardar(userId, {
         activo: !cortaAhora,
         hasta: cortaAhora
           ? new Date().toISOString()
           : aviso.expiration_at_ms
             ? new Date(aviso.expiration_at_ms).toISOString()
             : null,
-        tipo: tipoDe(aviso.product_id),
-        producto: aviso.product_id,
+        tipo: tipoDe(productoDelAviso(aviso)),
+        producto: productoDelAviso(aviso),
+        eventoMs: aviso.event_timestamp_ms,
       });
+
+      if (!aplicado) {
+        this.logger.log(`Aviso atrasado descartado para ${userId} (${aviso.type})`);
+        return 'ignorado';
+      }
 
       this.logger.log(`Plan dado de baja para ${userId} (${aviso.type})`);
       return 'desactivado';
@@ -123,11 +151,21 @@ export class ComprasService {
    * plan completo le borraría el límite a ese cliente en la siguiente
    * renovación, sin avisar y sin que nadie lo note hasta que reclame.
    */
-  private async guardar(userId: string, plan: Plan): Promise<void> {
-    await this.firebase.db
-      .collection(COLLECTIONS.users)
-      .doc(userId)
-      .set({ plan, updatedAt: new Date().toISOString() }, { merge: true });
+  private async guardar(userId: string, plan: Plan): Promise<boolean> {
+    const ref = this.firebase.db.collection(COLLECTIONS.users).doc(userId);
+
+    // En transaccion porque los dos avisos de un cambio de plan llegan casi
+    // juntos: sin ella, los dos leerian el mismo plan viejo y el ultimo en
+    // escribir ganaria, que es justo lo que se quiere evitar.
+    return this.firebase.db.runTransaction(async (tx) => {
+      const doc = await tx.get(ref);
+      const actual = (doc.data() as UserDoc | undefined)?.plan ?? undefined;
+
+      if (avisoAtrasado(actual, plan.eventoMs)) return false;
+
+      tx.set(ref, { plan, updatedAt: new Date().toISOString() }, { merge: true });
+      return true;
+    });
   }
 }
 

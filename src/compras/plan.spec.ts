@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
+  avisoAtrasado,
   premiumHasta,
+  productoDelAviso,
   planVigente,
   vehiculosDeProducto,
   vehiculosPermitidos,
@@ -166,5 +168,48 @@ describe('vehiculosPermitidos', () => {
     expect(
       vehiculosPermitidos({ activo: true, hasta: null, producto: 'premium_anual3', vehiculos: NaN }, HOY),
     ).toBe(3);
+  });
+});
+
+describe('productoDelAviso', () => {
+  it('usa el producto nuevo cuando el aviso es un cambio de plan', () => {
+    expect(
+      productoDelAviso({ product_id: 'premium_mensual', new_product_id: 'premium_mensual3' }),
+    ).toBe('premium_mensual3');
+  });
+
+  it('cae en el producto de siempre cuando no viene uno nuevo', () => {
+    expect(productoDelAviso({ product_id: 'premium_anual', new_product_id: null })).toBe(
+      'premium_anual',
+    );
+    expect(productoDelAviso({ product_id: 'premium_anual' })).toBe('premium_anual');
+  });
+
+  it('da tres vehículos al plan nuevo, no al anterior', () => {
+    const producto = productoDelAviso({
+      product_id: 'premium_mensual',
+      new_product_id: 'premium_anual3',
+    });
+
+    expect(vehiculosDeProducto(producto)).toBe(3);
+  });
+});
+
+describe('avisoAtrasado', () => {
+  const plan = { activo: true, hasta: null, eventoMs: 1_000 };
+
+  it('descarta el aviso anterior al último aplicado', () => {
+    expect(avisoAtrasado(plan, 999)).toBe(true);
+  });
+
+  it('acepta el aviso posterior, y también el simultáneo', () => {
+    expect(avisoAtrasado(plan, 1_001)).toBe(false);
+    expect(avisoAtrasado(plan, 1_000)).toBe(false);
+  });
+
+  it('no descarta nada si falta alguna de las dos fechas', () => {
+    expect(avisoAtrasado(plan, undefined)).toBe(false);
+    expect(avisoAtrasado({ activo: true, hasta: null }, 999)).toBe(false);
+    expect(avisoAtrasado(undefined, 999)).toBe(false);
   });
 });

@@ -53,6 +53,16 @@ export type Plan = {
     codigo: string;
     vehiculos: number;
   };
+  /**
+   * Cuándo ocurrió el aviso que dejó el plan así, en milisegundos.
+   *
+   * RevenueCat no garantiza el orden en que llegan sus avisos. En un cambio de
+   * plan salen dos casi juntos --se da de baja el anterior y se activa el
+   * nuevo-- y si llegan al revés, el viejo pisa al nuevo: la persona pagó el
+   * plan de tres vehículos y la app le deja uno. Guardar la hora del evento
+   * permite descartar el que viene atrasado.
+   */
+  eventoMs?: number;
 };
 
 /** Un vehículo, sin pagar nada. */
@@ -94,6 +104,37 @@ const VEHICULOS_POR_PRODUCTO: Record<string, number> = {
 export function vehiculosDeProducto(producto: string | undefined): number {
   if (!producto) return VEHICULOS_PREMIUM;
   return VEHICULOS_POR_PRODUCTO[producto.split(':')[0]] ?? VEHICULOS_PREMIUM;
+}
+
+/**
+ * El producto que queda vigente después de un aviso.
+ *
+ * En un cambio de plan, `product_id` es el producto **del que se viene**, y al
+ * que se cambió llega en `new_product_id`. Leer solo el primero deja a quien
+ * subió al plan de tres vehículos con el límite del anterior hasta la
+ * renovación siguiente, que puede ser un mes después.
+ *
+ * `new_product_id` no viene siempre --RevenueCat lo omite cuando es nulo, y en
+ * Google solo lo manda en los cambios diferidos--, así que el otro queda de
+ * respaldo.
+ */
+export function productoDelAviso(aviso: {
+  product_id?: string;
+  new_product_id?: string | null;
+}): string | undefined {
+  return aviso.new_product_id || aviso.product_id;
+}
+
+/**
+ * Si este aviso llegó tarde y describe algo anterior a lo ya guardado.
+ *
+ * Sin fecha en alguno de los dos lados no se descarta nada: es preferible
+ * aplicar un aviso de más que perder el que activa un plan pagado.
+ */
+export function avisoAtrasado(plan: Plan | undefined, eventoMs: number | undefined): boolean {
+  const ultimo = plan?.eventoMs;
+  if (typeof ultimo !== 'number' || typeof eventoMs !== 'number') return false;
+  return eventoMs < ultimo;
 }
 
 /**
