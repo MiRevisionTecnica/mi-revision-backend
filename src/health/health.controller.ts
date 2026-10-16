@@ -52,6 +52,10 @@ export class HealthController {
       // Sin el secreto, el webhook de compras queda cerrado: alguien podría
       // pagar y el plan no activarse nunca, y eso no se nota por ningún lado.
       compras: this.config.get<string>('REVENUECAT_SECRET') ? 'con secreto' : 'sin configurar',
+      // Igual que arriba: sin ADMIN_SECRET no se pueden crear ni listar
+      // códigos de regalo, y el endpoint responde lo mismo que si el secreto
+      // estuviera mal escrito. Verlo acá evita perseguir un fantasma.
+      codigos: this.config.get<string>('ADMIN_SECRET') ? 'con secreto' : 'sin configurar',
       // La nómina del Ministerio se carga sola en la primera consulta. Acá se
       // mira sin provocar la descarga: solo dice si ya está y de cuándo es.
       homologacion: this.homologacion.estado(),
